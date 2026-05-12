@@ -18,7 +18,7 @@ export function Alert({ variant, children }: AlertProps) {
   return (
     <div className={[styles.alert, styles[variant]].join(' ')}>
       <span className={styles.icon}>{icons[variant]}</span>
-      <span>{children}</span>
+      <span className={styles.content}>{children}</span>
     </div>
   );
 }

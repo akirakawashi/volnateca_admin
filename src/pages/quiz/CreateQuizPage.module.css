@@ -1,7 +1,8 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 24px;
+  max-width: 840px;
 }
 
 .pageHeader {
@@ -11,46 +12,48 @@
 }
 
 .title {
-  font-size: 1.6rem;
+  margin: 0 0 6px;
+  font-size: 24px;
   font-weight: 700;
-  color: #0f172a;
-  margin: 0 0 4px;
+  letter-spacing: -0.02em;
+  color: var(--text);
 }
 
 .sub {
-  font-size: 0.875rem;
-  color: #64748b;
   margin: 0;
+  font-size: 14px;
+  color: var(--text-2);
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 20px;
 }
 
 .grid3 {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
-  gap: 1rem;
+  gap: 16px;
 }
 
 .grid2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: 16px;
 }
 
 .mt {
-  margin-top: 1rem;
+  margin-top: 16px;
 }
 
 .actions {
   display: flex;
   justify-content: flex-end;
-  padding-top: 0.5rem;
+  padding-top: 8px;
 }
 
 @media (max-width: 600px) {
   .grid3, .grid2 { grid-template-columns: 1fr; }
 }
+

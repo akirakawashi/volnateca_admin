@@ -1,7 +1,7 @@
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import type { QuizFormValues } from './schema';
-import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Field';
+import { Button } from '../../components/ui/Button/Button';
+import { Input } from '../../components/ui/Field/Field';
 import styles from './OptionsEditor.module.css';
 
 interface OptionsEditorProps {

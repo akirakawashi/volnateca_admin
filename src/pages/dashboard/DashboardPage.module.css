@@ -1,0 +1,279 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  max-width: 840px;
+}
+
+/* ── Header ─────────────────────────── */
+.header {
+  margin-bottom: 4px;
+}
+
+.title {
+  margin: 0 0 6px;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  background: linear-gradient(135deg, var(--text) 30%, var(--primary-hover) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.sub {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-2);
+}
+
+/* ── Section label ──────────────────── */
+.sectionLabel {
+  margin: 0 0 12px;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--text-3);
+}
+
+/* ── Quick links grid ───────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.linkCard {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  color: var(--text);
+  text-decoration: none;
+  transition: all var(--t);
+  position: relative;
+  overflow: hidden;
+}
+
+.linkCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--primary-muted), transparent 60%);
+  opacity: 0;
+  transition: opacity var(--t);
+}
+
+.linkCard:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--sh), 0 0 0 1px var(--primary);
+}
+
+.linkCard:hover::before {
+  opacity: 1;
+}
+
+.linkIcon {
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary-muted);
+  border-radius: var(--r);
+  color: var(--primary-hover);
+  flex-shrink: 0;
+  position: relative;
+  transition: background var(--t);
+}
+
+.linkCard:hover .linkIcon {
+  background: rgba(99, 102, 241, 0.22);
+}
+
+.linkTitle {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  position: relative;
+}
+
+.linkDesc {
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.4;
+  position: relative;
+}
+
+.linkArrow {
+  margin-left: auto;
+  color: var(--text-3);
+  font-size: 18px;
+  transition: transform var(--t), color var(--t);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.linkCard:hover .linkArrow {
+  transform: translateX(3px);
+  color: var(--primary-hover);
+}
+
+/* ── Dev zone ───────────────────────── */
+.devZone {
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+
+.devHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 20px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(90deg, rgba(245, 158, 11, 0.07), transparent);
+}
+
+.devBadge {
+  padding: 3px 8px;
+  background: rgba(245, 158, 11, 0.14);
+  border: 1px solid rgba(245, 158, 11, 0.28);
+  border-radius: var(--r-sm);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--warning);
+  letter-spacing: 0.07em;
+  flex-shrink: 0;
+}
+
+.devTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.devSub {
+  font-size: 12px;
+  color: var(--text-2);
+}
+
+.devBody {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.seedGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.awardRow {
+  display: flex;
+  padding-top: 6px;
+  border-top: 1px solid var(--border);
+}
+
+.resultBox {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.resultList {
+  margin: 4px 0 0;
+  padding-left: 18px;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+/* ── Danger zone ────────────────────── */
+.dangerZone {
+  background: var(--surface);
+  border: 1px solid rgba(244, 63, 94, 0.18);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+
+.dangerHead {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 13px 20px;
+  border-bottom: 1px solid rgba(244, 63, 94, 0.12);
+  background: linear-gradient(90deg, rgba(244, 63, 94, 0.07), transparent);
+}
+
+.dangerIcon {
+  color: var(--error);
+  flex-shrink: 0;
+}
+
+.dangerTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--error);
+}
+
+.dangerSub {
+  font-size: 12px;
+  color: var(--text-2);
+}
+
+.dangerBody {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.dangerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+}
+
+.dangerActionTitle {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+
+.dangerActionDesc {
+  font-size: 11.5px;
+  color: var(--text-2);
+  font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+}
+
+.confirmBox {
+  padding: 16px;
+  background: rgba(244, 63, 94, 0.06);
+  border: 1px solid rgba(244, 63, 94, 0.2);
+  border-radius: var(--r);
+}
+
+.confirmText {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--text-2);
+}
+
+.confirmActions {
+  display: flex;
+  gap: 8px;
+}

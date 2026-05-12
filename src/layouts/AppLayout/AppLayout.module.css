@@ -1,0 +1,27 @@
+.shell {
+  display: flex;
+  height: 100%;
+  background: var(--bg);
+  background-image: radial-gradient(var(--border-2) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.main {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px 36px;
+}
+
+.inner {
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}

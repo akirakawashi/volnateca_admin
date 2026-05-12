@@ -33,5 +33,10 @@ export function Input({ className, ...props }: InputProps) {
 }
 
 export function Textarea({ className, ...props }: TextareaProps) {
-  return <textarea className={[styles.input, styles.textarea, className].filter(Boolean).join(' ')} {...props} />;
+  return (
+    <textarea
+      className={[styles.input, styles.textarea, className].filter(Boolean).join(' ')}
+      {...props}
+    />
+  );
 }

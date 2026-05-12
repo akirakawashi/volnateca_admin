@@ -2,9 +2,9 @@ import { useFieldArray, useFormContext } from 'react-hook-form';
 import type { QuizFormValues } from './schema';
 import { defaultQuestion } from './schema';
 import { OptionsEditor } from './OptionsEditor';
-import { Button } from '../../components/ui/Button';
-import { Card } from '../../components/ui/Card';
-import { Field, Input, Textarea } from '../../components/ui/Field';
+import { Button } from '../../components/ui/Button/Button';
+import { Card } from '../../components/ui/Card/Card';
+import { Field, Input, Textarea } from '../../components/ui/Field/Field';
 import styles from './QuestionsEditor.module.css';
 
 export function QuestionsEditor() {

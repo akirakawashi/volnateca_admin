@@ -1,7 +1,7 @@
 .block {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 16px;
 }
 
 .header {
@@ -11,20 +11,21 @@
 }
 
 .title {
-  font-size: 1rem;
+  font-size: 14px;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--text);
   margin: 0;
   flex: 1;
 }
 
 .error {
-  font-size: 0.78rem;
-  color: #ef4444;
+  font-size: 12px;
+  color: var(--error);
 }
 
 .questionInner {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 16px;
 }
+

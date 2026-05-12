@@ -4,10 +4,10 @@ import { quizFormSchema, defaultQuestion } from './schema';
 import type { QuizFormValues } from './schema';
 import { QuestionsEditor } from './QuestionsEditor';
 import { useCreateQuiz } from '../../hooks/useCreateQuiz';
-import { Button } from '../../components/ui/Button';
-import { Card } from '../../components/ui/Card';
-import { Field, Input, Textarea } from '../../components/ui/Field';
-import { Alert } from '../../components/ui/Alert';
+import { Button } from '../../components/ui/Button/Button';
+import { Card } from '../../components/ui/Card/Card';
+import { Field, Input, Textarea } from '../../components/ui/Field/Field';
+import { Alert } from '../../components/ui/Alert/Alert';
 import styles from './CreateQuizPage.module.css';
 
 export function CreateQuizPage() {
