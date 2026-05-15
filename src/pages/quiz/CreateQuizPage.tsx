@@ -17,7 +17,6 @@ export function CreateQuizPage() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(quizFormSchema) as any,
     defaultValues: {
-      code: '',
       task_name: '',
       description: '',
       points: 15,
@@ -32,7 +31,6 @@ export function CreateQuizPage() {
 
   const onSubmit = async (values: QuizFormValues) => {
     const created = await create({
-      code: values.code,
       task_name: values.task_name,
       description: values.description || null,
       points: values.points,
@@ -80,10 +78,7 @@ export function CreateQuizPage() {
         >
           {/* Main info */}
           <Card title="Основная информация">
-            <div className={styles.grid3}>
-              <Field label="Код задания" required error={errors.code?.message} hint="Уникальный идентификатор, напр. quiz_history_2026">
-                <Input {...register('code')} placeholder="quiz_history_2026" />
-              </Field>
+            <div className={styles.grid2}>
               <Field label="Очки" required error={errors.points?.message}>
                 <Input
                   {...register('points', { valueAsNumber: true })}

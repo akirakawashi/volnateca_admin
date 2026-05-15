@@ -11,7 +11,6 @@ export interface CreateQuizQuestionPayload {
 }
 
 export interface CreateQuizPayload {
-  code: string;
   task_name: string;
   description: string | null;
   points: number;

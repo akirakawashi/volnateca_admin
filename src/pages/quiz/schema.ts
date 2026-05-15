@@ -18,7 +18,6 @@ export const questionSchema = z
 
 export const quizFormSchema = z
   .object({
-    code: z.string().min(1, 'Код обязателен'),
     task_name: z.string().min(1, 'Название обязательно'),
     description: z.string().optional(),
     points: z.number().int().positive('Очки должны быть > 0'),
