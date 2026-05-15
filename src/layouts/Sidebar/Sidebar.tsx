@@ -74,7 +74,6 @@ export function Sidebar() {
 
   return (
     <aside className={styles.sidebar}>
-      {/* ── Brand ─────────────────────────────────────────── */}
       <div className={styles.brand}>
         <figure className={styles.appIcon}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white"
@@ -88,7 +87,6 @@ export function Sidebar() {
         </div>
       </div>
 
-      {/* ── Navigation ────────────────────────────────────── */}
       <nav className={styles.nav} aria-label="Основное меню">
         <p className={styles.sectionLabel}>Навигация</p>
         <ul className={styles.navList} role="list">
@@ -109,7 +107,6 @@ export function Sidebar() {
         </ul>
       </nav>
 
-      {/* ── Footer / Theme toggle ─────────────────────────── */}
       <div className={styles.foot}>
         <button
           className={styles.themeBtn}

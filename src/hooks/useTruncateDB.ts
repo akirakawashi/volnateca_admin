@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { truncateDB } from '../api/db';
 
-// TODO: удалить useTruncateDB и api/db.ts перед релизом — только для локальной отладки.
 interface UseTruncateDBResult {
   truncate: () => Promise<boolean>;
   loading: boolean;

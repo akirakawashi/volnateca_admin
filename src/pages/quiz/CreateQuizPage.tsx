@@ -14,7 +14,6 @@ export function CreateQuizPage() {
   const { create, loading, error, result, reset: resetMutation } = useCreateQuiz();
 
   const methods = useForm<QuizFormValues>({
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(quizFormSchema) as any,
     defaultValues: {
       task_name: '',
@@ -55,13 +54,12 @@ export function CreateQuizPage() {
   return (
     <div className={styles.page}>
 
-      {/* ── Page header ───────────────────────────────────────── */}
       <header className={styles.pageHeader}>
         <h1 className={styles.pageTitle}>Создать квиз</h1>
         <p className={styles.pageSub}>Новое задание типа «Викторина»</p>
       </header>
 
-      {/* ── Feedback ──────────────────────────────────────────── */}
+      
       {result && (
         <Alert variant="success">
           Квиз <strong>{result.code}</strong> успешно создан — tasks_id: {result.tasks_id},{' '}
@@ -70,7 +68,6 @@ export function CreateQuizPage() {
       )}
       {error && <Alert variant="error">{error}</Alert>}
 
-      {/* ── Form ──────────────────────────────────────────────── */}
       <FormProvider {...methods}>
         <form
           onSubmit={handleSubmit(onSubmit as Parameters<typeof handleSubmit>[0])}

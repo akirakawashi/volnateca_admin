@@ -137,7 +137,6 @@ export function DashboardPage() {
       const messages = await award({ month, limit: 10 });
       setAwardResult(messages);
     } catch {
-      // handled by hook error state
     }
   };
 
@@ -146,7 +145,6 @@ export function DashboardPage() {
   return (
     <div className={styles.root}>
 
-      {/* ── Hero / greeting ──────────────────────────────────── */}
       <header className={styles.hero}>
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>Добро пожаловать</h1>
@@ -158,7 +156,6 @@ export function DashboardPage() {
         </div>
       </header>
 
-      {/* ── Quick actions ─────────────────────────────────────── */}
       <section>
         <h2 className={styles.sectionTitle}>Быстрые действия</h2>
         <div className={styles.actionGrid}>
@@ -177,8 +174,6 @@ export function DashboardPage() {
         </div>
       </section>
 
-      {/* ── Dev scenarios ─────────────────────────────────────── */}
-      {/* TODO: удалить блок devZone (весь dev-сценарии + award-monthly-top) перед релизом. */}
       <section className={styles.devPanel}>
         <header className={styles.panelHead}>
           <span className={styles.devTag}>DEV</span>
@@ -246,8 +241,6 @@ export function DashboardPage() {
         </div>
       </section>
 
-      {/* ── Danger zone ───────────────────────────────────────── */}
-      {/* TODO: удалить блок dangerZone (truncate БД) перед релизом. */}
       <section className={styles.dangerPanel}>
         <header className={styles.panelHead}>
           <span className={styles.dangerIconWrap}><SvgWarning /></span>

@@ -33,7 +33,6 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   useEffect(() => {
     const root = document.documentElement;
 
-    // Add transitioning class to enable smooth color transitions
     root.classList.add('theme-transitioning');
 
     root.setAttribute('data-theme', theme);

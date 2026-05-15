@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { seedDevScenario, type SeedDevScenarioPayload } from '../api/dev';
 
-// TODO: удалить useSeedScenario, useAwardMonthlyTop и api/dev.ts перед релизом.
 interface UseSeedScenarioResult {
   seed: (payload: SeedDevScenarioPayload) => Promise<string[]>;
   loading: boolean;

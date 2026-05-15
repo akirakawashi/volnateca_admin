@@ -1,14 +1,9 @@
-/* ═══════════════════════════════════════════════════════════
-   Dashboard — Apple style
-   ═══════════════════════════════════════════════════════════ */
-
 .root {
   display: flex;
   flex-direction: column;
   gap: 32px;
 }
 
-/* ── Hero ──────────────────────────────────────────────────── */
 .hero {
   display: flex;
   align-items: flex-start;
@@ -66,7 +61,6 @@
   50% { opacity: 0.6; transform: scale(0.85); }
 }
 
-/* ── Section title ────────────────────────────────────────── */
 .sectionTitle {
   margin: 0 0 14px;
   font-size: 11px;
@@ -76,7 +70,6 @@
   color: var(--text-3);
 }
 
-/* ── Action cards grid ────────────────────────────────────── */
 .actionGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -153,7 +146,6 @@
   translate: 3px 0;
 }
 
-/* ── Dev / Danger shared panel shell ─────────────────────── */
 .devPanel,
 .dangerPanel {
   background: var(--surface);
@@ -239,7 +231,6 @@
   gap: 14px;
 }
 
-/* ── Chip grid (seed buttons) ─────────────────────────────── */
 .chipGrid {
   display: flex;
   flex-wrap: wrap;
@@ -252,7 +243,6 @@
   border-top: 1px solid var(--sep-2);
 }
 
-/* ── Result output ────────────────────────────────────────── */
 .resultBox {
   display: flex;
   flex-direction: column;
@@ -266,7 +256,6 @@
   line-height: 1.7;
 }
 
-/* ── Danger row ───────────────────────────────────────────── */
 .dangerRow {
   display: flex;
   align-items: center;
@@ -292,7 +281,6 @@
   font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
 }
 
-/* ── Confirm box ──────────────────────────────────────────── */
 .confirmBox {
   padding: 16px;
   background: rgba(255, 69, 58, 0.06);
