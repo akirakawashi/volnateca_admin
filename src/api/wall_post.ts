@@ -7,11 +7,3 @@ export function postToWall(payload: PostToWallPayload): Promise<PostedToWall> {
     body: JSON.stringify(payload),
   });
 }
-
-export async function uploadWallPhoto(url: string): Promise<string> {
-  const data = await apiFetch<{ attachment: string }>('/v1/admin/wall/photo', {
-    method: 'POST',
-    body: JSON.stringify({ url }),
-  });
-  return data.attachment;
-}
