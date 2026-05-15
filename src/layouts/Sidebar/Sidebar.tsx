@@ -57,6 +57,15 @@ function SvgSun() {
   );
 }
 
+function SvgTemplate() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="2.5" stroke="currentColor" strokeWidth="1.7"/>
+      <path d="M7 8h10M7 12h7M7 16h5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
 interface NavItem {
   to: string;
   label: string;
@@ -67,6 +76,7 @@ const navItems: NavItem[] = [
   { to: '/', label: 'Главная', icon: <SvgHome /> },
   { to: '/quiz/create', label: 'Создать квиз', icon: <SvgQuizDoc /> },
   { to: '/wall/post', label: 'Создать пост', icon: <SvgPost /> },
+  { to: '/message-templates', label: 'Шаблоны', icon: <SvgTemplate /> },
 ];
 
 export function Sidebar() {
