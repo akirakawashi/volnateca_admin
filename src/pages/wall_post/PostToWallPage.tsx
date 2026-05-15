@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { usePostToWall } from '../../hooks/usePostToWall';
+import { uploadWallPhoto } from '../../api/wall_post';
 import { Button } from '../../components/ui/Button/Button';
 import { Card } from '../../components/ui/Card/Card';
 import { Field, Input, Textarea } from '../../components/ui/Field/Field';
@@ -21,6 +23,10 @@ type FormValues = z.infer<typeof schema>;
 
 export function PostToWallPage() {
   const { post, loading, error, result, reset: resetMutation } = usePostToWall();
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [urlInput, setUrlInput] = useState('');
+  const [showUrlInput, setShowUrlInput] = useState(false);
 
   const {
     register,
@@ -42,6 +48,23 @@ export function PostToWallPage() {
   });
 
   const { fields, append, remove } = useFieldArray({ control, name: 'attachments' });
+
+  const handleUrlUpload = async () => {
+    const trimmed = urlInput.trim();
+    if (!trimmed) return;
+    setUploadError(null);
+    setUploading(true);
+    try {
+      const attachment = await uploadWallPhoto(trimmed);
+      append({ value: attachment });
+      setUrlInput('');
+      setShowUrlInput(false);
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : 'Ошибка загрузки');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const onSubmit = async (values: FormValues) => {
     const posted = await post({
@@ -73,6 +96,7 @@ export function PostToWallPage() {
         </Alert>
       )}
       {error && <Alert variant="error">{error}</Alert>}
+      {uploadError && <Alert variant="error">Загрузка фото: {uploadError}</Alert>}
 
       <form
         onSubmit={handleSubmit(onSubmit as Parameters<typeof handleSubmit>[0])}
@@ -108,13 +132,49 @@ export function PostToWallPage() {
                 </div>
               ))}
               {fields.length < 10 && (
-                <button
-                  type="button"
-                  className={styles.addBtn}
-                  onClick={() => append({ value: '' })}
-                >
-                  + Добавить вложение
-                </button>
+                <div className={styles.addActions}>
+                  <button
+                    type="button"
+                    className={styles.addBtn}
+                    onClick={() => append({ value: '' })}
+                  >
+                    + Вручную
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.addBtn}
+                    onClick={() => { setShowUrlInput((v) => !v); setUploadError(null); }}
+                  >
+                    + По ссылке
+                  </button>
+                </div>
+              )}
+              {showUrlInput && (
+                <div className={styles.urlRow}>
+                  <Input
+                    value={urlInput}
+                    onChange={(e) => setUrlInput(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleUrlUpload())}
+                    placeholder="https://example.com/image.jpg"
+                    disabled={uploading}
+                  />
+                  <button
+                    type="button"
+                    className={styles.uploadBtn}
+                    onClick={handleUrlUpload}
+                    disabled={uploading || !urlInput.trim()}
+                  >
+                    {uploading ? '…' : 'Загрузить'}
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.removeBtn}
+                    onClick={() => { setShowUrlInput(false); setUrlInput(''); setUploadError(null); }}
+                    aria-label="Отмена"
+                  >
+                    ✕
+                  </button>
+                </div>
               )}
             </Field>
           </div>
