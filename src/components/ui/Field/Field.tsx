@@ -15,12 +15,14 @@ export function Field({ label, error, hint, required, children }: FieldProps) {
       {label && (
         <label className={styles.label}>
           {label}
-          {required && <span className={styles.req}>*</span>}
+          {required && <span className={styles.req} aria-hidden="true"> *</span>}
         </label>
       )}
-      {children}
-      {hint && !error && <span className={styles.hint}>{hint}</span>}
-      {error && <span className={styles.error}>{error}</span>}
+      <div className={[styles.control, error ? styles.hasError : ''].filter(Boolean).join(' ')}>
+        {children}
+      </div>
+      {hint && !error && <p className={styles.hint}>{hint}</p>}
+      {error && <p className={styles.error} role="alert">{error}</p>}
     </div>
   );
 }

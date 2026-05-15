@@ -2,24 +2,57 @@ import { NavLink } from 'react-router-dom';
 import { useTheme } from '../../contexts/ThemeContext';
 import styles from './Sidebar.module.css';
 
-function IconGrid() {
+function SvgHome() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="3" width="7" height="7" rx="1" />
-      <rect x="14" y="3" width="7" height="7" rx="1" />
-      <rect x="3" y="14" width="7" height="7" rx="1" />
-      <rect x="14" y="14" width="7" height="7" rx="1" />
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"
+        stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M9 21V12h6v9"
+        stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   );
 }
 
-function IconClipboard() {
+function SvgQuizDoc() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-      <rect x="8" y="2" width="8" height="4" rx="1" />
-      <line x1="12" y1="11" x2="12" y2="17" />
-      <line x1="9" y1="14" x2="15" y2="14" />
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="4" y="2" width="16" height="20" rx="2.5"
+        stroke="currentColor" strokeWidth="1.7"/>
+      <path d="M8 7h8M8 12h8M8 17h5"
+        stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+function SvgPost() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+        stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+
+function SvgMoon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/>
+    </svg>
+  );
+}
+
+function SvgSun() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="4.5"/>
+      <line x1="12" y1="1.5" x2="12" y2="4.5"/>
+      <line x1="12" y1="19.5" x2="12" y2="22.5"/>
+      <line x1="4.1" y1="4.1" x2="6.2" y2="6.2"/>
+      <line x1="17.8" y1="17.8" x2="19.9" y2="19.9"/>
+      <line x1="1.5" y1="12" x2="4.5" y2="12"/>
+      <line x1="19.5" y1="12" x2="22.5" y2="12"/>
+      <line x1="4.1" y1="19.9" x2="6.2" y2="17.8"/>
+      <line x1="17.8" y1="6.2" x2="19.9" y2="4.1"/>
     </svg>
   );
 }
@@ -31,78 +64,67 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { to: '/', label: 'Главная', icon: <IconGrid /> },
-  { to: '/quiz/create', label: 'Создать квиз', icon: <IconClipboard /> },
+  { to: '/', label: 'Главная', icon: <SvgHome /> },
+  { to: '/quiz/create', label: 'Создать квиз', icon: <SvgQuizDoc /> },
+  { to: '/wall/post', label: 'Создать пост', icon: <SvgPost /> },
 ];
 
 export function Sidebar() {
   const { theme, toggle } = useTheme();
+
   return (
     <aside className={styles.sidebar}>
+      {/* ── Brand ─────────────────────────────────────────── */}
       <div className={styles.brand}>
-        <div className={styles.brandLogo}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+        <figure className={styles.appIcon}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white"
+            strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
             <path d="M2 12c1.5-3 3-4.5 4.5-4.5S9 9 10.5 12s3 4.5 4.5 4.5S18 15 19.5 12s3-4.5 4.5-4.5" />
           </svg>
-        </div>
-        <div>
-          <div className={styles.brandName}>Волнатека</div>
-          <div className={styles.brandSub}>Admin Panel</div>
+        </figure>
+        <div className={styles.brandMeta}>
+          <span className={styles.brandName}>Волнатека</span>
+          <span className={styles.brandRole}>Admin</span>
         </div>
       </div>
 
-      <nav className={styles.nav}>
-        <div className={styles.section}>
-          <span className={styles.sectionLabel}>Контент</span>
+      {/* ── Navigation ────────────────────────────────────── */}
+      <nav className={styles.nav} aria-label="Основное меню">
+        <p className={styles.sectionLabel}>Навигация</p>
+        <ul className={styles.navList} role="list">
           {navItems.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.to === '/'}
-              className={({ isActive }) =>
-                [styles.navItem, isActive ? styles.active : ''].filter(Boolean).join(' ')
-              }
-            >
-              <span className={styles.navIcon}>{item.icon}</span>
-              <span className={styles.navLabel}>{item.label}</span>
-            </NavLink>
+            <li key={item.to}>
+              <NavLink
+                to={item.to}
+                end={item.to === '/'}
+                className={({ isActive }) =>
+                  [styles.navLink, isActive ? styles.active : ''].filter(Boolean).join(' ')
+                }
+              >
+                <span className={styles.navIcon} aria-hidden="true">{item.icon}</span>
+                <span className={styles.navLabel}>{item.label}</span>
+              </NavLink>
+            </li>
           ))}
-        </div>
+        </ul>
       </nav>
 
-      <div className={styles.footer}>
+      {/* ── Footer / Theme toggle ─────────────────────────── */}
+      <div className={styles.foot}>
         <button
-          className={styles.themeToggle}
+          className={styles.themeBtn}
           onClick={toggle}
-          title={theme === 'dark' ? 'Включить светлую тему' : 'Включить тёмную тему'}
-          aria-label="Переключить тему"
+          aria-label={theme === 'dark' ? 'Переключить на светлую тему' : 'Переключить на тёмную тему'}
         >
-          <span className={[styles.themeTrack, theme === 'light' ? styles.themeTrackLight : ''].filter(Boolean).join(' ')}>
-            <span className={styles.themeThumb}>
-              {theme === 'dark' ? (
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z" />
-                </svg>
-              ) : (
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                  <circle cx="12" cy="12" r="5" />
-                  <line x1="12" y1="1" x2="12" y2="3" />
-                  <line x1="12" y1="21" x2="12" y2="23" />
-                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                  <line x1="1" y1="12" x2="3" y2="12" />
-                  <line x1="21" y1="12" x2="23" y2="12" />
-                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-                </svg>
-              )}
+          <span className={styles.toggleTrack} data-on={theme === 'light' ? 'true' : 'false'}>
+            <span className={styles.toggleThumb}>
+              {theme === 'dark' ? <SvgMoon /> : <SvgSun />}
             </span>
           </span>
           <span className={styles.themeLabel}>
-            {theme === 'dark' ? 'Тёмная' : 'Светлая'}
+            {theme === 'dark' ? 'Тёмная тема' : 'Светлая тема'}
           </span>
         </button>
-        <span className={styles.statusDot} />
       </div>
     </aside>
   );

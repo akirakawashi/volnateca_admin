@@ -6,20 +6,18 @@
 }
 
 .pageHeader {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  padding-bottom: 4px;
 }
 
-.title {
+.pageTitle {
   margin: 0 0 6px;
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   color: var(--text);
 }
 
-.sub {
+.pageSub {
   margin: 0;
   font-size: 14px;
   color: var(--text-2);
@@ -35,105 +33,65 @@
   margin-top: 16px;
 }
 
-.grid3 {
+.row3 {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 16px;
 }
 
-.attachmentRow {
+.attachRow {
   display: flex;
   align-items: center;
   gap: 8px;
   margin-bottom: 8px;
 }
 
-.attachmentRow input {
+.attachRow input {
   flex: 1;
 }
 
-.removeBtn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--text-2);
-  font-size: 14px;
-  padding: 4px 8px;
-  border-radius: 4px;
-  transition: color 0.15s, background 0.15s;
-}
-
-.removeBtn:hover {
-  color: var(--danger, #e53e3e);
-  background: var(--danger-bg, #fff5f5);
-}
-
-.addBtn {
-  background: none;
-  border: 1px dashed var(--border, #d1d5db);
-  border-radius: 6px;
-  cursor: pointer;
-  color: var(--text-2);
-  font-size: 13px;
-  padding: 6px 12px;
-  width: 100%;
-  text-align: left;
-  transition: border-color 0.15s, color 0.15s;
-}
-
-.addBtn:hover {
-  border-color: var(--accent, #4f46e5);
-  color: var(--accent, #4f46e5);
-}
-
-.addBtn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.addActions {
-  display: flex;
-  gap: 8px;
-}
-
-.addActions .addBtn {
-  flex: 1;
-}
-
-.urlRow {
+.removeAttach {
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.urlRow input {
-  flex: 1;
-}
-
-.uploadBtn {
-  background: var(--accent, #4f46e5);
-  color: #fff;
+  justify-content: center;
+  background: none;
   border: none;
-  border-radius: 6px;
+  color: var(--text-3);
+  border-radius: var(--r-sm);
   cursor: pointer;
+  flex-shrink: 0;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+
+.removeAttach:hover {
+  background: var(--red-muted);
+  color: var(--red);
+}
+
+.addAttach {
+  width: 100%;
+  padding: 8px 14px;
+  background: none;
+  border: 1px dashed var(--sep);
+  border-radius: var(--r-sm);
+  color: var(--text-2);
   font-size: 13px;
-  padding: 6px 14px;
-  white-space: nowrap;
-  transition: opacity 0.15s;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast);
 }
 
-.uploadBtn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.addAttach:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-muted);
 }
 
-.hiddenInput {
-  display: none;
-}
-
-.actions {
+.formActions {
   display: flex;
   justify-content: flex-end;
-  padding-top: 8px;
+  padding-top: 4px;
 }

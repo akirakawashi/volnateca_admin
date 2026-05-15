@@ -57,13 +57,14 @@ export function PostToWallPage() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.pageHeader}>
-        <div>
-          <h1 className={styles.title}>Пост на стене</h1>
-          <p className={styles.sub}>Опубликовать запись от имени сообщества и создать задания</p>
-        </div>
-      </div>
 
+      {/* ── Page header ───────────────────────────────────────── */}
+      <header className={styles.pageHeader}>
+        <h1 className={styles.pageTitle}>Пост на стене</h1>
+        <p className={styles.pageSub}>Опубликовать запись от имени сообщества и создать задания</p>
+      </header>
+
+      {/* ── Feedback ──────────────────────────────────────────── */}
       {result && (
         <Alert variant="success">
           Пост опубликован — <strong>{result.external_id}</strong>
@@ -74,6 +75,7 @@ export function PostToWallPage() {
       )}
       {error && <Alert variant="error">{error}</Alert>}
 
+      {/* ── Form ──────────────────────────────────────────────── */}
       <form
         onSubmit={handleSubmit(onSubmit as Parameters<typeof handleSubmit>[0])}
         onFocus={resetMutation}
@@ -92,38 +94,39 @@ export function PostToWallPage() {
           <div className={styles.mt}>
             <Field label="Вложения" hint="Строки формата photo-123_456, doc-123_456 и т.п.">
               {fields.map((field, index) => (
-                <div key={field.id} className={styles.attachmentRow}>
+                <div key={field.id} className={styles.attachRow}>
                   <Input
                     {...register(`attachments.${index}.value`)}
                     placeholder="photo-123456_789"
                   />
                   <button
                     type="button"
-                    className={styles.removeBtn}
+                    className={styles.removeAttach}
                     onClick={() => remove(index)}
                     aria-label="Удалить вложение"
                   >
-                    ✕
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
                   </button>
                 </div>
               ))}
               {fields.length < 10 && (
-                <div className={styles.addActions}>
-                  <button
-                    type="button"
-                    className={styles.addBtn}
-                    onClick={() => append({ value: '' })}
-                  >
-                    + Вручную
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  className={styles.addAttach}
+                  onClick={() => append({ value: '' })}
+                >
+                  + Добавить вложение
+                </button>
               )}
             </Field>
           </div>
         </Card>
 
         <Card title="Задания">
-          <div className={styles.grid3}>
+          <div className={styles.row3}>
             <Field label="Баллы за лайк" required error={errors.like_points?.message}>
               <Input
                 {...register('like_points', { valueAsNumber: true })}
@@ -168,7 +171,7 @@ export function PostToWallPage() {
           </div>
         </Card>
 
-        <div className={styles.actions}>
+        <div className={styles.formActions}>
           <Button type="submit" variant="primary" loading={loading}>
             Опубликовать
           </Button>

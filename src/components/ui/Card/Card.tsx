@@ -10,14 +10,16 @@ interface CardProps {
 
 export function Card({ children, className, title, action }: CardProps) {
   return (
-    <div className={[styles.card, className].filter(Boolean).join(' ')}>
+    <section className={[styles.card, className].filter(Boolean).join(' ')}>
       {(title || action) && (
-        <div className={styles.header}>
-          {title && <h3 className={styles.title}>{title}</h3>}
-          {action}
-        </div>
+        <header className={styles.cardHead}>
+          {title && <h3 className={styles.cardTitle}>{title}</h3>}
+          {action && <div className={styles.cardActions}>{action}</div>}
+        </header>
       )}
-      {children}
-    </div>
+      <div className={styles.cardBody}>
+        {children}
+      </div>
+    </section>
   );
 }

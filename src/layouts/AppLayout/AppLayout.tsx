@@ -8,12 +8,14 @@ interface AppLayoutProps {
 
 export function AppLayout({ children }: AppLayoutProps) {
   return (
-    <div className={styles.shell}>
+    <div className={styles.workspace}>
       <Sidebar />
-      <div className={styles.main}>
-        <main className={styles.content}>
-          <div className={styles.inner}>{children}</div>
-        </main>
+      <div className={styles.pane}>
+        <div className={styles.scrollRegion}>
+          <div className={styles.container}>
+            {children}
+          </div>
+        </div>
       </div>
     </div>
   );

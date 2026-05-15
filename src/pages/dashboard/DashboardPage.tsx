@@ -17,19 +17,38 @@ interface QuickLink {
 
 function IconQuizAdd() {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-      <rect x="8" y="2" width="8" height="4" rx="1" />
-      <line x1="12" y1="11" x2="12" y2="17" />
-      <line x1="9" y1="14" x2="15" y2="14" />
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="4" y="2" width="16" height="20" rx="2.5" />
+      <path d="M9 7h6M9 12h6M9 17h4" />
+      <circle cx="18" cy="18" r="4" fill="currentColor" stroke="none" />
+      <line x1="18" y1="16" x2="18" y2="20" stroke="white" strokeWidth="1.5" />
+      <line x1="16" y1="18" x2="20" y2="18" stroke="white" strokeWidth="1.5" />
     </svg>
   );
 }
 
 function IconWallPost() {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    </svg>
+  );
+}
+
+function SvgChevron() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <polyline points="9 18 15 12 9 6" />
+    </svg>
+  );
+}
+
+function SvgWarning() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+      <line x1="12" y1="9" x2="12" y2="13" />
+      <line x1="12" y1="17" x2="12.01" y2="17" />
     </svg>
   );
 }
@@ -125,39 +144,51 @@ export function DashboardPage() {
   const anyError = truncateError || seedError || awardError;
 
   return (
-    <div className={styles.page}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>Добро пожаловать</h1>
-        <p className={styles.sub}>Управление контентом проекта Волнатека</p>
+    <div className={styles.root}>
+
+      {/* ── Hero / greeting ──────────────────────────────────── */}
+      <header className={styles.hero}>
+        <div className={styles.heroContent}>
+          <h1 className={styles.heroTitle}>Добро пожаловать</h1>
+          <p className={styles.heroSub}>Управление контентом проекта Волнатека</p>
+        </div>
+        <div className={styles.heroPill} aria-hidden="true">
+          <span className={styles.heroPillDot} />
+          <span>Онлайн</span>
+        </div>
       </header>
 
+      {/* ── Quick actions ─────────────────────────────────────── */}
       <section>
-        <p className={styles.sectionLabel}>Быстрые действия</p>
-        <div className={styles.grid}>
+        <h2 className={styles.sectionTitle}>Быстрые действия</h2>
+        <div className={styles.actionGrid}>
           {quickLinks.map((item) => (
-            <Link key={item.to} to={item.to} className={styles.linkCard}>
-              <span className={styles.linkIcon}>{item.icon}</span>
-              <div>
-                <div className={styles.linkTitle}>{item.title}</div>
-                <div className={styles.linkDesc}>{item.description}</div>
+            <Link key={item.to} to={item.to} className={styles.actionCard}>
+              <div className={styles.actionIconRing}>
+                {item.icon}
               </div>
-              <span className={styles.linkArrow}>→</span>
+              <div className={styles.actionText}>
+                <span className={styles.actionName}>{item.title}</span>
+                <span className={styles.actionDesc}>{item.description}</span>
+              </div>
+              <span className={styles.actionArrow}><SvgChevron /></span>
             </Link>
           ))}
         </div>
       </section>
 
+      {/* ── Dev scenarios ─────────────────────────────────────── */}
       {/* TODO: удалить блок devZone (весь dev-сценарии + award-monthly-top) перед релизом. */}
-      <section className={styles.devZone}>
-        <div className={styles.devHead}>
-          <span className={styles.devBadge}>DEV</span>
-          <div>
-            <div className={styles.devTitle}>Dev-сценарии</div>
-            <div className={styles.devSub}>Засеять БД для ручного тестирования</div>
+      <section className={styles.devPanel}>
+        <header className={styles.panelHead}>
+          <span className={styles.devTag}>DEV</span>
+          <div className={styles.panelHeadText}>
+            <p className={styles.panelTitle}>Dev-сценарии</p>
+            <p className={styles.panelSub}>Засеять БД для ручного тестирования</p>
           </div>
-        </div>
+        </header>
 
-        <div className={styles.devBody}>
+        <div className={styles.panelBody}>
           {anyError && <Alert variant="error">{anyError}</Alert>}
 
           {seedResult && (
@@ -186,7 +217,7 @@ export function DashboardPage() {
             </Alert>
           )}
 
-          <div className={styles.seedGrid}>
+          <div className={styles.chipGrid}>
             {seedButtons.map((btn) => (
               <Button
                 key={btn.key}
@@ -215,31 +246,28 @@ export function DashboardPage() {
         </div>
       </section>
 
+      {/* ── Danger zone ───────────────────────────────────────── */}
       {/* TODO: удалить блок dangerZone (truncate БД) перед релизом. */}
-      <section className={styles.dangerZone}>
-        <div className={styles.dangerHead}>
-          <svg className={styles.dangerIcon} width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-            <line x1="12" y1="9" x2="12" y2="13" />
-            <line x1="12" y1="17" x2="12.01" y2="17" />
-          </svg>
-          <div>
-            <div className={styles.dangerTitle}>Опасная зона</div>
-            <div className={styles.dangerSub}>Только для DEBUG-режима</div>
+      <section className={styles.dangerPanel}>
+        <header className={styles.panelHead}>
+          <span className={styles.dangerIconWrap}><SvgWarning /></span>
+          <div className={styles.panelHeadText}>
+            <p className={styles.dangerTitle}>Опасная зона</p>
+            <p className={styles.panelSub}>Только для DEBUG-режима</p>
           </div>
-        </div>
+        </header>
 
-        <div className={styles.dangerBody}>
+        <div className={styles.panelBody}>
           {done && <Alert variant="success">База данных очищена</Alert>}
           {truncateError && <Alert variant="error">{truncateError}</Alert>}
 
           {!confirmPending ? (
             <div className={styles.dangerRow}>
               <div>
-                <div className={styles.dangerActionTitle}>Очистить базу данных</div>
-                <div className={styles.dangerActionDesc}>
+                <p className={styles.dangerActionTitle}>Очистить базу данных</p>
+                <p className={styles.dangerActionMeta}>
                   TRUNCATE всех таблиц с RESTART IDENTITY CASCADE
-                </div>
+                </p>
               </div>
               <Button variant="danger" size="sm" onClick={handleTruncateClick}>
                 Очистить БД
@@ -262,6 +290,7 @@ export function DashboardPage() {
           )}
         </div>
       </section>
+
     </div>
   );
 }

@@ -1,15 +1,19 @@
+/* ═══════════════════════════════════════════════════════════
+   Apple Alert
+   ═══════════════════════════════════════════════════════════ */
+
 .alert {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  padding: 13px 16px;
+  gap: 10px;
+  padding: 12px 14px;
   border-radius: var(--r);
   border: 1px solid transparent;
-  font-size: 13px;
+  font-size: 13.5px;
   line-height: 1.55;
 }
 
-.icon {
+.iconBubble {
   flex-shrink: 0;
   width: 22px;
   height: 22px;
@@ -17,42 +21,42 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  font-size: 11px;
-  font-weight: 700;
-  margin-top: 1px;
 }
 
-.content {
+.body {
   flex: 1;
 }
 
-/* ── Variants ─────────────────────── */
+/* ── Variants ─────────────────────────────────────────────── */
 .success {
-  background: var(--success-muted);
-  border-color: rgba(34, 197, 94, 0.22);
-  color: #4ade80;
+  background: var(--green-muted);
+  border-color: rgba(48, 209, 88, 0.24);
+  color: var(--green);
 }
-.success .icon {
-  background: rgba(34, 197, 94, 0.22);
-  color: var(--success);
+.success .iconBubble {
+  background: rgba(48, 209, 88, 0.2);
+  color: var(--green);
 }
+[data-theme='light'] .success { color: #1a7a34; }
 
 .error {
-  background: var(--error-muted);
-  border-color: rgba(244, 63, 94, 0.22);
-  color: #fb7185;
+  background: var(--red-muted);
+  border-color: rgba(255, 69, 58, 0.24);
+  color: var(--red);
 }
-.error .icon {
-  background: rgba(244, 63, 94, 0.22);
-  color: var(--error);
+.error .iconBubble {
+  background: rgba(255, 69, 58, 0.2);
+  color: var(--red);
 }
+[data-theme='light'] .error { color: #c0392b; }
 
 .info {
-  background: var(--info-muted);
-  border-color: rgba(56, 189, 248, 0.22);
-  color: #7dd3fc;
+  background: var(--blue-muted);
+  border-color: rgba(10, 132, 255, 0.24);
+  color: var(--blue);
 }
-.info .icon {
-  background: rgba(56, 189, 248, 0.22);
-  color: var(--info);
+.info .iconBubble {
+  background: rgba(10, 132, 255, 0.2);
+  color: var(--blue);
 }
+[data-theme='light'] .info { color: #0055b3; }

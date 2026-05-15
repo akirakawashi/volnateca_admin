@@ -19,11 +19,16 @@ export function Button({
   className,
   ...rest
 }: ButtonProps) {
-  const cls = [styles.btn, styles[variant], styles[size], className].filter(Boolean).join(' ');
+  const cls = [styles.btn, styles[variant], styles[size], loading ? styles.isLoading : '', className]
+    .filter(Boolean).join(' ');
   return (
-    <button {...rest} className={cls} disabled={disabled || loading}>
-      {loading ? <span className={styles.spinner} /> : null}
-      {children}
+    <button {...rest} className={cls} disabled={disabled || loading} aria-busy={loading}>
+      {loading && (
+        <span className={styles.spinnerWrap} aria-hidden="true">
+          <span className={styles.spinner} />
+        </span>
+      )}
+      <span className={loading ? styles.labelHidden : undefined}>{children}</span>
     </button>
   );
 }

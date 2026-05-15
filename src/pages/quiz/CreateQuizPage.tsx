@@ -54,13 +54,14 @@ export function CreateQuizPage() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.pageHeader}>
-        <div>
-          <h1 className={styles.title}>Создать квиз</h1>
-          <p className={styles.sub}>Новое задание типа «Викторина»</p>
-        </div>
-      </div>
 
+      {/* ── Page header ───────────────────────────────────────── */}
+      <header className={styles.pageHeader}>
+        <h1 className={styles.pageTitle}>Создать квиз</h1>
+        <p className={styles.pageSub}>Новое задание типа «Викторина»</p>
+      </header>
+
+      {/* ── Feedback ──────────────────────────────────────────── */}
       {result && (
         <Alert variant="success">
           Квиз <strong>{result.code}</strong> успешно создан — tasks_id: {result.tasks_id},{' '}
@@ -69,6 +70,7 @@ export function CreateQuizPage() {
       )}
       {error && <Alert variant="error">{error}</Alert>}
 
+      {/* ── Form ──────────────────────────────────────────────── */}
       <FormProvider {...methods}>
         <form
           onSubmit={handleSubmit(onSubmit as Parameters<typeof handleSubmit>[0])}
@@ -76,9 +78,8 @@ export function CreateQuizPage() {
           noValidate
           className={styles.form}
         >
-          {/* Main info */}
           <Card title="Основная информация">
-            <div className={styles.grid2}>
+            <div className={styles.row2}>
               <Field label="Очки" required error={errors.points?.message}>
                 <Input
                   {...register('points', { valueAsNumber: true })}
@@ -116,7 +117,7 @@ export function CreateQuizPage() {
               </Field>
             </div>
 
-            <div className={[styles.grid2, styles.mt].join(' ')}>
+            <div className={[styles.row2, styles.mt].join(' ')}>
               <Field label="Дата начала">
                 <Input {...register('starts_at')} type="datetime-local" />
               </Field>
@@ -126,10 +127,9 @@ export function CreateQuizPage() {
             </div>
           </Card>
 
-          {/* Questions */}
           <QuestionsEditor />
 
-          <div className={styles.actions}>
+          <div className={styles.formActions}>
             <Button type="submit" variant="primary" loading={loading}>
               Создать квиз
             </Button>
