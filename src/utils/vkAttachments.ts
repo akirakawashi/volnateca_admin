@@ -1,10 +1,11 @@
-export type VkAttachmentType = 'photo' | 'video' | 'doc' | 'clip';
+export type VkAttachmentType = 'photo' | 'video' | 'doc' | 'clip' | 'poll';
 
 const VK_ATTACHMENT_PATTERNS: Record<VkAttachmentType, RegExp> = {
   photo: /photo-?\d+_\d+(?:_[A-Za-z0-9]+)?/,
   video: /video-?\d+_\d+(?:_[A-Za-z0-9]+)?/,
   doc: /doc-?\d+_\d+(?:_[A-Za-z0-9]+)?/,
   clip: /clip-?\d+_\d+(?:_[A-Za-z0-9]+)?/,
+  poll: /poll-?\d+_\d+/,
 };
 
 function collectCandidates(value?: string | null): string[] {
@@ -41,9 +42,13 @@ export function extractVkAttachmentByTypes(
 }
 
 export function extractVkAttachment(value?: string | null): string | null {
-  return extractVkAttachmentByTypes(value, ['photo', 'video', 'doc', 'clip']);
+  return extractVkAttachmentByTypes(value, ['photo', 'video', 'doc', 'clip', 'poll']);
 }
 
 export function extractVkPhotoAttachment(value?: string | null): string | null {
   return extractVkAttachmentByTypes(value, ['photo']);
+}
+
+export function extractVkPollAttachment(value?: string | null): string | null {
+  return extractVkAttachmentByTypes(value, ['poll']);
 }
