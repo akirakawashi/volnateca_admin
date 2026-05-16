@@ -6,7 +6,7 @@ export interface CreateQuizOptionPayload {
 
 export interface CreateQuizQuestionPayload {
   question_text: string;
-  image_url: string | null;
+  image_attachment: string | null;
   options: CreateQuizOptionPayload[];
 }
 
@@ -30,6 +30,7 @@ export interface CreatedQuizOption {
 export interface CreatedQuizQuestion {
   quiz_questions_id: number;
   question_text: string;
+  image_attachment: string | null;
   image_url: string | null;
   options: CreatedQuizOption[];
 }

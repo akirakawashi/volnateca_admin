@@ -62,10 +62,14 @@ export function QuestionsEditor() {
               </Field>
 
               <div className={styles.mt}>
-                <Field label="URL изображения">
+                <Field
+                  label="VK attachment изображения"
+                  hint="Можно вставить photo-123456_789 или VK-фрагмент/ссылку: система попробует извлечь attachment."
+                  error={errors.questions?.[qIdx]?.image_attachment?.message}
+                >
                   <Input
-                    {...register(`questions.${qIdx}.image_url`)}
-                    placeholder="https://example.com/image.png"
+                    {...register(`questions.${qIdx}.image_attachment`)}
+                    placeholder="photo-123456_789"
                   />
                 </Field>
               </div>

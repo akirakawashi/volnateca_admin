@@ -6,6 +6,7 @@ import { Button } from '../../components/ui/Button/Button';
 import { Card } from '../../components/ui/Card/Card';
 import { Field, Input, Textarea } from '../../components/ui/Field/Field';
 import { Alert } from '../../components/ui/Alert/Alert';
+import { extractVkAttachment } from '../../utils/vkAttachments';
 import styles from './PostToWallPage.module.css';
 
 const schema = z.object({
@@ -14,7 +15,7 @@ const schema = z.object({
   repost_points: z.number().int().positive('Должно быть > 0'),
   comment_points: z.number().int().min(0, 'Не может быть отрицательным'),
   week_number: z.number().int().min(1).max(12).nullable().optional(),
-  attachments: z.array(z.object({ value: z.string().min(1) })).max(10),
+  attachments: z.array(z.object({ value: z.string().trim().min(1) })).max(10),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -43,13 +44,17 @@ export function PostToWallPage() {
   const { fields, append, remove } = useFieldArray({ control, name: 'attachments' });
 
   const onSubmit = async (values: FormValues) => {
+    const attachments = values.attachments
+      .map(({ value }) => extractVkAttachment(value) ?? value.trim())
+      .filter(Boolean);
+
     const posted = await post({
       message: values.message,
       like_points: values.like_points,
       repost_points: values.repost_points,
       comment_points: values.comment_points,
       week_number: values.week_number ?? null,
-      attachments: values.attachments.map((a) => a.value),
+      attachments,
     });
     if (posted) reset();
   };
@@ -88,7 +93,7 @@ export function PostToWallPage() {
           </Field>
 
           <div className={styles.mt}>
-            <Field label="Вложения" hint="Строки формата photo-123_456, doc-123_456 и т.п.">
+            <Field label="Вложения" hint="Можно вставить photo/doc/video/clip attachment или VK-фрагмент: система попробует извлечь нужную часть.">
               {fields.map((field, index) => (
                 <div key={field.id} className={styles.attachRow}>
                   <Input

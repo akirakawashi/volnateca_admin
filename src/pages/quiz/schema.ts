@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { extractVkPhotoAttachment } from '../../utils/vkAttachments';
 
 export const optionSchema = z.object({
   option_text: z.string().min(1, 'Вариант не может быть пустым'),
@@ -8,7 +9,13 @@ export const optionSchema = z.object({
 export const questionSchema = z
   .object({
     question_text: z.string().min(1, 'Текст вопроса обязателен'),
-    image_url: z.string().optional(),
+    image_attachment: z
+      .string()
+      .optional()
+      .refine(
+        (value) => !value || extractVkPhotoAttachment(value) !== null,
+        'Не удалось распознать VK attachment изображения',
+      ),
     options: z.array(optionSchema).min(2, 'Минимум 2 варианта ответа'),
   })
   .refine((q) => q.options.filter((o) => o.is_correct).length === 1, {
@@ -38,7 +45,7 @@ export type QuizFormValues = z.infer<typeof quizFormSchema>;
 
 export const defaultQuestion = () => ({
   question_text: '',
-  image_url: '',
+  image_attachment: '',
   options: [
     { option_text: '', is_correct: false },
     { option_text: '', is_correct: false },

@@ -8,6 +8,7 @@ import { Button } from '../../components/ui/Button/Button';
 import { Card } from '../../components/ui/Card/Card';
 import { Field, Input, Textarea } from '../../components/ui/Field/Field';
 import { Alert } from '../../components/ui/Alert/Alert';
+import { extractVkPhotoAttachment } from '../../utils/vkAttachments';
 import styles from './CreateQuizPage.module.css';
 
 export function CreateQuizPage() {
@@ -38,7 +39,7 @@ export function CreateQuizPage() {
       ends_at: values.ends_at ? new Date(values.ends_at).toISOString() : null,
       questions: values.questions.map((q) => ({
         question_text: q.question_text,
-        image_url: q.image_url || null,
+        image_attachment: extractVkPhotoAttachment(q.image_attachment),
         options: q.options.map((o, i) => ({
           option_text: o.option_text,
           is_correct: o.is_correct,
