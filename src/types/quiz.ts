@@ -31,7 +31,6 @@ export interface CreatedQuizQuestion {
   quiz_questions_id: number;
   question_text: string;
   image_attachment: string | null;
-  image_url: string | null;
   options: CreatedQuizOption[];
 }
 
