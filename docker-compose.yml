@@ -1,0 +1,25 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: volnateca_admin_web:latest
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+
+  dev:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - ./:/app:cached
+      - /app/node_modules
+    command: sh -c "npm i -g pnpm && pnpm install && pnpm dev --host 0.0.0.0"
+    ports:
+      - "5173:5173"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    profiles:
+      - dev
