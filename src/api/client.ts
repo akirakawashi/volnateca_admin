@@ -1,12 +1,46 @@
+import {
+  clearStoredAdminAuthHeader,
+  getStoredAdminAuthHeader,
+  notifyAdminUnauthorized,
+} from '../auth/adminAuth';
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
 
-export async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
+interface ApiFetchOptions extends RequestInit {
+  authHeader?: string;
+}
+
+export class ApiError extends Error {
+  readonly status: number;
+
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+  }
+}
+
+export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): Promise<T> {
+  const { authHeader: explicitAuthHeader, headers, ...requestInit } = options;
+  const authHeader = explicitAuthHeader ?? getStoredAdminAuthHeader();
+  const requestHeaders = new Headers(headers);
+
+  requestHeaders.set('Content-Type', 'application/json');
+  if (authHeader) {
+    requestHeaders.set('Authorization', authHeader);
+  }
+
   const response = await fetch(`${API_BASE}${path}`, {
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    ...options,
+    ...requestInit,
+    headers: requestHeaders,
   });
 
   if (!response.ok) {
+    if (response.status === 401) {
+      clearStoredAdminAuthHeader();
+      notifyAdminUnauthorized();
+    }
+
     let detail = `HTTP ${response.status}`;
     try {
       const json = await response.json() as { detail?: string | { msg: string }[] };
@@ -15,7 +49,7 @@ export async function apiFetch<T>(path: string, options?: RequestInit): Promise<
     } catch {
       detail = await response.text().catch(() => detail);
     }
-    throw new Error(detail);
+    throw new ApiError(detail, response.status);
   }
 
   if (response.status === 204) return undefined as T;

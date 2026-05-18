@@ -1,0 +1,76 @@
+.page {
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at top, rgba(10, 132, 255, 0.18), transparent 34%),
+    linear-gradient(180deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 84%, var(--surface)) 100%);
+}
+
+.shell {
+  width: 100%;
+  max-width: 440px;
+}
+
+.card {
+  display: grid;
+  gap: 20px;
+  padding: 28px;
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-xl);
+  background: var(--surface-glass);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  box-shadow: var(--sh-lg);
+}
+
+.brand {
+  display: grid;
+  gap: 10px;
+}
+
+.badge {
+  width: fit-content;
+  padding: 5px 10px;
+  border-radius: var(--r-full);
+  background: var(--accent-muted);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  font-size: 30px;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--text-2);
+  font-size: 14px;
+}
+
+.form {
+  display: grid;
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 16px;
+  }
+
+  .card {
+    padding: 22px;
+    border-radius: var(--r-lg);
+  }
+
+  .title {
+    font-size: 26px;
+  }
+}

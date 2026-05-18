@@ -141,11 +141,14 @@
 }
 
 .foot {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   padding: 10px 12px 16px;
   border-top: 1px solid var(--sep-2);
 }
 
-.themeBtn {
+.footBtn {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -161,9 +164,27 @@
   transition: background var(--t-fast), color var(--t-fast);
 }
 
-.themeBtn:hover {
+.footBtn:hover {
   background: rgba(128, 128, 128, 0.1);
   color: var(--text);
+}
+
+.footIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 20px;
+  color: inherit;
+}
+
+.logoutBtn {
+  color: var(--text-2);
+}
+
+.logoutBtn:hover {
+  color: var(--red);
 }
 
 .toggleTrack {

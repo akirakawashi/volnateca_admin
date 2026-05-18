@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useTheme } from '../../contexts/ThemeContext';
 import styles from './Sidebar.module.css';
@@ -66,10 +67,31 @@ function SvgTemplate() {
   );
 }
 
+function SvgLogout() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M16 17l5-5-5-5M21 12H9"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 interface NavItem {
   to: string;
   label: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
 }
 
 const navItems: NavItem[] = [
@@ -79,7 +101,11 @@ const navItems: NavItem[] = [
   { to: '/message-templates', label: 'Шаблоны', icon: <SvgTemplate /> },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  onLogout: () => void;
+}
+
+export function Sidebar({ onLogout }: SidebarProps) {
   const { theme, toggle } = useTheme();
 
   return (
@@ -119,7 +145,19 @@ export function Sidebar() {
 
       <div className={styles.foot}>
         <button
-          className={styles.themeBtn}
+          type="button"
+          className={[styles.footBtn, styles.logoutBtn].join(' ')}
+          onClick={onLogout}
+          aria-label="Выйти из админ-панели"
+        >
+          <span className={styles.footIcon} aria-hidden="true">
+            <SvgLogout />
+          </span>
+          <span className={styles.themeLabel}>Выйти</span>
+        </button>
+        <button
+          type="button"
+          className={[styles.footBtn, styles.themeBtn].join(' ')}
           onClick={toggle}
           aria-label={theme === 'dark' ? 'Переключить на светлую тему' : 'Переключить на тёмную тему'}
         >
