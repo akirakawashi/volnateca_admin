@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useMessageTemplates } from '../../hooks/useMessageTemplates';
 import { Button } from '../../components/ui/Button/Button';
 import { Card } from '../../components/ui/Card/Card';
+import { PageHero, PageHeroMark } from '../../components/ui/PageHero/PageHero';
 import { Field, Textarea } from '../../components/ui/Field/Field';
 import { Alert } from '../../components/ui/Alert/Alert';
 import styles from './MessageTemplatesPage.module.css';
@@ -54,10 +55,12 @@ export function MessageTemplatesPage() {
 
   return (
     <div className={styles.page}>
-      <header className={styles.pageHeader}>
-        <h1 className={styles.pageTitle}>Шаблоны сообщений</h1>
-        <p className={styles.pageSub}>Редактирование текстов сообщений, отправляемых ботом</p>
-      </header>
+      <PageHero
+        eyebrow="Message templates"
+        title="Шаблоны сообщений"
+        subtitle="Редактирование текстов сообщений, отправляемых ботом"
+        aside={<PageHeroMark label="T" />}
+      />
 
       {error && <Alert variant="error">{error}</Alert>}
 

@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../../components/ui/Button/Button';
 import { Alert } from '../../components/ui/Alert/Alert';
+import { PageHero } from '../../components/ui/PageHero/PageHero';
+import { useAutoStatusMessage } from '../../hooks/useAutoStatusMessage';
 import { useTruncateDB } from '../../hooks/useTruncateDB';
 import { useSeedScenario } from '../../hooks/useSeedScenario';
 import { useSeedStorePrizes } from '../../hooks/useSeedStorePrizes';
@@ -92,6 +94,8 @@ const seedButtons: SeedButton[] = [
 export function DashboardPage() {
   const [confirmPending, setConfirmPending] = useState(false);
   const [done, setDone] = useState(false);
+  const devStatusRef = useRef<HTMLDivElement>(null);
+  const dangerStatusRef = useRef<HTMLDivElement>(null);
   const { truncate, loading: truncateLoading, error: truncateError, reset: resetTruncate } = useTruncateDB();
   const { seed, loading: seedLoading, error: seedError, reset: resetSeed } = useSeedScenario();
   const {
@@ -128,6 +132,7 @@ export function DashboardPage() {
     resetSeed();
     setSeedResult(null);
     setStoreSeedResult(null);
+    setAwardResult(null);
     setActiveScenario(scenario);
     try {
       const messages = await seed({ scenario, users_id: 1 });
@@ -141,6 +146,7 @@ export function DashboardPage() {
     resetStoreSeed();
     setSeedResult(null);
     setStoreSeedResult(null);
+    setAwardResult(null);
     try {
       const messages = await seedStore();
       setStoreSeedResult(messages);
@@ -152,6 +158,8 @@ export function DashboardPage() {
   const handleAwardMonthlyTop = async () => {
     resetAward();
     setAwardResult(null);
+    setSeedResult(null);
+    setStoreSeedResult(null);
     const now = new Date();
     const month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
     try {
@@ -162,24 +170,61 @@ export function DashboardPage() {
     }
   };
 
-  const anyError = truncateError || seedError || storeSeedError || awardError;
+  const devError = seedError || storeSeedError || awardError;
+  const hasDevStatus = Boolean(devError || seedResult || storeSeedResult || awardResult);
+  const hasDevSuccess = Boolean(seedResult || storeSeedResult || awardResult);
+  const hasDangerStatus = Boolean(done || truncateError);
+
+  useAutoStatusMessage({
+    active: hasDevStatus,
+    scrollRef: devStatusRef,
+    onDismiss: hasDevSuccess
+      ? () => {
+          setSeedResult(null);
+          setStoreSeedResult(null);
+          setAwardResult(null);
+        }
+      : undefined,
+  });
+
+  useAutoStatusMessage({
+    active: hasDangerStatus,
+    scrollRef: dangerStatusRef,
+    onDismiss: done ? () => setDone(false) : undefined,
+  });
 
   return (
     <div className={styles.root}>
+      <PageHero
+        eyebrow="Волнатека Admin"
+        title="Добро пожаловать"
+        subtitle="Управление контентом проекта Волнатека"
+        aside={
+          <div className={styles.heroPanel} aria-hidden="true">
+            <div className={styles.heroPill}>
+              <span className={styles.heroPillDot} />
+              <span>Онлайн</span>
+            </div>
+            <div className={styles.heroMetrics}>
+              <div>
+                <span>Разделы</span>
+                <strong>4</strong>
+              </div>
+              <div>
+                <span>DEV</span>
+                <strong>{seedButtons.length + 2}</strong>
+              </div>
+            </div>
+          </div>
+        }
+        asideClassName={styles.heroAside}
+      />
 
-      <header className={styles.hero}>
-        <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>Добро пожаловать</h1>
-          <p className={styles.heroSub}>Управление контентом проекта Волнатека</p>
+      <section className={styles.section}>
+        <div className={styles.sectionHead}>
+          <h2 className={styles.sectionTitle}>Быстрые действия</h2>
+          <span className={styles.sectionMeta}>Контент</span>
         </div>
-        <div className={styles.heroPill} aria-hidden="true">
-          <span className={styles.heroPillDot} />
-          <span>Онлайн</span>
-        </div>
-      </header>
-
-      <section>
-        <h2 className={styles.sectionTitle}>Быстрые действия</h2>
         <div className={styles.actionGrid}>
           {quickLinks.map((item) => (
             <Link key={item.to} to={item.to} className={styles.actionCard}>
@@ -198,53 +243,59 @@ export function DashboardPage() {
 
       <section className={styles.devPanel}>
         <header className={styles.panelHead}>
-          <span className={styles.devTag}>DEV</span>
-          <div className={styles.panelHeadText}>
-            <p className={styles.panelTitle}>Dev-сценарии</p>
-            <p className={styles.panelSub}>Засеять БД для ручного тестирования</p>
+          <div className={styles.panelTitleWrap}>
+            <span className={styles.devTag}>DEV</span>
+            <div className={styles.panelHeadText}>
+              <p className={styles.panelTitle}>Dev-сценарии</p>
+              <p className={styles.panelSub}>Засеять БД для ручного тестирования</p>
+            </div>
           </div>
         </header>
 
         <div className={styles.panelBody}>
-          {anyError && <Alert variant="error">{anyError}</Alert>}
+          {hasDevStatus && (
+            <div ref={devStatusRef} className={styles.statusStack}>
+              {devError && <Alert variant="error">{devError}</Alert>}
 
-          {seedResult && (
-            <Alert variant="info">
-              <div className={styles.resultBox}>
-                <strong>Сценарий «{seedResult.scenario}» выполнен</strong>
-                <ul className={styles.resultList}>
-                  {seedResult.messages.map((m, i) => (
-                    <li key={i}>{m}</li>
-                  ))}
-                </ul>
-              </div>
-            </Alert>
-          )}
+              {seedResult && (
+                <Alert variant="info">
+                  <div className={styles.resultBox}>
+                    <strong>Сценарий «{seedResult.scenario}» выполнен</strong>
+                    <ul className={styles.resultList}>
+                      {seedResult.messages.map((m, i) => (
+                        <li key={i}>{m}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </Alert>
+              )}
 
-          {awardResult && (
-            <Alert variant="info">
-              <div className={styles.resultBox}>
-                <strong>Начисление monthly_top_10 выполнено</strong>
-                <ul className={styles.resultList}>
-                  {awardResult.map((m, i) => (
-                    <li key={i}>{m}</li>
-                  ))}
-                </ul>
-              </div>
-            </Alert>
-          )}
+              {awardResult && (
+                <Alert variant="info">
+                  <div className={styles.resultBox}>
+                    <strong>Начисление monthly_top_10 выполнено</strong>
+                    <ul className={styles.resultList}>
+                      {awardResult.map((m, i) => (
+                        <li key={i}>{m}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </Alert>
+              )}
 
-          {storeSeedResult && (
-            <Alert variant="info">
-              <div className={styles.resultBox}>
-                <strong>Тестовые призы магазина засеяны</strong>
-                <ul className={styles.resultList}>
-                  {storeSeedResult.map((m, i) => (
-                    <li key={i}>{m}</li>
-                  ))}
-                </ul>
-              </div>
-            </Alert>
+              {storeSeedResult && (
+                <Alert variant="info">
+                  <div className={styles.resultBox}>
+                    <strong>Тестовые призы магазина засеяны</strong>
+                    <ul className={styles.resultList}>
+                      {storeSeedResult.map((m, i) => (
+                        <li key={i}>{m}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </Alert>
+              )}
+            </div>
           )}
 
           <div className={styles.chipGrid}>
@@ -287,16 +338,22 @@ export function DashboardPage() {
 
       <section className={styles.dangerPanel}>
         <header className={styles.panelHead}>
-          <span className={styles.dangerIconWrap}><SvgWarning /></span>
-          <div className={styles.panelHeadText}>
-            <p className={styles.dangerTitle}>Опасная зона</p>
-            <p className={styles.panelSub}>Только для DEBUG-режима</p>
+          <div className={styles.panelTitleWrap}>
+            <span className={styles.dangerIconWrap}><SvgWarning /></span>
+            <div className={styles.panelHeadText}>
+              <p className={styles.dangerTitle}>Опасная зона</p>
+              <p className={styles.panelSub}>Только для DEBUG-режима</p>
+            </div>
           </div>
         </header>
 
         <div className={styles.panelBody}>
-          {done && <Alert variant="success">База данных очищена</Alert>}
-          {truncateError && <Alert variant="error">{truncateError}</Alert>}
+          {hasDangerStatus && (
+            <div ref={dangerStatusRef} className={styles.statusStack}>
+              {done && <Alert variant="success">База данных очищена</Alert>}
+              {truncateError && <Alert variant="error">{truncateError}</Alert>}
+            </div>
+          )}
 
           {!confirmPending ? (
             <div className={styles.dangerRow}>
@@ -327,7 +384,6 @@ export function DashboardPage() {
           )}
         </div>
       </section>
-
     </div>
   );
 }

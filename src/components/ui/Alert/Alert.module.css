@@ -1,18 +1,20 @@
 .alert {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  padding: 12px 14px;
-  border-radius: var(--r);
+  gap: 11px;
+  padding: 13px 14px;
+  border-radius: 14px;
   border: 1px solid transparent;
   font-size: 13.5px;
   line-height: 1.55;
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
 }
 
 .iconBubble {
   flex-shrink: 0;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -21,36 +23,41 @@
 
 .body {
   flex: 1;
+  min-width: 0;
 }
+
 .success {
-  background: var(--green-muted);
-  border-color: rgba(48, 209, 88, 0.24);
+  background: linear-gradient(135deg, rgba(93, 242, 165, 0.13), rgba(93, 242, 165, 0.04));
+  border-color: rgba(93, 242, 165, 0.24);
   color: var(--green);
+  box-shadow: 0 0 28px rgba(93, 242, 165, 0.08);
 }
+
 .success .iconBubble {
-  background: rgba(48, 209, 88, 0.2);
+  background: rgba(93, 242, 165, 0.16);
   color: var(--green);
 }
-[data-theme='light'] .success { color: #1a7a34; }
 
 .error {
-  background: var(--red-muted);
-  border-color: rgba(255, 69, 58, 0.24);
+  background: linear-gradient(135deg, rgba(255, 95, 115, 0.14), rgba(255, 95, 115, 0.04));
+  border-color: rgba(255, 95, 115, 0.25);
   color: var(--red);
+  box-shadow: 0 0 28px rgba(255, 95, 115, 0.08);
 }
+
 .error .iconBubble {
-  background: rgba(255, 69, 58, 0.2);
+  background: rgba(255, 95, 115, 0.16);
   color: var(--red);
 }
-[data-theme='light'] .error { color: #c0392b; }
 
 .info {
-  background: var(--blue-muted);
-  border-color: rgba(10, 132, 255, 0.24);
+  background: linear-gradient(135deg, rgba(99, 167, 255, 0.14), rgba(66, 232, 224, 0.05));
+  border-color: rgba(99, 167, 255, 0.24);
   color: var(--blue);
+  box-shadow: 0 0 28px rgba(99, 167, 255, 0.08);
 }
+
 .info .iconBubble {
-  background: rgba(10, 132, 255, 0.2);
+  background: rgba(99, 167, 255, 0.16);
   color: var(--blue);
 }
-[data-theme='light'] .info { color: #0055b3; }

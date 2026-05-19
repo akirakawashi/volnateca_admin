@@ -1,32 +1,21 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  max-width: 680px;
-}
-
-.pageHeader {
-  padding-bottom: 4px;
-}
-
-.pageTitle {
-  margin: 0 0 6px;
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  color: var(--text);
-}
-
-.pageSub {
-  margin: 0;
-  font-size: 14px;
-  color: var(--text-2);
+  gap: 22px;
+  width: 100%;
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
+}
+
+.statusRegion {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scroll-margin-top: 24px;
 }
 
 .mt {
@@ -35,7 +24,7 @@
 
 .row3 {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
 }
 
@@ -43,7 +32,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 8px;
+  margin-bottom: 9px;
 }
 
 .attachRow input {
@@ -51,47 +40,75 @@
 }
 
 .removeAttach {
-  width: 28px;
-  height: 28px;
+  width: 34px;
+  height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: none;
-  border: none;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   color: var(--text-3);
-  border-radius: var(--r-sm);
+  border-radius: 10px;
   cursor: pointer;
   flex-shrink: 0;
-  transition: background var(--t-fast), color var(--t-fast);
+  transition: background var(--t-fast), border-color var(--t-fast), color var(--t-fast), box-shadow var(--t-fast);
 }
 
 .removeAttach:hover {
   background: var(--red-muted);
+  border-color: rgba(255, 95, 115, 0.22);
   color: var(--red);
+  box-shadow: 0 0 20px rgba(255, 95, 115, 0.08);
 }
 
 .addAttach {
   width: 100%;
-  padding: 8px 14px;
-  background: none;
-  border: 1px dashed var(--sep);
-  border-radius: var(--r-sm);
-  color: var(--text-2);
+  padding: 10px 14px;
+  background: rgba(66, 232, 224, 0.06);
+  border: 1px dashed rgba(66, 232, 224, 0.24);
+  border-radius: 12px;
+  color: var(--accent);
   font-size: 13px;
+  font-weight: 750;
   font-family: inherit;
   text-align: left;
   cursor: pointer;
-  transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast);
+  transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast), box-shadow var(--t-fast);
 }
 
 .addAttach:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: var(--accent-muted);
+  border-color: rgba(66, 232, 224, 0.42);
+  background: rgba(66, 232, 224, 0.10);
+  box-shadow: 0 0 24px rgba(66, 232, 224, 0.08);
 }
 
 .formActions {
+  position: sticky;
+  bottom: 9px;
+  z-index: 3;
   display: flex;
   justify-content: flex-end;
-  padding-top: 4px;
+  padding: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 16px;
+  background: rgba(10, 14, 24, 0.72);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: var(--sh-sm);
+}
+
+@media (max-width: 780px) {
+  .row3 {
+    grid-template-columns: 1fr;
+  }
+
+  .formActions {
+    position: static;
+  }
+}
+
+@media (max-width: 520px) {
+  .attachRow {
+    align-items: stretch;
+  }
 }

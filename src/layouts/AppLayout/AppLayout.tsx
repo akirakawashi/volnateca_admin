@@ -10,6 +10,7 @@ interface AppLayoutProps {
 export function AppLayout({ children, onLogout }: AppLayoutProps) {
   return (
     <div className={styles.workspace}>
+      <div className={styles.backdrop} aria-hidden="true" />
       <Sidebar onLogout={onLogout} />
       <div className={styles.pane}>
         <div className={styles.scrollRegion}>

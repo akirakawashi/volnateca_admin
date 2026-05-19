@@ -1,11 +1,14 @@
+import { useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { quizFormSchema, defaultQuestion } from './schema';
 import type { QuizFormValues } from './schema';
 import { QuestionsEditor } from './QuestionsEditor';
 import { useCreateQuiz } from '../../hooks/useCreateQuiz';
+import { useAutoStatusMessage } from '../../hooks/useAutoStatusMessage';
 import { Button } from '../../components/ui/Button/Button';
 import { Card } from '../../components/ui/Card/Card';
+import { PageHero, PageHeroMark } from '../../components/ui/PageHero/PageHero';
 import { Field, Input, Textarea } from '../../components/ui/Field/Field';
 import { Alert } from '../../components/ui/Alert/Alert';
 import { extractVkPhotoAttachment } from '../../utils/vkAttachments';
@@ -13,6 +16,7 @@ import styles from './CreateQuizPage.module.css';
 
 export function CreateQuizPage() {
   const { create, loading, error, result, reset: resetMutation } = useCreateQuiz();
+  const statusRef = useRef<HTMLDivElement>(null);
 
   const methods = useForm<QuizFormValues>({
     resolver: zodResolver(quizFormSchema) as any,
@@ -52,22 +56,32 @@ export function CreateQuizPage() {
     }
   };
 
+  useAutoStatusMessage({
+    active: Boolean(result || error),
+    scrollRef: statusRef,
+    onDismiss: result ? resetMutation : undefined,
+  });
+
   return (
     <div className={styles.page}>
+      <PageHero
+        eyebrow="Quiz builder"
+        title="Создать квиз"
+        subtitle="Новое задание типа «Викторина»"
+        aside={<PageHeroMark label="Q" />}
+      />
 
-      <header className={styles.pageHeader}>
-        <h1 className={styles.pageTitle}>Создать квиз</h1>
-        <p className={styles.pageSub}>Новое задание типа «Викторина»</p>
-      </header>
-
-      
-      {result && (
-        <Alert variant="success">
-          Квиз <strong>{result.code}</strong> успешно создан — tasks_id: {result.tasks_id},{' '}
-          вопросов: {result.questions.length}
-        </Alert>
+      {(result || error) && (
+        <div ref={statusRef} className={styles.statusRegion}>
+          {result && (
+            <Alert variant="success">
+              Квиз <strong>{result.code}</strong> успешно создан — tasks_id: {result.tasks_id},{' '}
+              вопросов: {result.questions.length}
+            </Alert>
+          )}
+          {error && <Alert variant="error">{error}</Alert>}
+        </div>
       )}
-      {error && <Alert variant="error">{error}</Alert>}
 
       <FormProvider {...methods}>
         <form

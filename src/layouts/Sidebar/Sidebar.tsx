@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
-import { useTheme } from '../../contexts/ThemeContext';
 import styles from './Sidebar.module.css';
 
 function SvgHome() {
@@ -30,30 +29,6 @@ function SvgPost() {
     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
         stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
-  );
-}
-
-function SvgMoon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/>
-    </svg>
-  );
-}
-
-function SvgSun() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
-      <circle cx="12" cy="12" r="4.5"/>
-      <line x1="12" y1="1.5" x2="12" y2="4.5"/>
-      <line x1="12" y1="19.5" x2="12" y2="22.5"/>
-      <line x1="4.1" y1="4.1" x2="6.2" y2="6.2"/>
-      <line x1="17.8" y1="17.8" x2="19.9" y2="19.9"/>
-      <line x1="1.5" y1="12" x2="4.5" y2="12"/>
-      <line x1="19.5" y1="12" x2="22.5" y2="12"/>
-      <line x1="4.1" y1="19.9" x2="6.2" y2="17.8"/>
-      <line x1="17.8" y1="6.2" x2="19.9" y2="4.1"/>
     </svg>
   );
 }
@@ -106,8 +81,6 @@ interface SidebarProps {
 }
 
 export function Sidebar({ onLogout }: SidebarProps) {
-  const { theme, toggle } = useTheme();
-
   return (
     <aside className={styles.sidebar}>
       <div className={styles.brand}>
@@ -119,7 +92,7 @@ export function Sidebar({ onLogout }: SidebarProps) {
         </figure>
         <div className={styles.brandMeta}>
           <span className={styles.brandName}>Волнатека</span>
-          <span className={styles.brandRole}>Admin</span>
+          <span className={styles.brandRole}>Control room</span>
         </div>
       </div>
 
@@ -144,6 +117,13 @@ export function Sidebar({ onLogout }: SidebarProps) {
       </nav>
 
       <div className={styles.foot}>
+        <div className={styles.sessionCard} aria-hidden="true">
+          <span className={styles.sessionDot} />
+          <div>
+            <span className={styles.sessionLabel}>Сессия</span>
+            <strong className={styles.sessionValue}>Активна</strong>
+          </div>
+        </div>
         <button
           type="button"
           className={[styles.footBtn, styles.logoutBtn].join(' ')}
@@ -154,21 +134,6 @@ export function Sidebar({ onLogout }: SidebarProps) {
             <SvgLogout />
           </span>
           <span className={styles.themeLabel}>Выйти</span>
-        </button>
-        <button
-          type="button"
-          className={[styles.footBtn, styles.themeBtn].join(' ')}
-          onClick={toggle}
-          aria-label={theme === 'dark' ? 'Переключить на светлую тему' : 'Переключить на тёмную тему'}
-        >
-          <span className={styles.toggleTrack} data-on={theme === 'light' ? 'true' : 'false'}>
-            <span className={styles.toggleThumb}>
-              {theme === 'dark' ? <SvgMoon /> : <SvgSun />}
-            </span>
-          </span>
-          <span className={styles.themeLabel}>
-            {theme === 'dark' ? 'Тёмная тема' : 'Светлая тема'}
-          </span>
         </button>
       </div>
     </aside>

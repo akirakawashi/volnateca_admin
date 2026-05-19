@@ -36,6 +36,24 @@ export function LoginPage({ checking, onLogin }: LoginPageProps) {
   return (
     <main className={styles.page}>
       <div className={styles.shell}>
+        <aside className={styles.visual} aria-hidden="true">
+          <div className={styles.logoMark}>
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white"
+              strokeWidth="2.1" strokeLinecap="round">
+              <path d="M2 12c1.5-3 3-4.5 4.5-4.5S9 9 10.5 12s3 4.5 4.5 4.5S18 15 19.5 12s3-4.5 4.5-4.5" />
+            </svg>
+          </div>
+          <div className={styles.visualText}>
+            <span>Volnateca</span>
+            <strong>Admin</strong>
+          </div>
+          <div className={styles.visualGrid}>
+            <span />
+            <span />
+            <span />
+            <span />
+          </div>
+        </aside>
         <section className={styles.card}>
           <div className={styles.brand}>
             <span className={styles.badge}>Admin</span>

@@ -1,9 +1,12 @@
+import { useRef } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { usePostToWall } from '../../hooks/usePostToWall';
+import { useAutoStatusMessage } from '../../hooks/useAutoStatusMessage';
 import { Button } from '../../components/ui/Button/Button';
 import { Card } from '../../components/ui/Card/Card';
+import { PageHero, PageHeroMark } from '../../components/ui/PageHero/PageHero';
 import { Field, Input, Textarea } from '../../components/ui/Field/Field';
 import { Alert } from '../../components/ui/Alert/Alert';
 import { extractVkAttachment } from '../../utils/vkAttachments';
@@ -22,6 +25,7 @@ type FormValues = z.infer<typeof schema>;
 
 export function PostToWallPage() {
   const { post, loading, error, result, reset: resetMutation } = usePostToWall();
+  const statusRef = useRef<HTMLDivElement>(null);
 
   const {
     register,
@@ -59,23 +63,34 @@ export function PostToWallPage() {
     if (posted) reset();
   };
 
+  useAutoStatusMessage({
+    active: Boolean(result || error),
+    scrollRef: statusRef,
+    onDismiss: result ? resetMutation : undefined,
+  });
+
   return (
     <div className={styles.page}>
+      <PageHero
+        eyebrow="Wall post"
+        title="Пост на стене"
+        subtitle="Опубликовать запись от имени сообщества и создать задания"
+        aside={<PageHeroMark label="VK" />}
+      />
 
-      <header className={styles.pageHeader}>
-        <h1 className={styles.pageTitle}>Пост на стене</h1>
-        <p className={styles.pageSub}>Опубликовать запись от имени сообщества и создать задания</p>
-      </header>
-
-      {result && (
-        <Alert variant="success">
-          Пост опубликован — <strong>{result.external_id}</strong>
-          {result.like_tasks_id != null && <>, задание «лайк»: #{result.like_tasks_id}</>}
-          {result.repost_tasks_id != null && <>, «репост»: #{result.repost_tasks_id}</>}
-          {result.comment_tasks_id != null && <>, «комментарий»: #{result.comment_tasks_id}</>}
-        </Alert>
+      {(result || error) && (
+        <div ref={statusRef} className={styles.statusRegion}>
+          {result && (
+            <Alert variant="success">
+              Пост опубликован — <strong>{result.external_id}</strong>
+              {result.like_tasks_id != null && <>, задание «лайк»: #{result.like_tasks_id}</>}
+              {result.repost_tasks_id != null && <>, «репост»: #{result.repost_tasks_id}</>}
+              {result.comment_tasks_id != null && <>, «комментарий»: #{result.comment_tasks_id}</>}
+            </Alert>
+          )}
+          {error && <Alert variant="error">{error}</Alert>}
+        </div>
       )}
-      {error && <Alert variant="error">{error}</Alert>}
 
       <form
         onSubmit={handleSubmit(onSubmit as Parameters<typeof handleSubmit>[0])}

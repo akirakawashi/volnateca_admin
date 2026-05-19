@@ -1,14 +1,14 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 7px;
 }
 
 .label {
-  font-size: 11.5px;
-  font-weight: 600;
+  font-size: 10.5px;
+  font-weight: 850;
   color: var(--text-2);
-  letter-spacing: 0.04em;
+  letter-spacing: 0;
   text-transform: uppercase;
   user-select: none;
 }
@@ -24,15 +24,19 @@
 .input {
   display: block;
   width: 100%;
-  padding: 9px 13px;
-  background: var(--surface-2);
-  border: 1px solid var(--sep);
-  border-radius: var(--r-sm);
+  min-height: 42px;
+  padding: 10px 13px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.025)),
+    rgba(10, 14, 24, 0.76);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 10px;
   color: var(--text);
   font-size: 14px;
   line-height: 1.5;
   outline: none;
   transition: border-color var(--t-fast), box-shadow var(--t-fast), background var(--t-fast);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   -webkit-appearance: none;
   appearance: none;
 }
@@ -42,24 +46,26 @@
 }
 
 .input:focus {
-  border-color: var(--accent);
-  background: var(--surface);
-  box-shadow: 0 0 0 3px var(--accent-muted);
+  border-color: rgba(66, 232, 224, 0.52);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.03)),
+    rgba(13, 19, 32, 0.92);
+  box-shadow: 0 0 0 3px rgba(66, 232, 224, 0.12), 0 0 32px rgba(66, 232, 224, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.07);
 }
 
 .hasError .input {
-  border-color: var(--red);
+  border-color: rgba(255, 95, 115, 0.64);
 }
 
 .hasError .input:focus {
-  box-shadow: 0 0 0 3px var(--red-muted);
+  box-shadow: 0 0 0 3px rgba(255, 95, 115, 0.14), 0 0 32px rgba(255, 95, 115, 0.08);
 }
 
 .textarea {
   height: auto;
-  padding: 10px 13px;
+  padding: 11px 13px;
   resize: vertical;
-  min-height: 86px;
+  min-height: 98px;
   line-height: 1.55;
 }
 
@@ -67,23 +73,17 @@
   color-scheme: dark;
 }
 
-[data-theme='light'] .input[type='datetime-local'] {
-  color-scheme: light;
-}
-
 .hint {
   margin: 0;
   font-size: 12px;
   color: var(--text-3);
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 .error {
   margin: 0;
   font-size: 12px;
   color: var(--red);
-  font-weight: 500;
-  line-height: 1.4;
+  font-weight: 650;
+  line-height: 1.45;
 }
-
-/* Overlay styles removed — using plain textarea */
