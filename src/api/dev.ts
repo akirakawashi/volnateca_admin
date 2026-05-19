@@ -21,6 +21,12 @@ export async function seedDevScenario(payload: SeedDevScenarioPayload): Promise<
   });
 }
 
+export async function seedStorePrizes(): Promise<DevResponse> {
+  return apiFetch<DevResponse>('/v1/admin/dev/seed-store-prizes', {
+    method: 'POST',
+  });
+}
+
 export async function awardMonthlyTop(payload: AwardMonthlyTopPayload): Promise<DevResponse> {
   return apiFetch<DevResponse>('/v1/admin/dev/award-monthly-top', {
     method: 'POST',

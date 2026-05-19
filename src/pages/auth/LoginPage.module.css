@@ -60,6 +60,46 @@
   gap: 16px;
 }
 
+.passwordControl {
+  position: relative;
+}
+
+.passwordInput {
+  padding-right: 92px;
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 28px;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: var(--r-xs);
+  background: transparent;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
+}
+
+.passwordToggle:hover:not(:disabled) {
+  background: var(--accent-muted);
+}
+
+.passwordToggle:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-muted);
+}
+
+.passwordToggle:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 @media (max-width: 640px) {
   .page {
     padding: 16px;

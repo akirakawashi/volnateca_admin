@@ -13,6 +13,7 @@ interface LoginPageProps {
 export function LoginPage({ checking, onLogin }: LoginPageProps) {
   const [login, setLogin] = useState('admin');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -59,14 +60,26 @@ export function LoginPage({ checking, onLogin }: LoginPageProps) {
             </Field>
 
             <Field label="Пароль" required>
-              <Input
-                type="password"
-                autoComplete="current-password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                disabled={disabled}
-                placeholder="Введите пароль"
-              />
+              <div className={styles.passwordControl}>
+                <Input
+                  className={styles.passwordInput}
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  disabled={disabled}
+                  placeholder="Введите пароль"
+                />
+                <button
+                  type="button"
+                  className={styles.passwordToggle}
+                  onClick={() => setShowPassword((value) => !value)}
+                  disabled={disabled}
+                  aria-pressed={showPassword}
+                >
+                  {showPassword ? 'Скрыть' : 'Показать'}
+                </button>
+              </div>
             </Field>
 
             <Button type="submit" size="md" loading={submitting} disabled={checking}>

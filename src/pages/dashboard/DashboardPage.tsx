@@ -5,6 +5,7 @@ import { Button } from '../../components/ui/Button/Button';
 import { Alert } from '../../components/ui/Alert/Alert';
 import { useTruncateDB } from '../../hooks/useTruncateDB';
 import { useSeedScenario } from '../../hooks/useSeedScenario';
+import { useSeedStorePrizes } from '../../hooks/useSeedStorePrizes';
 import { useAwardMonthlyTop } from '../../hooks/useAwardMonthlyTop';
 import styles from './DashboardPage.module.css';
 
@@ -93,9 +94,16 @@ export function DashboardPage() {
   const [done, setDone] = useState(false);
   const { truncate, loading: truncateLoading, error: truncateError, reset: resetTruncate } = useTruncateDB();
   const { seed, loading: seedLoading, error: seedError, reset: resetSeed } = useSeedScenario();
+  const {
+    seedStore,
+    loading: storeSeedLoading,
+    error: storeSeedError,
+    reset: resetStoreSeed,
+  } = useSeedStorePrizes();
   const { award, loading: awardLoading, error: awardError, reset: resetAward } = useAwardMonthlyTop();
 
   const [seedResult, setSeedResult] = useState<{ scenario: string; messages: string[] } | null>(null);
+  const [storeSeedResult, setStoreSeedResult] = useState<string[] | null>(null);
   const [awardResult, setAwardResult] = useState<string[] | null>(null);
   const [activeScenario, setActiveScenario] = useState<string | null>(null);
 
@@ -119,12 +127,25 @@ export function DashboardPage() {
   const handleSeed = async (scenario: string) => {
     resetSeed();
     setSeedResult(null);
+    setStoreSeedResult(null);
     setActiveScenario(scenario);
     try {
       const messages = await seed({ scenario, users_id: 1 });
       setSeedResult({ scenario, messages });
     } finally {
       setActiveScenario(null);
+    }
+  };
+
+  const handleSeedStorePrizes = async () => {
+    resetStoreSeed();
+    setSeedResult(null);
+    setStoreSeedResult(null);
+    try {
+      const messages = await seedStore();
+      setStoreSeedResult(messages);
+    } catch {
+      // Error text is exposed through storeSeedError.
     }
   };
 
@@ -137,10 +158,11 @@ export function DashboardPage() {
       const messages = await award({ month, limit: 10 });
       setAwardResult(messages);
     } catch {
+      // Error text is exposed through awardError.
     }
   };
 
-  const anyError = truncateError || seedError || awardError;
+  const anyError = truncateError || seedError || storeSeedError || awardError;
 
   return (
     <div className={styles.root}>
@@ -212,6 +234,19 @@ export function DashboardPage() {
             </Alert>
           )}
 
+          {storeSeedResult && (
+            <Alert variant="info">
+              <div className={styles.resultBox}>
+                <strong>Тестовые призы магазина засеяны</strong>
+                <ul className={styles.resultList}>
+                  {storeSeedResult.map((m, i) => (
+                    <li key={i}>{m}</li>
+                  ))}
+                </ul>
+              </div>
+            </Alert>
+          )}
+
           <div className={styles.chipGrid}>
             {seedButtons.map((btn) => (
               <Button
@@ -219,7 +254,7 @@ export function DashboardPage() {
                 variant={btn.color}
                 size="sm"
                 loading={seedLoading && activeScenario === btn.scenario}
-                disabled={seedLoading}
+                disabled={seedLoading || storeSeedLoading}
                 onClick={() => handleSeed(btn.scenario)}
               >
                 {btn.label}
@@ -232,10 +267,19 @@ export function DashboardPage() {
               variant="primary"
               size="sm"
               loading={awardLoading}
-              disabled={seedLoading}
+              disabled={seedLoading || storeSeedLoading}
               onClick={handleAwardMonthlyTop}
             >
               Начислить monthly_top_10 за текущий месяц
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              loading={storeSeedLoading}
+              disabled={seedLoading || awardLoading}
+              onClick={handleSeedStorePrizes}
+            >
+              Засеять тестовые призы магазина
             </Button>
           </div>
         </div>
