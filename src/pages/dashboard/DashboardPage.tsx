@@ -9,6 +9,7 @@ import { useTruncateDB } from '../../hooks/useTruncateDB';
 import { useSeedScenario } from '../../hooks/useSeedScenario';
 import { useSeedStorePrizes } from '../../hooks/useSeedStorePrizes';
 import { useAwardMonthlyTop } from '../../hooks/useAwardMonthlyTop';
+import type { SeedDevScenario } from '../../api/dev';
 import styles from './DashboardPage.module.css';
 
 interface QuickLink {
@@ -74,15 +75,11 @@ const quickLinks: QuickLink[] = [
 type SeedButton = {
   key: string;
   label: string;
-  scenario: string;
+  scenario: SeedDevScenario;
   color: 'primary' | 'secondary' | 'ghost';
 };
 
 const seedButtons: SeedButton[] = [
-  { key: 'daily7', label: 'Стрик 7 дней', scenario: 'daily7', color: 'secondary' },
-  { key: 'daily30', label: 'Стрик 30 дней', scenario: 'daily30', color: 'secondary' },
-  { key: 'quiz5', label: '5 правильных викторин подряд', scenario: 'quiz5', color: 'secondary' },
-  { key: 'quiz-broken', label: 'Quiz streak (сбит)', scenario: 'quiz-broken', color: 'secondary' },
   { key: 'week', label: 'Все задания недели', scenario: 'week', color: 'secondary' },
   { key: 'monthly_top', label: 'Топ-10 месяца (seed)', scenario: 'monthly_top', color: 'secondary' },
   { key: 'project12', label: 'Все 12 недель', scenario: 'project12', color: 'secondary' },
@@ -106,10 +103,10 @@ export function DashboardPage() {
   } = useSeedStorePrizes();
   const { award, loading: awardLoading, error: awardError, reset: resetAward } = useAwardMonthlyTop();
 
-  const [seedResult, setSeedResult] = useState<{ scenario: string; messages: string[] } | null>(null);
+  const [seedResult, setSeedResult] = useState<{ scenario: SeedDevScenario; messages: string[] } | null>(null);
   const [storeSeedResult, setStoreSeedResult] = useState<string[] | null>(null);
   const [awardResult, setAwardResult] = useState<string[] | null>(null);
-  const [activeScenario, setActiveScenario] = useState<string | null>(null);
+  const [activeScenario, setActiveScenario] = useState<SeedDevScenario | null>(null);
 
   const handleTruncateClick = () => {
     resetTruncate();
@@ -128,7 +125,7 @@ export function DashboardPage() {
     resetTruncate();
   };
 
-  const handleSeed = async (scenario: string) => {
+  const handleSeed = async (scenario: SeedDevScenario) => {
     resetSeed();
     setSeedResult(null);
     setStoreSeedResult(null);

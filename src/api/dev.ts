@@ -1,7 +1,15 @@
 import { apiFetch } from './client';
 
+export type SeedDevScenario =
+  | 'week'
+  | 'monthly_top'
+  | 'project12'
+  | 'referral3'
+  | 'referral5'
+  | 'referral10';
+
 export interface SeedDevScenarioPayload {
-  scenario: string;
+  scenario: SeedDevScenario;
   users_id?: number;
 }
 
