@@ -10,10 +10,6 @@ interface PageHeroProps {
   className?: string;
 }
 
-interface PageHeroMarkProps {
-  label: string;
-}
-
 export function PageHero({
   eyebrow,
   title,
@@ -35,14 +31,5 @@ export function PageHero({
         </div>
       ) : null}
     </header>
-  );
-}
-
-export function PageHeroMark({ label }: PageHeroMarkProps) {
-  return (
-    <div className={styles.mark} aria-hidden="true">
-      <span className={styles.markInner} />
-      <strong className={styles.markLabel}>{label}</strong>
-    </div>
   );
 }

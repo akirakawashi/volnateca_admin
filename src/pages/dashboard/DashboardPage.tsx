@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react';
-import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../../components/ui/Button/Button';
 import { Alert } from '../../components/ui/Alert/Alert';
@@ -14,59 +13,18 @@ import styles from './DashboardPage.module.css';
 
 interface QuickLink {
   to: string;
-  icon: ReactNode;
   title: string;
   description: string;
-}
-
-function IconQuizAdd() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="4" y="2" width="16" height="20" rx="2.5" />
-      <path d="M9 7h6M9 12h6M9 17h4" />
-      <circle cx="18" cy="18" r="4" fill="currentColor" stroke="none" />
-      <line x1="18" y1="16" x2="18" y2="20" stroke="white" strokeWidth="1.5" />
-      <line x1="16" y1="18" x2="20" y2="18" stroke="white" strokeWidth="1.5" />
-    </svg>
-  );
-}
-
-function IconWallPost() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-    </svg>
-  );
-}
-
-function SvgChevron() {
-  return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <polyline points="9 18 15 12 9 6" />
-    </svg>
-  );
-}
-
-function SvgWarning() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-      <line x1="12" y1="9" x2="12" y2="13" />
-      <line x1="12" y1="17" x2="12.01" y2="17" />
-    </svg>
-  );
 }
 
 const quickLinks: QuickLink[] = [
   {
     to: '/quiz/create',
-    icon: <IconQuizAdd />,
     title: 'Создать квиз',
     description: 'Новое задание типа «Викторина» с вопросами и вариантами ответов',
   },
   {
     to: '/wall/post',
-    icon: <IconWallPost />,
     title: 'Пост на стене',
     description: 'Опубликовать запись от имени сообщества ВКонтакте',
   },
@@ -225,14 +183,10 @@ export function DashboardPage() {
         <div className={styles.actionGrid}>
           {quickLinks.map((item) => (
             <Link key={item.to} to={item.to} className={styles.actionCard}>
-              <div className={styles.actionIconRing}>
-                {item.icon}
-              </div>
               <div className={styles.actionText}>
                 <span className={styles.actionName}>{item.title}</span>
                 <span className={styles.actionDesc}>{item.description}</span>
               </div>
-              <span className={styles.actionArrow}><SvgChevron /></span>
             </Link>
           ))}
         </div>
@@ -336,7 +290,7 @@ export function DashboardPage() {
       <section className={styles.dangerPanel}>
         <header className={styles.panelHead}>
           <div className={styles.panelTitleWrap}>
-            <span className={styles.dangerIconWrap}><SvgWarning /></span>
+            <span className={styles.dangerIconWrap} aria-hidden="true">!</span>
             <div className={styles.panelHeadText}>
               <p className={styles.dangerTitle}>Опасная зона</p>
               <p className={styles.panelSub}>Только для DEBUG-режима</p>

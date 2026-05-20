@@ -1,28 +1,29 @@
 .block {
-  margin-top: 18px;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
-  gap: 11px;
+  gap: 12px;
 }
 
 .blockHead {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .blockLabel {
-  font-size: 10.5px;
-  font-weight: 850;
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0;
-  color: var(--text-2);
+  letter-spacing: 0.1em;
+  color: var(--text-3);
 }
 
 .rootError {
   font-size: 12px;
   color: var(--red);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .optionList {
@@ -31,58 +32,58 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 10px;
 }
 
 .optionRow {
   display: grid;
-  grid-template-columns: 34px minmax(0, 1fr) auto;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
   align-items: start;
   gap: 10px;
-  padding: 10px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.025)),
-    rgba(8, 12, 22, 0.56);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
+  padding: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--sep);
+  border-radius: 20px;
   transition: border-color var(--t-fast), background var(--t-fast), box-shadow var(--t-fast);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .optionCorrect {
-  border-color: rgba(93, 242, 165, 0.26);
-  background:
-    linear-gradient(135deg, rgba(93, 242, 165, 0.11), rgba(255, 255, 255, 0.025)),
-    rgba(8, 12, 22, 0.56);
-  box-shadow: 0 0 24px rgba(93, 242, 165, 0.08);
+  border-color: rgba(124, 242, 174, 0.24);
+  background: linear-gradient(180deg, rgba(124, 242, 174, 0.08), rgba(124, 242, 174, 0.03)), var(--surface-2);
 }
 
 .correctMark {
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--sep);
   color: var(--text-3);
   cursor: pointer;
   flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   transition: background var(--t-fast), border-color var(--t-fast), color var(--t-fast), box-shadow var(--t-fast);
 }
 
 .correctMark:hover {
   background: var(--green-muted);
-  border-color: rgba(93, 242, 165, 0.30);
+  border-color: rgba(124, 242, 174, 0.28);
   color: var(--green);
-  box-shadow: 0 0 18px rgba(93, 242, 165, 0.10);
 }
 
 .correctMarkOn {
   background: var(--green-muted);
-  border-color: rgba(93, 242, 165, 0.34);
+  border-color: rgba(124, 242, 174, 0.32);
   color: var(--green);
-  box-shadow: 0 0 18px rgba(93, 242, 165, 0.12);
+  box-shadow: 0 0 24px rgba(124, 242, 174, 0.08);
 }
 
 .optionInputWrap {
@@ -96,34 +97,35 @@
 .optErr {
   font-size: 11.5px;
   color: var(--red);
-  font-weight: 650;
+  font-weight: 600;
 }
 
 .removeBtn {
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--sep);
   color: var(--text-3);
-  border-radius: 12px;
+  border-radius: 14px;
   cursor: pointer;
   flex-shrink: 0;
-  transition: background var(--t-fast), border-color var(--t-fast), color var(--t-fast), box-shadow var(--t-fast);
+  font-size: 26px;
+  line-height: 1;
+  transition: background var(--t-fast), border-color var(--t-fast), color var(--t-fast);
 }
 
 .removeBtn:hover {
   background: var(--red-muted);
-  border-color: rgba(255, 95, 115, 0.22);
+  border-color: rgba(255, 143, 151, 0.22);
   color: var(--red);
-  box-shadow: 0 0 18px rgba(255, 95, 115, 0.08);
 }
 
 @media (max-width: 560px) {
   .optionRow {
-    grid-template-columns: 34px minmax(0, 1fr);
+    grid-template-columns: 40px minmax(0, 1fr);
   }
 
   .removeBtn {

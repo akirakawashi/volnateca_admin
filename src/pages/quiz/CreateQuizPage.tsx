@@ -8,7 +8,7 @@ import { useCreateQuiz } from '../../hooks/useCreateQuiz';
 import { useAutoStatusMessage } from '../../hooks/useAutoStatusMessage';
 import { Button } from '../../components/ui/Button/Button';
 import { Card } from '../../components/ui/Card/Card';
-import { PageHero, PageHeroMark } from '../../components/ui/PageHero/PageHero';
+import { PageHero } from '../../components/ui/PageHero/PageHero';
 import { Field, Input, Textarea } from '../../components/ui/Field/Field';
 import { Alert } from '../../components/ui/Alert/Alert';
 import { extractVkPhotoAttachment } from '../../utils/vkAttachments';
@@ -68,7 +68,6 @@ export function CreateQuizPage() {
         eyebrow="Quiz builder"
         title="Создать квиз"
         subtitle="Новое задание типа «Викторина»"
-        aside={<PageHeroMark label="Q" />}
       />
 
       {(result || error) && (

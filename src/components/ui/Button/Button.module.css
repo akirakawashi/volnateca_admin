@@ -5,21 +5,20 @@
   gap: 8px;
   max-width: 100%;
   border: 1px solid transparent;
-  border-radius: 10px;
-  font-weight: 750;
+  border-radius: 16px;
+  font-weight: 700;
   font-family: inherit;
   cursor: pointer;
   transition:
+    transform var(--t-fast),
     opacity var(--t-fast),
     background var(--t-fast),
     border-color var(--t-fast),
     color var(--t-fast),
-    box-shadow var(--t-fast),
-    transform var(--t-fast),
-    filter var(--t-fast);
+    box-shadow var(--t-fast);
   white-space: nowrap;
   position: relative;
-  letter-spacing: 0;
+  letter-spacing: 0.01em;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -29,9 +28,17 @@
   text-overflow: ellipsis;
 }
 
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
 .btn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(66, 232, 224, 0.16), 0 0 0 1px var(--accent), 0 0 32px var(--accent-glow);
+  box-shadow: 0 0 0 3px rgba(139, 157, 255, 0.18);
 }
 
 .btn:disabled {
@@ -41,84 +48,61 @@
 }
 
 .sm {
-  min-height: 34px;
-  padding: 0 13px;
-  font-size: 12px;
+  min-height: 36px;
+  padding: 0 14px;
+  font-size: 12.5px;
 }
 
 .md {
-  min-height: 42px;
+  min-height: 44px;
   padding: 0 18px;
   font-size: 14px;
 }
 
 .primary {
-  background:
-    linear-gradient(135deg, rgba(66, 232, 224, 0.96), rgba(99, 167, 255, 0.90) 54%, rgba(139, 92, 246, 0.88));
-  color: #041014;
+  background: linear-gradient(135deg, var(--accent-hover), var(--accent-2));
+  color: #ffffff;
+  border-color: rgba(139, 157, 255, 0.22);
   box-shadow: var(--sh-primary);
 }
 
 .primary:hover:not(:disabled) {
-  filter: brightness(1.08) saturate(1.08);
-  box-shadow: 0 0 0 1px rgba(66, 232, 224, 0.36), 0 18px 42px rgba(66, 232, 224, 0.22);
-  transform: translateY(-1px);
-}
-
-.primary:active:not(:disabled) {
-  transform: translateY(0);
-  filter: brightness(0.96);
+  box-shadow: 0 0 0 1px rgba(139, 157, 255, 0.34), 0 20px 42px rgba(106, 125, 255, 0.3);
 }
 
 .secondary {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04)),
-    rgba(21, 27, 40, 0.74);
+  background: rgba(255, 255, 255, 0.03);
   color: var(--text);
-  border-color: rgba(255, 255, 255, 0.10);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  border-color: var(--sep);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .secondary:hover:not(:disabled) {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05)),
-    rgba(32, 40, 57, 0.88);
-  border-color: rgba(66, 232, 224, 0.24);
-  box-shadow: 0 0 22px rgba(66, 232, 224, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.10);
-}
-
-.secondary:active:not(:disabled) {
-  filter: brightness(0.95);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--sep-2);
 }
 
 .ghost {
-  background: rgba(66, 232, 224, 0.08);
+  background: transparent;
   color: var(--accent);
-  border-color: rgba(66, 232, 224, 0.12);
+  border-color: rgba(139, 157, 255, 0.18);
 }
 
 .ghost:hover:not(:disabled) {
-  background: rgba(66, 232, 224, 0.14);
-  border-color: rgba(66, 232, 224, 0.26);
-  box-shadow: 0 0 22px rgba(66, 232, 224, 0.10);
+  background: var(--accent-muted);
+  border-color: rgba(139, 157, 255, 0.28);
 }
 
 .danger {
-  background:
-    linear-gradient(135deg, rgba(255, 95, 115, 0.98), rgba(255, 107, 181, 0.82));
+  background: linear-gradient(135deg, #ff9ca3, #ff7a84);
   color: #ffffff;
-  box-shadow: 0 0 0 1px rgba(255, 95, 115, 0.24), 0 16px 36px rgba(255, 95, 115, 0.18);
+  border-color: rgba(255, 143, 151, 0.24);
+  box-shadow: 0 18px 38px rgba(255, 122, 132, 0.18);
 }
 
 .danger:hover:not(:disabled) {
-  filter: brightness(1.08);
-  box-shadow: 0 0 0 1px rgba(255, 95, 115, 0.34), 0 20px 44px rgba(255, 95, 115, 0.24);
-  transform: translateY(-1px);
-}
-
-.danger:active:not(:disabled) {
-  transform: translateY(0);
-  filter: brightness(0.94);
+  box-shadow: 0 20px 42px rgba(255, 122, 132, 0.26);
 }
 
 .isLoading {
@@ -133,17 +117,18 @@
 }
 
 .spinner {
-  width: 15px;
-  height: 15px;
-  border: 2px solid rgba(255, 255, 255, 0.34);
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.28);
   border-top-color: #ffffff;
   border-radius: 50%;
   animation: spin 0.65s linear infinite;
 }
 
-.primary .spinner {
-  border-color: rgba(4, 16, 20, 0.24);
-  border-top-color: #041014;
+.secondary .spinner,
+.ghost .spinner {
+  border-color: rgba(139, 157, 255, 0.24);
+  border-top-color: var(--accent);
 }
 
 .labelHidden {

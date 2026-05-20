@@ -6,7 +6,7 @@ import { usePostToWall } from '../../hooks/usePostToWall';
 import { useAutoStatusMessage } from '../../hooks/useAutoStatusMessage';
 import { Button } from '../../components/ui/Button/Button';
 import { Card } from '../../components/ui/Card/Card';
-import { PageHero, PageHeroMark } from '../../components/ui/PageHero/PageHero';
+import { PageHero } from '../../components/ui/PageHero/PageHero';
 import { Field, Input, Textarea } from '../../components/ui/Field/Field';
 import { Alert } from '../../components/ui/Alert/Alert';
 import { extractVkAttachment } from '../../utils/vkAttachments';
@@ -75,7 +75,6 @@ export function PostToWallPage() {
         eyebrow="Wall post"
         title="Пост на стене"
         subtitle="Опубликовать запись от имени сообщества и создать задания"
-        aside={<PageHeroMark label="VK" />}
       />
 
       {(result || error) && (
@@ -121,10 +120,7 @@ export function PostToWallPage() {
                     onClick={() => remove(index)}
                     aria-label="Удалить вложение"
                   >
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                      <line x1="18" y1="6" x2="6" y2="18" />
-                      <line x1="6" y1="6" x2="18" y2="18" />
-                    </svg>
+                    ×
                   </button>
                 </div>
               ))}

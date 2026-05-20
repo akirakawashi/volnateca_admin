@@ -6,7 +6,7 @@
 }
 
 .heroAside {
-  align-items: center;
+  align-items: stretch;
   justify-content: flex-end;
 }
 
@@ -14,14 +14,14 @@
   width: 300px;
   max-width: 100%;
   display: grid;
-  gap: 10px;
-  padding: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 18px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
-    rgba(255, 255, 255, 0.025);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 10px 28px rgba(0, 0, 0, 0.16);
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--sep);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0)), var(--surface-2);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  box-shadow: var(--sh-sm);
 }
 
 .heroPill {
@@ -29,12 +29,12 @@
   align-items: center;
   gap: 8px;
   width: fit-content;
-  padding: 6px 11px;
-  background: rgba(93, 242, 165, 0.08);
-  border: 1px solid rgba(93, 242, 165, 0.16);
+  padding: 6px 12px;
+  background: var(--green-muted);
+  border: 1px solid rgba(124, 242, 174, 0.18);
   border-radius: var(--r-full);
   font-size: 12px;
-  font-weight: 650;
+  font-weight: 700;
   color: var(--green);
 }
 
@@ -43,27 +43,27 @@
   height: 7px;
   background: var(--green);
   border-radius: 50%;
-  box-shadow: 0 0 16px rgba(93, 242, 165, 0.75);
+  box-shadow: 0 0 18px rgba(124, 242, 174, 0.45);
   animation: pulse 2s ease-in-out infinite;
 }
 
 .heroMetrics {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
 }
 
 .heroMetrics div {
-  min-height: 72px;
+  min-height: 78px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 11px 12px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02)),
-    rgba(255, 255, 255, 0.02);
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid var(--sep);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.02);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
 }
 
 .heroMetrics span,
@@ -74,20 +74,21 @@
 .heroMetrics span {
   color: var(--text-3);
   font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0;
-  text-transform: none;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .heroMetrics strong {
   color: var(--text);
   font-size: 22px;
-  font-weight: 650;
+  font-weight: 700;
   line-height: 1;
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }
@@ -112,157 +113,150 @@
 
 .sectionTitle {
   margin: 0;
-  font-size: 13px;
-  font-weight: 850;
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0;
+  letter-spacing: 0.1em;
   color: var(--text-3);
 }
 
 .sectionMeta {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border: 1px solid rgba(139, 157, 255, 0.18);
+  border-radius: var(--r-full);
+  background: rgba(255, 255, 255, 0.02);
   color: var(--accent);
   font-size: 11px;
-  font-weight: 850;
-  letter-spacing: 0;
+  font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
 .actionGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  gap: 12px;
 }
 
 .actionCard {
   position: relative;
-  display: grid;
-  grid-template-columns: 54px minmax(0, 1fr) 24px;
-  align-items: center;
+  display: flex;
+  align-items: flex-start;
   gap: 16px;
-  min-height: 118px;
-  padding: 20px;
+  padding: 18px;
   overflow: hidden;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.025)),
-    var(--surface-glass);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0)), var(--surface);
+  border: 1px solid var(--sep);
+  border-radius: 24px;
   color: var(--text);
   text-decoration: none;
-  transition: border-color var(--t-fast), box-shadow var(--t-fast), transform var(--t-fast), background var(--t-fast);
-  box-shadow: var(--sh-sm), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  backdrop-filter: var(--blur);
-  -webkit-backdrop-filter: var(--blur);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  box-shadow: var(--sh-card);
+  transition:
+    transform var(--t-fast),
+    border-color var(--t-fast),
+    box-shadow var(--t-fast),
+    background var(--t-fast);
 }
 
 .actionCard::before {
   content: "";
   position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(66, 232, 224, 0.12), transparent 42%, rgba(139, 92, 246, 0.10));
-  opacity: 0;
-  transition: opacity var(--t-fast);
+  top: -20%;
+  right: -18%;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: var(--accent-glow);
+  filter: blur(60px);
+  opacity: 0.24;
+  pointer-events: none;
 }
 
 .actionCard:hover {
-  border-color: rgba(66, 232, 224, 0.32);
-  box-shadow: 0 0 0 1px rgba(66, 232, 224, 0.16), 0 22px 52px rgba(0, 0, 0, 0.26), 0 0 38px rgba(66, 232, 224, 0.10);
   transform: translateY(-2px);
+  border-color: var(--sep-2);
+  box-shadow: 0 24px 60px rgba(2, 6, 18, 0.4);
 }
 
-.actionCard:hover::before {
-  opacity: 1;
-}
-
-.actionIconRing,
-.actionText,
-.actionArrow {
+.actionText {
   position: relative;
   z-index: 1;
-}
-
-.actionIconRing {
-  width: 54px;
-  height: 54px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(66, 232, 224, 0.10);
-  border: 1px solid rgba(66, 232, 224, 0.16);
-  border-radius: 16px;
-  color: var(--accent);
-  flex-shrink: 0;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10);
-  transition: background var(--t-fast), box-shadow var(--t-fast), color var(--t-fast);
-}
-
-.actionCard:hover .actionIconRing {
-  background: rgba(66, 232, 224, 0.16);
-  box-shadow: 0 0 24px rgba(66, 232, 224, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 .actionText {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
   flex: 1;
   min-width: 0;
+  padding-right: 28px;
+}
+
+.actionText::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  border-top: 1.5px solid rgba(188, 198, 219, 0.62);
+  border-right: 1.5px solid rgba(188, 198, 219, 0.62);
+  transform: translateY(-50%) rotate(45deg);
+  transition: border-color var(--t-fast), transform var(--t-fast);
 }
 
 .actionName {
-  font-size: 16px;
-  font-weight: 850;
-  letter-spacing: 0;
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .actionDesc {
-  font-size: 13px;
+  font-size: 12.5px;
   color: var(--text-2);
-  line-height: 1.45;
+  line-height: 1.5;
 }
 
-.actionArrow {
-  color: var(--text-3);
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  transition: color var(--t-fast), transform var(--t-fast);
-}
-
-.actionCard:hover .actionArrow {
-  color: var(--accent);
-  transform: translateX(3px);
+.actionCard:hover .actionText::after {
+  border-color: var(--text);
+  transform: translateY(-50%) translateX(2px) rotate(45deg);
 }
 
 .devPanel,
 .dangerPanel {
   position: relative;
   overflow: hidden;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.025)),
-    var(--surface-glass);
-  backdrop-filter: var(--blur);
-  -webkit-backdrop-filter: var(--blur);
-  box-shadow: var(--sh-sm), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  border-radius: 28px;
+  border: 1px solid var(--sep);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)), var(--surface);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  box-shadow: var(--sh-card);
 }
 
 .devPanel::before,
 .dangerPanel::before {
   content: "";
   position: absolute;
-  inset: 0;
+  top: -120px;
+  right: -80px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  filter: blur(72px);
+  opacity: 0.32;
   pointer-events: none;
-  opacity: 0.62;
 }
 
 .devPanel::before {
-  background: linear-gradient(135deg, rgba(255, 200, 87, 0.10), transparent 46%, rgba(66, 232, 224, 0.08));
+  background: rgba(130, 216, 255, 0.14);
 }
 
 .dangerPanel::before {
-  background: linear-gradient(135deg, rgba(255, 95, 115, 0.12), transparent 45%, rgba(255, 107, 181, 0.06));
+  background: rgba(255, 143, 151, 0.14);
 }
 
 .panelHead,
@@ -276,8 +270,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 17px 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--sep);
 }
 
 .panelTitleWrap {
@@ -288,54 +282,56 @@
 }
 
 .devTag {
-  padding: 6px 9px;
-  background: rgba(255, 200, 87, 0.12);
-  border: 1px solid rgba(255, 200, 87, 0.24);
-  border-radius: 10px;
+  padding: 5px 10px;
+  background: var(--orange-muted);
+  border: 1px solid rgba(255, 187, 118, 0.22);
+  border-radius: var(--r-full);
   font-size: 10px;
-  font-weight: 900;
-  letter-spacing: 0;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: var(--orange);
   flex-shrink: 0;
-  box-shadow: 0 0 20px rgba(255, 200, 87, 0.08);
 }
 
 .dangerIconWrap {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--red);
-  background: rgba(255, 95, 115, 0.12);
-  border: 1px solid rgba(255, 95, 115, 0.20);
-  border-radius: 10px;
+  background: var(--red-muted);
+  border: 1px solid rgba(255, 143, 151, 0.22);
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 800;
   flex-shrink: 0;
 }
 
 .panelHeadText {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
   min-width: 0;
 }
 
 .panelTitle,
 .dangerTitle {
   margin: 0;
-  font-size: 15px;
-  font-weight: 850;
+  font-size: 14px;
+  font-weight: 600;
   color: var(--text);
 }
 
 .dangerTitle {
-  color: var(--red);
+  color: #ffd4d8;
 }
 
 .panelSub {
   margin: 0;
   font-size: 12px;
-  color: var(--text-2);
+  color: var(--text-3);
 }
 
 .panelBody {
@@ -355,27 +351,27 @@
 .chipGrid {
   display: flex;
   flex-wrap: wrap;
-  gap: 9px;
+  gap: 10px;
 }
 
 .awardRow {
   display: flex;
   flex-wrap: wrap;
-  gap: 9px;
+  gap: 10px;
   padding-top: 14px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid var(--sep);
 }
 
 .resultBox {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .resultList {
-  margin: 4px 0 0;
+  margin: 6px 0 0;
   padding-left: 18px;
-  font-size: 12px;
+  font-size: 12.5px;
   line-height: 1.7;
 }
 
@@ -384,33 +380,35 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.045);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
+  padding: 18px;
+  background: var(--surface-2);
+  border: 1px solid var(--sep);
+  border-radius: 22px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .dangerActionTitle {
   margin: 0 0 4px;
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 600;
   color: var(--text);
 }
 
 .dangerActionMeta {
   margin: 0;
   font-size: 11.5px;
-  color: var(--text-2);
+  color: var(--text-3);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 .confirmBox {
-  padding: 16px;
-  background:
-    linear-gradient(135deg, rgba(255, 95, 115, 0.13), rgba(255, 107, 181, 0.04)),
-    rgba(255, 255, 255, 0.035);
-  border: 1px solid rgba(255, 95, 115, 0.22);
-  border-radius: 16px;
+  padding: 18px;
+  background: linear-gradient(180deg, rgba(255, 143, 151, 0.1), rgba(255, 143, 151, 0.04));
+  border: 1px solid rgba(255, 143, 151, 0.18);
+  border-radius: 22px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .confirmText {
@@ -422,17 +420,22 @@
 .confirmActions {
   display: flex;
   flex-wrap: wrap;
-  gap: 9px;
+  gap: 8px;
 }
 
 @media (max-width: 940px) {
   .heroPanel {
     width: 100%;
-    gap: 10px;
   }
 
   .actionGrid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .panelHead {
+    align-items: flex-start;
   }
 }
 
@@ -446,13 +449,11 @@
   }
 
   .actionCard {
-    grid-template-columns: 48px minmax(0, 1fr);
-    min-height: auto;
     padding: 16px;
   }
 
-  .actionArrow {
-    display: none;
+  .panelBody {
+    padding: 16px;
   }
 
   .dangerRow {

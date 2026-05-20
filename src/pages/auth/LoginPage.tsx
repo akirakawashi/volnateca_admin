@@ -37,15 +37,9 @@ export function LoginPage({ checking, onLogin }: LoginPageProps) {
     <main className={styles.page}>
       <div className={styles.shell}>
         <aside className={styles.visual} aria-hidden="true">
-          <div className={styles.logoMark}>
-            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white"
-              strokeWidth="2.1" strokeLinecap="round">
-              <path d="M2 12c1.5-3 3-4.5 4.5-4.5S9 9 10.5 12s3 4.5 4.5 4.5S18 15 19.5 12s3-4.5 4.5-4.5" />
-            </svg>
-          </div>
           <div className={styles.visualText}>
-            <span>Volnateca</span>
-            <strong>Admin</strong>
+            <span>Volnateca Admin</span>
+            <strong>Панель управления</strong>
           </div>
           <div className={styles.visualGrid}>
             <span />
@@ -56,7 +50,6 @@ export function LoginPage({ checking, onLogin }: LoginPageProps) {
         </aside>
         <section className={styles.card}>
           <div className={styles.brand}>
-            <span className={styles.badge}>Admin</span>
             <h1 className={styles.title}>Вход в Волнатека</h1>
             <p className={styles.subtitle}>
               {checking ? 'Проверяем сохранённую авторизацию…' : 'Введите логин и пароль администратора'}

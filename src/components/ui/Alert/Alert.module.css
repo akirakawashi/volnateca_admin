@@ -1,24 +1,31 @@
 .alert {
   display: flex;
   align-items: flex-start;
-  gap: 11px;
-  padding: 13px 14px;
-  border-radius: 14px;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 20px;
   border: 1px solid transparent;
   font-size: 13.5px;
   line-height: 1.55;
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
 }
 
 .iconBubble {
   flex-shrink: 0;
-  width: 24px;
-  height: 24px;
-  display: flex;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 10px;
+  margin-top: 1px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
 .body {
@@ -26,38 +33,42 @@
   min-width: 0;
 }
 
+.body strong {
+  color: #ffffff;
+}
+
 .success {
-  background: linear-gradient(135deg, rgba(93, 242, 165, 0.13), rgba(93, 242, 165, 0.04));
-  border-color: rgba(93, 242, 165, 0.24);
-  color: var(--green);
-  box-shadow: 0 0 28px rgba(93, 242, 165, 0.08);
+  background: linear-gradient(180deg, rgba(124, 242, 174, 0.12), rgba(124, 242, 174, 0.04));
+  border-color: rgba(124, 242, 174, 0.18);
+  color: #d8ffe8;
 }
 
 .success .iconBubble {
-  background: rgba(93, 242, 165, 0.16);
+  background: rgba(124, 242, 174, 0.12);
+  border: 1px solid rgba(124, 242, 174, 0.2);
   color: var(--green);
 }
 
 .error {
-  background: linear-gradient(135deg, rgba(255, 95, 115, 0.14), rgba(255, 95, 115, 0.04));
-  border-color: rgba(255, 95, 115, 0.25);
-  color: var(--red);
-  box-shadow: 0 0 28px rgba(255, 95, 115, 0.08);
+  background: linear-gradient(180deg, rgba(255, 143, 151, 0.12), rgba(255, 143, 151, 0.04));
+  border-color: rgba(255, 143, 151, 0.18);
+  color: #ffd9dc;
 }
 
 .error .iconBubble {
-  background: rgba(255, 95, 115, 0.16);
+  background: rgba(255, 143, 151, 0.12);
+  border: 1px solid rgba(255, 143, 151, 0.2);
   color: var(--red);
 }
 
 .info {
-  background: linear-gradient(135deg, rgba(99, 167, 255, 0.14), rgba(66, 232, 224, 0.05));
-  border-color: rgba(99, 167, 255, 0.24);
-  color: var(--blue);
-  box-shadow: 0 0 28px rgba(99, 167, 255, 0.08);
+  background: linear-gradient(180deg, rgba(130, 216, 255, 0.12), rgba(130, 216, 255, 0.04));
+  border-color: rgba(130, 216, 255, 0.18);
+  color: #dbf4ff;
 }
 
 .info .iconBubble {
-  background: rgba(99, 167, 255, 0.16);
+  background: rgba(130, 216, 255, 0.12);
+  border: 1px solid rgba(130, 216, 255, 0.2);
   color: var(--blue);
 }

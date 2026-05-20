@@ -1,17 +1,20 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 20px;
   width: 100%;
 }
 
 .empty {
   margin: 0;
   color: var(--text-2);
-  padding: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.04);
+  padding: 22px;
+  border: 1px solid var(--sep);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)), var(--surface);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  box-shadow: var(--sh-card);
 }
 
 .card {
@@ -21,19 +24,19 @@
 .meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 9px 14px;
+  gap: 10px 14px;
   align-items: center;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .code {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 12px;
   color: var(--accent);
-  background: rgba(66, 232, 224, 0.09);
-  border: 1px solid rgba(66, 232, 224, 0.16);
-  padding: 4px 9px;
-  border-radius: 9px;
+  background: var(--accent-muted);
+  border: 1px solid rgba(139, 157, 255, 0.22);
+  padding: 5px 9px;
+  border-radius: 12px;
 }
 
 .vars {
@@ -50,23 +53,23 @@
   font-weight: 800;
   font-size: 12px;
   margin-left: 0;
-  letter-spacing: 0;
+  letter-spacing: 0.02em;
 }
 
 .varExample {
-  background: rgba(255, 200, 87, 0.12);
-  border: 1px solid rgba(255, 200, 87, 0.18);
+  background: var(--orange-muted);
+  border: 1px solid rgba(255, 187, 118, 0.22);
   color: var(--orange);
   padding: 3px 8px;
-  border-radius: 8px;
+  border-radius: 12px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 600;
   margin-left: 6px;
 }
 
 .mt {
-  margin-top: 14px;
+  margin-top: 16px;
 }
 
 .actions {
@@ -75,5 +78,5 @@
   gap: 10px;
   margin-top: 14px;
   padding-top: 14px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid var(--sep);
 }

@@ -1,15 +1,13 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 8px;
 }
 
 .label {
-  font-size: 10.5px;
-  font-weight: 850;
+  font-size: 12.5px;
+  font-weight: 600;
   color: var(--text-2);
-  letter-spacing: 0;
-  text-transform: uppercase;
   user-select: none;
 }
 
@@ -24,49 +22,50 @@
 .input {
   display: block;
   width: 100%;
-  min-height: 42px;
-  padding: 10px 13px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.025)),
-    rgba(10, 14, 24, 0.76);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: 10px;
+  min-height: 44px;
+  padding: 11px 14px;
+  background: rgba(7, 12, 22, 0.58);
+  border: 1px solid var(--sep);
+  border-radius: 16px;
   color: var(--text);
   font-size: 14px;
   line-height: 1.5;
   outline: none;
   transition: border-color var(--t-fast), box-shadow var(--t-fast), background var(--t-fast);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   -webkit-appearance: none;
   appearance: none;
 }
 
 .input::placeholder {
-  color: var(--text-3);
+  color: var(--text-4);
+}
+
+.input:hover {
+  border-color: rgba(139, 157, 255, 0.22);
 }
 
 .input:focus {
-  border-color: rgba(66, 232, 224, 0.52);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.03)),
-    rgba(13, 19, 32, 0.92);
-  box-shadow: 0 0 0 3px rgba(66, 232, 224, 0.12), 0 0 32px rgba(66, 232, 224, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(139, 157, 255, 0.14), 0 0 26px rgba(139, 157, 255, 0.12);
+  background: rgba(10, 16, 28, 0.72);
 }
 
 .hasError .input {
-  border-color: rgba(255, 95, 115, 0.64);
+  border-color: rgba(255, 143, 151, 0.38);
 }
 
 .hasError .input:focus {
-  box-shadow: 0 0 0 3px rgba(255, 95, 115, 0.14), 0 0 32px rgba(255, 95, 115, 0.08);
+  box-shadow: 0 0 0 3px rgba(255, 143, 151, 0.14), 0 0 26px rgba(255, 143, 151, 0.1);
 }
 
 .textarea {
   height: auto;
-  padding: 11px 13px;
+  min-height: 116px;
+  padding: 12px 14px;
   resize: vertical;
-  min-height: 98px;
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
 .input[type='datetime-local'] {
@@ -77,13 +76,13 @@
   margin: 0;
   font-size: 12px;
   color: var(--text-3);
-  line-height: 1.45;
+  line-height: 1.5;
 }
 
 .error {
   margin: 0;
   font-size: 12px;
   color: var(--red);
-  font-weight: 650;
+  font-weight: 600;
   line-height: 1.45;
 }
