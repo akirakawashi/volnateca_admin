@@ -18,22 +18,46 @@
     box-shadow var(--t-fast);
   white-space: nowrap;
   position: relative;
+  overflow: hidden;
+  isolation: isolate;
   letter-spacing: 0.01em;
   -webkit-font-smoothing: antialiased;
 }
 
 .btn > span:last-child {
+  position: relative;
+  z-index: 1;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.btn:hover:not(:disabled) {
-  transform: translateY(-1px);
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(120deg, transparent 18%, rgba(255, 255, 255, 0.16) 46%, transparent 72%);
+  transform: translateX(-135%);
+  transition: transform 760ms var(--ease-out);
+  pointer-events: none;
 }
 
-.btn:active:not(:disabled) {
-  transform: translateY(0);
+.btn::after {
+  content: "";
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  bottom: -28%;
+  height: 58%;
+  z-index: 0;
+  border-radius: 50%;
+  background: rgba(139, 157, 255, 0.24);
+  filter: blur(26px);
+  opacity: 0;
+  transition: opacity var(--t-slow), transform var(--t-slow);
+  transform: scale(0.84);
+  pointer-events: none;
 }
 
 .btn:focus-visible {
@@ -101,16 +125,13 @@
   box-shadow: 0 18px 38px rgba(255, 122, 132, 0.18);
 }
 
-.danger:hover:not(:disabled) {
-  box-shadow: 0 20px 42px rgba(255, 122, 132, 0.26);
-}
-
 .isLoading {
   pointer-events: none;
 }
 
 .spinnerWrap {
   position: absolute;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -133,6 +154,43 @@
 
 .labelHidden {
   opacity: 0;
+}
+
+@media (hover: hover) {
+  .btn:hover:not(:disabled) {
+    transform: translateY(-2px) scale(1.01);
+  }
+
+  .btn:hover:not(:disabled)::before {
+    transform: translateX(135%);
+  }
+
+  .btn:hover:not(:disabled)::after {
+    opacity: 0.75;
+    transform: scale(1.04);
+  }
+
+  .btn:active:not(:disabled) {
+    transform: translateY(1px) scale(0.985);
+  }
+
+  .primary:hover:not(:disabled) {
+    box-shadow: 0 0 0 1px rgba(139, 157, 255, 0.34), 0 20px 42px rgba(106, 125, 255, 0.3);
+  }
+
+  .secondary:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--sep-2);
+  }
+
+  .ghost:hover:not(:disabled) {
+    background: var(--accent-muted);
+    border-color: rgba(139, 157, 255, 0.28);
+  }
+
+  .danger:hover:not(:disabled) {
+    box-shadow: 0 20px 42px rgba(255, 122, 132, 0.26);
+  }
 }
 
 @keyframes spin {

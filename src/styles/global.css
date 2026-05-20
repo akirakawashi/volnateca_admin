@@ -45,6 +45,8 @@
 
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --t-fast: 140ms var(--ease-out);
+  --t-slow: 280ms var(--ease-out);
+  --t-linger: 720ms var(--ease-out);
 }
 
 .theme-transitioning,
@@ -71,6 +73,10 @@ body,
   padding: 0;
   min-height: 100%;
   height: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -116,4 +122,18 @@ select {
 ::selection {
   background: rgba(139, 157, 255, 0.28);
   color: #ffffff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
