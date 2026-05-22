@@ -22,9 +22,9 @@
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  background: rgba(139, 157, 255, 0.12);
+  background: rgba(249, 126, 184, 0.14);
   filter: blur(70px);
-  opacity: 0.35;
+  opacity: 0.45;
   pointer-events: none;
   animation: cardGlowFloat 14s ease-in-out infinite alternate;
 }
@@ -36,8 +36,8 @@
   right: 20px;
   top: 0;
   height: 1px;
-  background: linear-gradient(90deg, rgba(139, 157, 255, 0), rgba(139, 157, 255, 0.48), rgba(130, 216, 255, 0));
-  opacity: 0.45;
+  background: linear-gradient(90deg, rgba(249, 126, 184, 0), rgba(249, 126, 184, 0.56), rgba(139, 157, 255, 0.32), rgba(130, 216, 255, 0));
+  opacity: 0.55;
   transform: scaleX(0.72);
   transform-origin: center;
   transition: opacity var(--t-slow), transform var(--t-slow);
@@ -79,7 +79,7 @@
 @media (hover: hover) {
   .card:hover {
     transform: translateY(-3px);
-    border-color: rgba(139, 157, 255, 0.18);
+    border-color: rgba(249, 126, 184, 0.22);
     box-shadow: 0 32px 72px rgba(2, 6, 18, 0.36);
   }
 

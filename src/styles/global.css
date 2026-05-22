@@ -28,6 +28,9 @@
   --orange-muted: rgba(255, 187, 118, 0.12);
   --blue: #82d8ff;
   --blue-muted: rgba(130, 216, 255, 0.12);
+  --pink: #f97eb8;
+  --pink-muted: rgba(249, 126, 184, 0.14);
+  --pink-glow: rgba(249, 126, 184, 0.3);
 
   --sidebar-w: 248px;
 

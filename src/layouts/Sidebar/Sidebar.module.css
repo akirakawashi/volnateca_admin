@@ -80,7 +80,7 @@
   width: 52px;
   height: 3px;
   border-radius: var(--r-full);
-  background: linear-gradient(90deg, var(--accent-hover), rgba(130, 216, 255, 0.72));
+  background: linear-gradient(90deg, var(--pink), rgba(139, 157, 255, 0.72));
 }
 
 .brandMeta {
@@ -140,7 +140,7 @@
   content: "";
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, rgba(139, 157, 255, 0.16), transparent);
+  background: linear-gradient(90deg, rgba(249, 126, 184, 0.22), transparent);
 }
 
 .navList {
@@ -219,7 +219,7 @@
   bottom: 10px;
   height: 2px;
   border-radius: var(--r-full);
-  background: linear-gradient(90deg, rgba(139, 157, 255, 0.95), rgba(130, 216, 255, 0.36), rgba(130, 216, 255, 0.04));
+  background: linear-gradient(90deg, rgba(249, 126, 184, 0.95), rgba(139, 157, 255, 0.5), rgba(130, 216, 255, 0.04));
   opacity: 0;
   transform: scaleX(0.18);
   transform-origin: left;
@@ -227,32 +227,32 @@
     opacity var(--t-slow),
     transform var(--t-slow),
     box-shadow var(--t-slow);
-  box-shadow: 0 0 0 rgba(139, 157, 255, 0);
+  box-shadow: 0 0 0 rgba(249, 126, 184, 0);
 }
 
 .navLink:hover {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(139, 157, 255, 0.12);
+  background: rgba(249, 126, 184, 0.04);
+  border-color: rgba(249, 126, 184, 0.14);
   color: var(--text);
   transform: translateY(-1px) translateX(1px);
 }
 
 .navLink:hover::before {
-  background: rgba(188, 198, 219, 0.92);
-  box-shadow: 0 0 14px rgba(139, 157, 255, 0.12);
+  background: rgba(249, 126, 184, 0.8);
+  box-shadow: 0 0 14px rgba(249, 126, 184, 0.2);
 }
 
 .navLink:hover::after {
   opacity: 0.55;
   transform: scaleX(0.72);
-  box-shadow: 0 0 12px rgba(139, 157, 255, 0.12);
+  box-shadow: 0 0 12px rgba(249, 126, 184, 0.18);
 }
 
 .navLink.active {
   background:
-    linear-gradient(135deg, rgba(139, 157, 255, 0.14), rgba(130, 216, 255, 0.06) 44%, rgba(255, 255, 255, 0.01)),
+    linear-gradient(135deg, rgba(249, 126, 184, 0.12), rgba(139, 157, 255, 0.07) 44%, rgba(255, 255, 255, 0.01)),
     rgba(255, 255, 255, 0.03);
-  border-color: rgba(139, 157, 255, 0.26);
+  border-color: rgba(249, 126, 184, 0.28);
   color: var(--text);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.04),

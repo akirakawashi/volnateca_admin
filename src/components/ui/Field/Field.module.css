@@ -43,12 +43,12 @@
 }
 
 .input:hover {
-  border-color: rgba(139, 157, 255, 0.22);
+  border-color: rgba(249, 126, 184, 0.26);
 }
 
 .input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(139, 157, 255, 0.14), 0 0 26px rgba(139, 157, 255, 0.12);
+  border-color: var(--pink);
+  box-shadow: 0 0 0 3px rgba(249, 126, 184, 0.16), 0 0 26px rgba(249, 126, 184, 0.14);
   background: rgba(10, 16, 28, 0.72);
 }
 
@@ -86,8 +86,8 @@
 }
 
 .selectTriggerOpen {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(139, 157, 255, 0.14), 0 0 26px rgba(139, 157, 255, 0.12);
+  border-color: var(--pink);
+  box-shadow: 0 0 0 3px rgba(249, 126, 184, 0.16), 0 0 26px rgba(249, 126, 184, 0.14);
   background: rgba(10, 16, 28, 0.72);
 }
 
@@ -116,7 +116,7 @@
 }
 
 .selectCaretOpen {
-  border-color: var(--accent-hover);
+  border-color: var(--pink);
   transform: rotate(-135deg) translateY(-1px);
 }
 
@@ -172,19 +172,19 @@
 }
 
 .selectOption:hover {
-  background: rgba(139, 157, 255, 0.06);
-  border-color: rgba(139, 157, 255, 0.18);
+  background: rgba(249, 126, 184, 0.06);
+  border-color: rgba(249, 126, 184, 0.22);
   color: #ffffff;
 }
 
 .selectOptionSelected {
-  background: linear-gradient(180deg, rgba(139, 157, 255, 0.08), rgba(139, 157, 255, 0.05));
-  border-color: rgba(139, 157, 255, 0.18);
+  background: linear-gradient(180deg, rgba(249, 126, 184, 0.1), rgba(249, 126, 184, 0.06));
+  border-color: rgba(249, 126, 184, 0.26);
   color: #ffffff;
 }
 
 .selectOptionCheck {
-  color: var(--blue);
+  color: var(--pink);
   font-size: 13px;
   font-weight: 700;
 }

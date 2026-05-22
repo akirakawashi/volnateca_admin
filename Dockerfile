@@ -1,5 +1,7 @@
 # syntax=docker/dockerfile:1
-FROM node:20-alpine AS builder
+ARG NODE_IMAGE=node:22-alpine
+
+FROM ${NODE_IMAGE} AS builder
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 
@@ -13,9 +15,9 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 RUN pnpm build
 
-FROM node:20-alpine AS runner
+FROM ${NODE_IMAGE} AS runner
 WORKDIR /app
 COPY --from=builder /app/dist ./dist
 RUN npm i -g serve
 EXPOSE 3000
-CMD ["serve", "-s", "dist", "-l", "3000"]
+CMD ["serve", "-s", "dist", "-l", "tcp://0.0.0.0:3000"]

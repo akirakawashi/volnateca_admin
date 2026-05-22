@@ -27,9 +27,9 @@
   width: 320px;
   height: 320px;
   border-radius: 50%;
-  background: var(--accent-glow);
+  background: radial-gradient(circle, rgba(249, 126, 184, 0.22), rgba(139, 157, 255, 0.1) 60%, transparent 80%);
   filter: blur(96px);
-  opacity: 0.45;
+  opacity: 0.55;
   pointer-events: none;
   animation: heroGlowDrift 14s ease-in-out infinite alternate;
 }
