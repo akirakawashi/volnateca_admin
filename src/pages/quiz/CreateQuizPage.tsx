@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { quizFormSchema, defaultQuestion } from './schema';
 import type { QuizFormValues } from './schema';
@@ -8,6 +8,7 @@ import { useCreateQuiz } from '../../hooks/useCreateQuiz';
 import { useAutoStatusMessage } from '../../hooks/useAutoStatusMessage';
 import { Button } from '../../components/ui/Button/Button';
 import { Card } from '../../components/ui/Card/Card';
+import { DateTimePicker } from '../../components/ui/DateTimePicker/DateTimePicker';
 import { PageHero } from '../../components/ui/PageHero/PageHero';
 import { Field, Input, Textarea } from '../../components/ui/Field/Field';
 import { Alert } from '../../components/ui/Alert/Alert';
@@ -19,7 +20,7 @@ export function CreateQuizPage() {
   const statusRef = useRef<HTMLDivElement>(null);
 
   const methods = useForm<QuizFormValues>({
-    resolver: zodResolver(quizFormSchema) as any,
+    resolver: zodResolver(quizFormSchema),
     defaultValues: {
       task_name: '',
       description: '',
@@ -130,10 +131,30 @@ export function CreateQuizPage() {
 
             <div className={[styles.row2, styles.mt].join(' ')}>
               <Field label="Дата начала">
-                <Input {...register('starts_at')} type="datetime-local" />
+                <Controller
+                  control={methods.control}
+                  name="starts_at"
+                  render={({ field }) => (
+                    <DateTimePicker
+                      value={field.value}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                    />
+                  )}
+                />
               </Field>
               <Field label="Дата окончания" error={errors.ends_at?.message}>
-                <Input {...register('ends_at')} type="datetime-local" />
+                <Controller
+                  control={methods.control}
+                  name="ends_at"
+                  render={({ field }) => (
+                    <DateTimePicker
+                      value={field.value}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                    />
+                  )}
+                />
               </Field>
             </div>
           </Card>

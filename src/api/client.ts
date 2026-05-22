@@ -43,9 +43,20 @@ export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): 
 
     let detail = `HTTP ${response.status}`;
     try {
-      const json = await response.json() as { detail?: string | { msg: string }[] };
-      if (typeof json.detail === 'string') detail = json.detail;
-      else if (Array.isArray(json.detail)) detail = json.detail.map((d) => d.msg).join('; ');
+      const json = await response.json() as {
+        detail?: string | { msg?: string }[];
+        message?: string;
+        context?: { msg?: string }[] | null;
+      };
+      if (typeof json.detail === 'string') {
+        detail = json.detail;
+      } else if (Array.isArray(json.detail)) {
+        detail = json.detail.map((d) => d.msg).filter(Boolean).join('; ');
+      } else if (Array.isArray(json.context)) {
+        detail = json.context.map((d) => d.msg).filter(Boolean).join('; ') || json.message || detail;
+      } else if (typeof json.message === 'string') {
+        detail = json.message;
+      }
     } catch {
       detail = await response.text().catch(() => detail);
     }

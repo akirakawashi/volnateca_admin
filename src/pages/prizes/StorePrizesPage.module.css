@@ -1,0 +1,298 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
+.statusRegion {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scroll-margin-top: 24px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(340px, 0.92fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.formCard,
+.listCard {
+  min-height: 100%;
+}
+
+.formCard {
+  overflow: visible !important;
+  z-index: 4;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.row3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid var(--sep);
+  border-radius: 16px;
+  background: rgba(7, 12, 22, 0.58);
+  transition: border-color var(--t-fast), box-shadow var(--t-fast), background var(--t-fast);
+}
+
+.toggle:hover {
+  border-color: rgba(139, 157, 255, 0.22);
+}
+
+.toggle:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(139, 157, 255, 0.14);
+  background: rgba(10, 16, 28, 0.72);
+}
+
+.toggleInput {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.toggleText {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.helperBox {
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  border: 1px solid rgba(130, 216, 255, 0.18);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(130, 216, 255, 0.08), rgba(130, 216, 255, 0.03));
+}
+
+.helperBox strong {
+  color: var(--blue);
+  font-size: 13px;
+}
+
+.helperBox span {
+  color: var(--text-2);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.heroStats {
+  width: 320px;
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.metricCard {
+  min-height: 102px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid var(--sep);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0)), var(--surface-2);
+  box-shadow: var(--sh-card);
+}
+
+.metricCard span {
+  color: var(--text-3);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.metricCard strong {
+  color: var(--text);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.empty {
+  margin: 0;
+  color: var(--text-3);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.prizeItem {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--sep);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)), rgba(7, 12, 22, 0.42);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+.prizeHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.prizeHeadText {
+  display: grid;
+  gap: 6px;
+}
+
+.prizeTitle {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.prizeCode {
+  width: fit-content;
+  padding: 4px 8px;
+  border: 1px solid var(--sep);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-2);
+  font-size: 12px;
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.badgeType {
+  border: 1px solid rgba(130, 216, 255, 0.18);
+  background: var(--blue-muted);
+  color: var(--blue);
+}
+
+.badgeAvailable {
+  border: 1px solid rgba(124, 242, 174, 0.16);
+  background: var(--green-muted);
+  color: var(--green);
+}
+
+.badgeSoldOut {
+  border: 1px solid rgba(255, 187, 118, 0.18);
+  background: var(--orange-muted);
+  color: var(--orange);
+}
+
+.badgeHidden {
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(148, 163, 184, 0.08);
+  color: var(--text-3);
+}
+
+.badgeActive {
+  border: 1px solid rgba(124, 242, 174, 0.16);
+  background: rgba(124, 242, 174, 0.09);
+  color: var(--green);
+}
+
+.badgeInactive {
+  border: 1px solid rgba(255, 143, 151, 0.16);
+  background: var(--red-muted);
+  color: var(--red);
+}
+
+.prizeDescription {
+  margin: 0;
+  color: var(--text-2);
+  line-height: 1.6;
+}
+
+.metaGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 16px;
+}
+
+.metaLabel {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--text-3);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.metaValue {
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+@media (max-width: 1180px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 860px) {
+  .row2,
+  .row3,
+  .heroStats,
+  .metaGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .prizeHead {
+    flex-direction: column;
+  }
+
+  .badges {
+    justify-content: flex-start;
+  }
+}

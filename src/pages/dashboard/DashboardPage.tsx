@@ -19,6 +19,11 @@ interface QuickLink {
 
 const quickLinks: QuickLink[] = [
   {
+    to: '/store/prizes',
+    title: 'Призы магазина',
+    description: 'Добавить мерч, партнёрский приз или суперприз в каталог',
+  },
+  {
     to: '/quiz/create',
     title: 'Создать квиз',
     description: 'Новое задание типа «Викторина» с вопросами и вариантами ответов',
@@ -163,7 +168,7 @@ export function DashboardPage() {
             <div className={styles.heroMetrics}>
               <div>
                 <span>Разделы</span>
-                <strong>4</strong>
+                <strong>5</strong>
               </div>
               <div>
                 <span>DEV</span>

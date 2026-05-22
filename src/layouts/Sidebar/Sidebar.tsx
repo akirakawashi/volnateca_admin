@@ -8,6 +8,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { to: '/', label: 'Главная' },
+  { to: '/store/prizes', label: 'Призы магазина' },
   { to: '/quiz/create', label: 'Создать квиз' },
   { to: '/wall/post', label: 'Создать пост' },
   { to: '/message-templates', label: 'Шаблоны' },
