@@ -6,6 +6,7 @@ import {
 
 type RuntimeConfig = {
   API_BASE_URL?: string;
+  ADMIN_TOKEN?: string;
 };
 
 declare global {
@@ -20,6 +21,15 @@ const DEFAULT_API_BASE =
     : window.location.origin;
 
 const API_BASE = window.__APP_CONFIG__?.API_BASE_URL ?? DEFAULT_API_BASE;
+const ADMIN_TOKEN = window.__APP_CONFIG__?.ADMIN_TOKEN?.trim() ?? '';
+
+function getRequiredAdminToken(): string {
+  if (!ADMIN_TOKEN) {
+    throw new Error('Не настроен ADMIN_TOKEN в runtime-config.js');
+  }
+
+  return ADMIN_TOKEN;
+}
 
 interface ApiFetchOptions extends RequestInit {
   authHeader?: string;
@@ -41,6 +51,7 @@ export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): 
   const requestHeaders = new Headers(headers);
 
   requestHeaders.set('Content-Type', 'application/json');
+  requestHeaders.set('X-Admin-Token', getRequiredAdminToken());
   if (authHeader) {
     requestHeaders.set('Authorization', authHeader);
   }
