@@ -4,7 +4,22 @@ import {
   notifyAdminUnauthorized,
 } from '../auth/adminAuth';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
+type RuntimeConfig = {
+  API_BASE_URL?: string;
+};
+
+declare global {
+  interface Window {
+    __APP_CONFIG__?: RuntimeConfig;
+  }
+}
+
+const DEFAULT_API_BASE =
+  window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:8000'
+    : window.location.origin;
+
+const API_BASE = window.__APP_CONFIG__?.API_BASE_URL ?? DEFAULT_API_BASE;
 
 interface ApiFetchOptions extends RequestInit {
   authHeader?: string;
