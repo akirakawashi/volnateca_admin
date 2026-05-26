@@ -43,7 +43,6 @@ type SeedButton = {
 };
 
 const seedButtons: SeedButton[] = [
-  { key: 'week', label: 'Все задания недели', scenario: 'week', color: 'secondary' },
   { key: 'monthly_top', label: 'Топ-10 месяца (seed)', scenario: 'monthly_top', color: 'secondary' },
   { key: 'project12', label: 'Все 12 недель', scenario: 'project12', color: 'secondary' },
   { key: 'referral3', label: 'Рефералы: 3 друга', scenario: 'referral3', color: 'ghost' },
@@ -316,7 +315,7 @@ export function DashboardPage() {
               <div>
                 <p className={styles.dangerActionTitle}>Очистить базу данных</p>
                 <p className={styles.dangerActionMeta}>
-                  TRUNCATE всех таблиц с RESTART IDENTITY CASCADE
+                  TRUNCATE рабочих таблиц с RESTART IDENTITY CASCADE; справочники сохраняются
                 </p>
               </div>
               <Button variant="danger" size="sm" onClick={handleTruncateClick}>
