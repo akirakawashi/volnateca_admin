@@ -1,0 +1,159 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
+.statusRegion {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scroll-margin-top: 24px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.formCard,
+.statsCard {
+  min-height: 100%;
+}
+
+.formCard {
+  overflow: visible !important;
+  z-index: 4;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.row3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.heroStats {
+  width: 320px;
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.metricCard {
+  min-height: 102px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid var(--sep);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0)), var(--surface-2);
+  box-shadow: var(--sh-card);
+}
+
+.metricCard span,
+.statBox span {
+  color: var(--text-3);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.metricCard strong {
+  color: var(--text);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.helperBox {
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  border: 1px solid rgba(130, 216, 255, 0.18);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(130, 216, 255, 0.08), rgba(130, 216, 255, 0.03));
+}
+
+.helperBox strong {
+  color: var(--blue);
+  font-size: 13px;
+}
+
+.helperBox span {
+  color: var(--text-2);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.statsForm {
+  display: grid;
+  gap: 14px;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.statBox {
+  min-height: 96px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--sep);
+  border-radius: 18px;
+  background: rgba(7, 12, 22, 0.42);
+}
+
+.statBox strong {
+  color: var(--text);
+  font-size: 28px;
+  line-height: 1;
+}
+
+.empty {
+  margin: 18px 0 0;
+  color: var(--text-3);
+}
+
+@media (max-width: 1180px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 860px) {
+  .row2,
+  .row3,
+  .heroStats,
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+}

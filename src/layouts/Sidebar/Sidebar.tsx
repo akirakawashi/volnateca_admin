@@ -10,6 +10,7 @@ const navItems: NavItem[] = [
   { to: '/', label: 'Главная' },
   { to: '/store/prizes', label: 'Призы магазина' },
   { to: '/quiz/create', label: 'Создать квиз' },
+  { to: '/tasks/promo-codes', label: 'Задание Меняйки' },
   { to: '/wall/post', label: 'Создать пост' },
   { to: '/broadcast', label: 'VK-рассылка' },
   { to: '/message-templates', label: 'Шаблоны' },

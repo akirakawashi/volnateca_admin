@@ -14,6 +14,7 @@ import { LoginPage } from './pages/auth/LoginPage';
 import { DashboardPage } from './pages/dashboard/DashboardPage';
 import { CreateQuizPage } from './pages/quiz/CreateQuizPage';
 import { StorePrizesPage } from './pages/prizes/StorePrizesPage';
+import { TaskPromoCodeTaskPage } from './pages/taskPromoCode/TaskPromoCodeTaskPage';
 import { PostToWallPage } from './pages/wall_post/PostToWallPage';
 import { MessageTemplatesPage } from './pages/message_templates/MessageTemplatesPage';
 import { BroadcastPage } from './pages/broadcast/BroadcastPage';
@@ -81,6 +82,7 @@ export default function App() {
             <Routes>
               <Route path="/" element={<DashboardPage />} />
               <Route path="/quiz/create" element={<CreateQuizPage />} />
+              <Route path="/tasks/promo-codes" element={<TaskPromoCodeTaskPage />} />
               <Route path="/store/prizes" element={<StorePrizesPage />} />
               <Route path="/wall/post" element={<PostToWallPage />} />
               <Route path="/message-templates" element={<MessageTemplatesPage />} />
