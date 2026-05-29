@@ -16,6 +16,7 @@ import { CreateQuizPage } from './pages/quiz/CreateQuizPage';
 import { StorePrizesPage } from './pages/prizes/StorePrizesPage';
 import { PostToWallPage } from './pages/wall_post/PostToWallPage';
 import { MessageTemplatesPage } from './pages/message_templates/MessageTemplatesPage';
+import { BroadcastPage } from './pages/broadcast/BroadcastPage';
 
 type AuthStatus = 'checking' | 'unauthenticated' | 'authenticated';
 
@@ -83,6 +84,7 @@ export default function App() {
               <Route path="/store/prizes" element={<StorePrizesPage />} />
               <Route path="/wall/post" element={<PostToWallPage />} />
               <Route path="/message-templates" element={<MessageTemplatesPage />} />
+              <Route path="/broadcast" element={<BroadcastPage />} />
             </Routes>
           </AppLayout>
         </BrowserRouter>

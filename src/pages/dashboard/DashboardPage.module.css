@@ -26,6 +26,10 @@
   animation-delay: 360ms;
 }
 
+.root > *:nth-child(5) {
+  animation-delay: 450ms;
+}
+
 .heroAside {
   align-items: stretch;
   justify-content: flex-end;
@@ -71,7 +75,7 @@
 
 .heroMetrics {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
 }
 
@@ -254,6 +258,7 @@
   transition: color var(--t-fast), transform var(--t-fast);
 }
 
+.prodPanel,
 .devPanel,
 .dangerPanel {
   position: relative;
@@ -270,6 +275,7 @@
     box-shadow var(--t-slow);
 }
 
+.prodPanel::before,
 .devPanel::before,
 .dangerPanel::before {
   content: "";
@@ -283,6 +289,10 @@
   opacity: 0.32;
   pointer-events: none;
   animation: sectionGlowFloat 13s ease-in-out infinite alternate;
+}
+
+.prodPanel::before {
+  background: rgba(124, 242, 174, 0.14);
 }
 
 .devPanel::before {
@@ -313,6 +323,19 @@
   align-items: center;
   gap: 12px;
   min-width: 0;
+}
+
+.prodTag {
+  padding: 5px 10px;
+  background: var(--green-muted);
+  border: 1px solid rgba(124, 242, 174, 0.22);
+  border-radius: var(--r-full);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--green);
+  flex-shrink: 0;
 }
 
 .devTag {
@@ -389,10 +412,14 @@
   gap: 10px;
 }
 
+.prodRow,
 .awardRow {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.awardRow {
   padding-top: 14px;
   border-top: 1px solid var(--sep);
 }
@@ -491,6 +518,7 @@
     transform: translateY(-50%) translateX(4px) rotate(45deg);
   }
 
+  .prodPanel:hover,
   .devPanel:hover,
   .dangerPanel:hover {
     transform: translateY(-3px);
@@ -579,7 +607,7 @@
   }
 
   .heroMetrics {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .actionCard {

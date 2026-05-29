@@ -11,6 +11,7 @@ const navItems: NavItem[] = [
   { to: '/store/prizes', label: 'Призы магазина' },
   { to: '/quiz/create', label: 'Создать квиз' },
   { to: '/wall/post', label: 'Создать пост' },
+  { to: '/broadcast', label: 'VK-рассылка' },
   { to: '/message-templates', label: 'Шаблоны' },
 ];
 

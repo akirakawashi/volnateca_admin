@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../../components/ui/Button/Button';
 import { Alert } from '../../components/ui/Alert/Alert';
 import { PageHero } from '../../components/ui/PageHero/PageHero';
@@ -9,6 +9,8 @@ import { useSeedScenario } from '../../hooks/useSeedScenario';
 import { useSeedStorePrizes } from '../../hooks/useSeedStorePrizes';
 import { useAwardMonthlyTop } from '../../hooks/useAwardMonthlyTop';
 import type { SeedDevScenario } from '../../api/dev';
+import type { AwardMonthlyTopResponse } from '../../types/monthly_top';
+import { formatMonthlyTopAwardLine } from '../../utils/monthlyTop';
 import styles from './DashboardPage.module.css';
 
 interface QuickLink {
@@ -35,6 +37,8 @@ const quickLinks: QuickLink[] = [
   },
 ];
 
+const PROD_ACTIONS_COUNT = 2;
+
 type SeedButton = {
   key: string;
   label: string;
@@ -51,8 +55,10 @@ const seedButtons: SeedButton[] = [
 ];
 
 export function DashboardPage() {
+  const navigate = useNavigate();
   const [confirmPending, setConfirmPending] = useState(false);
   const [done, setDone] = useState(false);
+  const prodStatusRef = useRef<HTMLDivElement>(null);
   const devStatusRef = useRef<HTMLDivElement>(null);
   const dangerStatusRef = useRef<HTMLDivElement>(null);
   const { truncate, loading: truncateLoading, error: truncateError, reset: resetTruncate } = useTruncateDB();
@@ -67,7 +73,7 @@ export function DashboardPage() {
 
   const [seedResult, setSeedResult] = useState<{ scenario: SeedDevScenario; messages: string[] } | null>(null);
   const [storeSeedResult, setStoreSeedResult] = useState<string[] | null>(null);
-  const [awardResult, setAwardResult] = useState<string[] | null>(null);
+  const [awardResult, setAwardResult] = useState<AwardMonthlyTopResponse | null>(null);
   const [activeScenario, setActiveScenario] = useState<SeedDevScenario | null>(null);
 
   const handleTruncateClick = () => {
@@ -122,17 +128,27 @@ export function DashboardPage() {
     const now = new Date();
     const month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
     try {
-      const messages = await award({ month, limit: 10 });
-      setAwardResult(messages);
+      const result = await award({ month, limit: 10 });
+      setAwardResult(result);
     } catch {
       // Error text is exposed through awardError.
     }
   };
 
-  const devError = seedError || storeSeedError || awardError;
-  const hasDevStatus = Boolean(devError || seedResult || storeSeedResult || awardResult);
-  const hasDevSuccess = Boolean(seedResult || storeSeedResult || awardResult);
+  const prodError = awardError;
+  const hasProdStatus = Boolean(prodError || awardResult);
+  const hasProdSuccess = Boolean(awardResult);
+
+  const devError = seedError || storeSeedError;
+  const hasDevStatus = Boolean(devError || seedResult || storeSeedResult);
+  const hasDevSuccess = Boolean(seedResult || storeSeedResult);
   const hasDangerStatus = Boolean(done || truncateError);
+
+  useAutoStatusMessage({
+    active: hasProdStatus,
+    scrollRef: prodStatusRef,
+    onDismiss: hasProdSuccess ? () => setAwardResult(null) : undefined,
+  });
 
   useAutoStatusMessage({
     active: hasDevStatus,
@@ -141,7 +157,6 @@ export function DashboardPage() {
       ? () => {
           setSeedResult(null);
           setStoreSeedResult(null);
-          setAwardResult(null);
         }
       : undefined,
   });
@@ -167,11 +182,15 @@ export function DashboardPage() {
             <div className={styles.heroMetrics}>
               <div>
                 <span>Разделы</span>
-                <strong>5</strong>
+                <strong>{quickLinks.length}</strong>
+              </div>
+              <div>
+                <span>PROD</span>
+                <strong>{PROD_ACTIONS_COUNT}</strong>
               </div>
               <div>
                 <span>DEV</span>
-                <strong>{seedButtons.length + 2}</strong>
+                <strong>{seedButtons.length + 1}</strong>
               </div>
             </div>
           </div>
@@ -193,6 +212,71 @@ export function DashboardPage() {
               </div>
             </Link>
           ))}
+        </div>
+      </section>
+
+      <section className={styles.prodPanel}>
+        <header className={styles.panelHead}>
+          <div className={styles.panelTitleWrap}>
+            <span className={styles.prodTag}>PROD</span>
+            <div className={styles.panelHeadText}>
+              <p className={styles.panelTitle}>Production-сценарии</p>
+              <p className={styles.panelSub}>Операции для боевого окружения</p>
+            </div>
+          </div>
+        </header>
+
+        <div className={styles.panelBody}>
+          {hasProdStatus && (
+            <div ref={prodStatusRef} className={styles.statusStack}>
+              {prodError && <Alert variant="error">{prodError}</Alert>}
+
+              {awardResult && (
+                <Alert variant={awardResult.achievement_found ? 'info' : 'error'}>
+                  <div className={styles.resultBox}>
+                    <strong>
+                      Начисление monthly_top_10 за {awardResult.month}
+                    </strong>
+                    {!awardResult.achievement_found && (
+                      <p>Достижение monthly_top_10 не найдено в каталоге.</p>
+                    )}
+                    {awardResult.awards.length === 0 && awardResult.achievement_found && (
+                      <p>Нет пользователей с начислениями за выбранный месяц.</p>
+                    )}
+                    {awardResult.awards.length > 0 && (
+                      <ul className={styles.resultList}>
+                        {awardResult.awards.map((award) => (
+                          <li key={`${award.users_id}-${award.rank}`}>
+                            {formatMonthlyTopAwardLine(award)}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </Alert>
+              )}
+            </div>
+          )}
+
+          <div className={styles.prodRow}>
+            <Button
+              variant="primary"
+              size="sm"
+              loading={awardLoading}
+              disabled={awardLoading}
+              onClick={handleAwardMonthlyTop}
+            >
+              Топ-10 месяца
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              disabled={awardLoading}
+              onClick={() => navigate('/broadcast')}
+            >
+              VK-рассылка
+            </Button>
+          </div>
         </div>
       </section>
 
@@ -218,19 +302,6 @@ export function DashboardPage() {
                     <strong>Сценарий «{seedResult.scenario}» выполнен</strong>
                     <ul className={styles.resultList}>
                       {seedResult.messages.map((m, i) => (
-                        <li key={i}>{m}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </Alert>
-              )}
-
-              {awardResult && (
-                <Alert variant="info">
-                  <div className={styles.resultBox}>
-                    <strong>Начисление monthly_top_10 выполнено</strong>
-                    <ul className={styles.resultList}>
-                      {awardResult.map((m, i) => (
                         <li key={i}>{m}</li>
                       ))}
                     </ul>
@@ -270,19 +341,10 @@ export function DashboardPage() {
 
           <div className={styles.awardRow}>
             <Button
-              variant="primary"
-              size="sm"
-              loading={awardLoading}
-              disabled={seedLoading || storeSeedLoading}
-              onClick={handleAwardMonthlyTop}
-            >
-              Начислить monthly_top_10 за текущий месяц
-            </Button>
-            <Button
               variant="secondary"
               size="sm"
               loading={storeSeedLoading}
-              disabled={seedLoading || awardLoading}
+              disabled={seedLoading}
               onClick={handleSeedStorePrizes}
             >
               Засеять тестовые призы магазина
