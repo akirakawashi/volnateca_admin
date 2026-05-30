@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useRef } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Alert } from '../../components/ui/Alert/Alert';
@@ -31,9 +31,7 @@ const repeatPolicyOptions = repeatPolicies.map((policy) => ({
 }));
 
 export function TaskPromoCodeTaskPage() {
-  const { creating, loadingStats, error, result, stats, create, fetchStats, resetStatus } =
-    useTaskPromoCodeTask();
-  const [statsTaskId, setStatsTaskId] = useState('');
+  const { creating, error, result, create, resetStatus } = useTaskPromoCodeTask();
   const statusRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -73,15 +71,7 @@ export function TaskPromoCodeTaskPage() {
     });
 
     if (created) {
-      setStatsTaskId(String(created.tasks_id));
       reset(defaultTaskPromoCodeFormValues);
-    }
-  };
-
-  const handleFetchStats = () => {
-    const tasksId = Number.parseInt(statsTaskId, 10);
-    if (Number.isFinite(tasksId) && tasksId > 0) {
-      void fetchStats(tasksId);
     }
   };
 
@@ -90,20 +80,12 @@ export function TaskPromoCodeTaskPage() {
       <PageHero
         eyebrow="Promo task"
         title="Задание Меняйки"
-        subtitle="Создание общего задания и стартового банка промокодов для проверки в боте"
+        subtitle="Создание задания и загрузка банка промокодов для проверки в боте"
         aside={
           <div className={styles.heroStats} aria-hidden="true">
             <div className={styles.metricCard}>
               <span>Кодов в форме</span>
               <strong>{promoCodeCount}</strong>
-            </div>
-            <div className={styles.metricCard}>
-              <span>Осталось</span>
-              <strong>{stats?.available_count ?? '—'}</strong>
-            </div>
-            <div className={styles.metricCard}>
-              <span>Использовано</span>
-              <strong>{stats?.used_count ?? '—'}</strong>
             </div>
           </div>
         }
@@ -113,171 +95,127 @@ export function TaskPromoCodeTaskPage() {
         <div ref={statusRef} className={styles.statusRegion}>
           {result && (
             <Alert variant="success">
-              Задание <strong>{result.task_name}</strong> создано — tasks_id: {result.tasks_id},
-              промокодов: {result.promo_codes_total}
+              Задание <strong>{result.task_name}</strong> создано — загружено промокодов:{' '}
+              {result.promo_codes_total}
             </Alert>
           )}
           {error && <Alert variant="error">{error}</Alert>}
         </div>
       )}
 
-      <div className={styles.layout}>
-        <Card title="Создать задание" className={styles.formCard}>
-          <form
-            onSubmit={handleSubmit(onSubmit as Parameters<typeof handleSubmit>[0])}
-            onFocus={resetStatus}
-            noValidate
-            className={styles.form}
-          >
-            <div className={styles.row3}>
-              <Field label="Очки" required error={errors.points?.message}>
-                <Input
-                  {...register('points', { valueAsNumber: true })}
-                  type="number"
-                  min={1}
-                  placeholder="15"
-                />
-              </Field>
-              <Field label="Неделя (1–12)" error={errors.week_number?.message}>
-                <Input
-                  {...register('week_number', {
-                    setValueAs: (value: string) => (value === '' ? null : Number.parseInt(value, 10)),
-                  })}
-                  type="number"
-                  min={1}
-                  max={12}
-                  placeholder="Без недели"
-                />
-              </Field>
-              <Field label="Повтор" required error={errors.repeat_policy?.message}>
-                <Controller
-                  control={control}
-                  name="repeat_policy"
-                  render={({ field }) => (
-                    <Select
-                      name={field.name}
-                      value={field.value}
-                      onChange={(value) => field.onChange(value as TaskRepeatPolicy)}
-                      onBlur={field.onBlur}
-                      options={repeatPolicyOptions}
-                    />
-                  )}
-                />
-              </Field>
-            </div>
-
-            <Field label="Название задания" required error={errors.task_name?.message}>
-              <Input {...register('task_name')} placeholder="Меняйка: обмен ГБ на промокод" />
-            </Field>
-
-            <Field label="Описание">
-              <Textarea
-                {...register('description')}
-                rows={3}
-                placeholder="Инструкция для внутренней админки или описания задания..."
-              />
-            </Field>
-
-            <div className={styles.row2}>
-              <Field label="Дата начала">
-                <Controller
-                  control={control}
-                  name="starts_at"
-                  render={({ field }) => (
-                    <DateTimePicker
-                      value={field.value}
-                      onChange={field.onChange}
-                      onBlur={field.onBlur}
-                    />
-                  )}
-                />
-              </Field>
-              <Field label="Дата окончания" error={errors.ends_at?.message}>
-                <Controller
-                  control={control}
-                  name="ends_at"
-                  render={({ field }) => (
-                    <DateTimePicker
-                      value={field.value}
-                      onChange={field.onChange}
-                      onBlur={field.onBlur}
-                    />
-                  )}
-                />
-              </Field>
-            </div>
-
-            <Field
-              label="Промокоды"
-              required
-              error={errors.promo_codes_text?.message}
-              hint="Каждый код с новой строки. Также можно разделять запятой или точкой с запятой."
-            >
-              <Textarea
-                {...register('promo_codes_text')}
-                rows={12}
-                placeholder={'BOT-CODE-001\nBOT-CODE-002\nBOT-CODE-003'}
-              />
-            </Field>
-
-            <div className={styles.helperBox}>
-              <strong>Текущее количество: {promoCodeCount}</strong>
-              <span>
-                Задание будет показываться пользователям, пока оно активно и у пользователя нет
-                выполненного периода. Backend отключит задание после активации последнего кода.
-              </span>
-            </div>
-
-            <div className={styles.formActions}>
-              <Button type="submit" variant="primary" loading={creating}>
-                Создать задание
-              </Button>
-            </div>
-          </form>
-        </Card>
-
-        <Card title="Статистика банка" className={styles.statsCard}>
-          <div className={styles.statsForm}>
-            <Field label="tasks_id">
+      <Card title="Создать задание" className={styles.formCard}>
+        <form
+          onSubmit={handleSubmit(onSubmit as Parameters<typeof handleSubmit>[0])}
+          onFocus={resetStatus}
+          noValidate
+          className={styles.form}
+        >
+          <div className={styles.row3}>
+            <Field label="Очки" required error={errors.points?.message}>
               <Input
-                value={statsTaskId}
-                onChange={(event) => setStatsTaskId(event.target.value)}
+                {...register('points', { valueAsNumber: true })}
                 type="number"
                 min={1}
-                placeholder="123"
+                placeholder="15"
               />
             </Field>
-            <Button
-              type="button"
-              variant="ghost"
-              loading={loadingStats}
-              onClick={handleFetchStats}
-              disabled={!statsTaskId}
-            >
-              Обновить статистику
-            </Button>
+            <Field label="Неделя (1–12)" error={errors.week_number?.message}>
+              <Input
+                {...register('week_number', {
+                  setValueAs: (value: string) => (value === '' ? null : Number.parseInt(value, 10)),
+                })}
+                type="number"
+                min={1}
+                max={12}
+                placeholder="Без недели"
+              />
+            </Field>
+            <Field label="Повтор" required error={errors.repeat_policy?.message}>
+              <Controller
+                control={control}
+                name="repeat_policy"
+                render={({ field }) => (
+                  <Select
+                    name={field.name}
+                    value={field.value}
+                    onChange={(value) => field.onChange(value as TaskRepeatPolicy)}
+                    onBlur={field.onBlur}
+                    options={repeatPolicyOptions}
+                  />
+                )}
+              />
+            </Field>
           </div>
 
-          {stats ? (
-            <div className={styles.statsGrid}>
-              <div className={styles.statBox}>
-                <span>Всего</span>
-                <strong>{stats.total_count}</strong>
-              </div>
-              <div className={styles.statBox}>
-                <span>Доступно</span>
-                <strong>{stats.available_count}</strong>
-              </div>
-              <div className={styles.statBox}>
-                <span>Использовано</span>
-                <strong>{stats.used_count}</strong>
-              </div>
-            </div>
-          ) : (
-            <p className={styles.empty}>После создания задания статистика появится здесь.</p>
-          )}
-        </Card>
-      </div>
+          <Field label="Название задания" required error={errors.task_name?.message}>
+            <Input {...register('task_name')} placeholder="Меняйка: обмен ГБ на промокод" />
+          </Field>
+
+          <Field label="Описание">
+            <Textarea
+              {...register('description')}
+              rows={3}
+              placeholder="Инструкция для внутренней админки или описания задания..."
+            />
+          </Field>
+
+          <div className={styles.row2}>
+            <Field label="Дата начала">
+              <Controller
+                control={control}
+                name="starts_at"
+                render={({ field }) => (
+                  <DateTimePicker
+                    value={field.value}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                  />
+                )}
+              />
+            </Field>
+            <Field label="Дата окончания" error={errors.ends_at?.message}>
+              <Controller
+                control={control}
+                name="ends_at"
+                render={({ field }) => (
+                  <DateTimePicker
+                    value={field.value}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                  />
+                )}
+              />
+            </Field>
+          </div>
+
+          <Field
+            label="Промокоды"
+            required
+            error={errors.promo_codes_text?.message}
+            hint="Каждый код с новой строки. Также можно разделять запятой или точкой с запятой."
+          >
+            <Textarea
+              {...register('promo_codes_text')}
+              rows={12}
+              placeholder={'BOT-CODE-001\nBOT-CODE-002\nBOT-CODE-003'}
+            />
+          </Field>
+
+          <div className={styles.helperBox}>
+            <strong>Текущее количество: {promoCodeCount}</strong>
+            <span>
+              Задание будет показываться пользователям, пока оно активно и у пользователя нет
+              выполненного периода. Backend отключит задание после активации последнего кода.
+            </span>
+          </div>
+
+          <div className={styles.formActions}>
+            <Button type="submit" variant="primary" loading={creating}>
+              Создать задание
+            </Button>
+          </div>
+        </form>
+      </Card>
     </div>
   );
 }
