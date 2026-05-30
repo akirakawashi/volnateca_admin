@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Alert } from '../../components/ui/Alert/Alert';
@@ -11,12 +12,11 @@ import { usePrizes } from '../../hooks/usePrizes';
 import {
   ADMIN_PRIZE_STATUSES,
   ADMIN_PRIZE_TYPES,
-  ADMIN_RECEIVE_TYPES,
   type AdminPrize,
-  type PrizeReceiveType,
   type PrizeStatus,
   type PrizeType,
 } from '../../types/prize';
+import { formatReceiveType } from '../../utils/prizeReceiveType';
 import { extractVkPhotoAttachment } from '../../utils/vkAttachments';
 import { defaultPrizeFormValues, prizeFormSchema, type PrizeFormValues } from './schema';
 import styles from './StorePrizesPage.module.css';
@@ -25,12 +25,6 @@ const prizeTypeLabels: Record<PrizeType, string> = {
   merch: 'Мерч',
   partner: 'Партнёрский приз',
   super_prize: 'Суперприз',
-};
-
-const receiveTypeLabels: Record<PrizeReceiveType, string> = {
-  pickup: 'Самовывоз',
-  delivery: 'Доставка',
-  manager_contact: 'Связь с менеджером',
 };
 
 const statusLabels: Record<PrizeStatus, string> = {
@@ -44,11 +38,6 @@ const prizeTypeOptions = ADMIN_PRIZE_TYPES.map((type) => ({
   label: prizeTypeLabels[type],
 }));
 
-const receiveTypeOptions = ADMIN_RECEIVE_TYPES.map((type) => ({
-  value: type,
-  label: receiveTypeLabels[type],
-}));
-
 const statusOptions = ADMIN_PRIZE_STATUSES.map((status) => ({
   value: status,
   label: statusLabels[status],
@@ -56,7 +45,7 @@ const statusOptions = ADMIN_PRIZE_STATUSES.map((status) => ({
 
 function formatQuantity(prize: AdminPrize): string {
   if (prize.quantity_total === null) {
-    return 'Без лимита';
+    return `${prize.quantity_claimed} / —`;
   }
   return `${prize.quantity_claimed} / ${prize.quantity_total}`;
 }
@@ -70,6 +59,7 @@ export function StorePrizesPage() {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<PrizeFormValues>({
     resolver: zodResolver(prizeFormSchema),
@@ -90,6 +80,12 @@ export function StorePrizesPage() {
     control,
     name: 'prize_type',
   });
+
+  useEffect(() => {
+    if (selectedPrizeType === 'super_prize') {
+      setValue('quantity_total', 1, { shouldValidate: true });
+    }
+  }, [selectedPrizeType, setValue]);
   const prizeStats = useMemo(() => {
     const items = prizes ?? [];
     return {
@@ -105,10 +101,10 @@ export function StorePrizesPage() {
       description: values.description?.trim() || null,
       image_attachment: extractVkPhotoAttachment(values.image_attachment),
       prize_type: values.prize_type,
-      receive_type: values.receive_type,
+      receive_type: 'pickup',
       status: values.status,
       cost_points: values.cost_points,
-      quantity_total: values.quantity_total ?? null,
+      quantity_total: values.quantity_total,
       required_level: values.required_level ?? null,
       sort_order: values.sort_order,
       is_active: values.is_active,
@@ -162,38 +158,21 @@ export function StorePrizesPage() {
             noValidate
             className={styles.form}
           >
-            <div className={styles.row2}>
-              <Field label="Тип приза" required error={errors.prize_type?.message}>
-                <Controller
-                  control={control}
-                  name="prize_type"
-                  render={({ field }) => (
-                    <Select
-                      name={field.name}
-                      value={field.value}
-                      onChange={field.onChange}
-                      onBlur={field.onBlur}
-                      options={prizeTypeOptions}
-                    />
-                  )}
-                />
-              </Field>
-              <Field label="Способ получения" required error={errors.receive_type?.message}>
-                <Controller
-                  control={control}
-                  name="receive_type"
-                  render={({ field }) => (
-                    <Select
-                      name={field.name}
-                      value={field.value}
-                      onChange={field.onChange}
-                      onBlur={field.onBlur}
-                      options={receiveTypeOptions}
-                    />
-                  )}
-                />
-              </Field>
-            </div>
+            <Field label="Тип приза" required error={errors.prize_type?.message}>
+              <Controller
+                control={control}
+                name="prize_type"
+                render={({ field }) => (
+                  <Select
+                    name={field.name}
+                    value={field.value}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                    options={prizeTypeOptions}
+                  />
+                )}
+              />
+            </Field>
 
             <div className={styles.row2}>
               <Field label="Статус" required error={errors.status?.message}>
@@ -244,16 +223,19 @@ export function StorePrizesPage() {
             <div className={styles.row3}>
               <Field
                 label="Количество"
+                required
                 error={errors.quantity_total?.message}
-                hint={selectedPrizeType === 'super_prize' ? 'Для суперприза обычно указывают 1.' : undefined}
+                hint={
+                  selectedPrizeType === 'super_prize'
+                    ? 'Суперприз — одна единица на всех.'
+                    : 'Все призы лимитированы. Укажите общий остаток.'
+                }
               >
                 <Input
-                  {...register('quantity_total', {
-                    setValueAs: (value: string) => (value === '' ? null : Number.parseInt(value, 10)),
-                  })}
+                  {...register('quantity_total', { valueAsNumber: true })}
                   type="number"
                   min={1}
-                  placeholder="Без лимита"
+                  placeholder={selectedPrizeType === 'super_prize' ? '1' : '10'}
                 />
               </Field>
               <Field label="Мин. уровень" error={errors.required_level?.message}>
@@ -287,8 +269,8 @@ export function StorePrizesPage() {
             <div className={styles.helperBox}>
               <strong>{prizeTypeLabels[selectedPrizeType]}</strong>
               <span>
-                Промокоды в этом экране не поддерживаются. Для мерча и партнёрских призов достаточно
-                корректного attachment картинки и базовых параметров витрины.
+                Выдача только на пункте самовывоза. Промокоды в этом экране не поддерживаются —
+                укажите картинку VK и лимит количества.
               </span>
             </div>
 
@@ -324,6 +306,13 @@ export function StorePrizesPage() {
                       <h3 className={styles.prizeTitle}>{prize.prize_name}</h3>
                       <code className={styles.prizeCode}>{prize.code}</code>
                     </div>
+                    <div className={styles.prizeHeadActions}>
+                      <Link
+                        className={styles.redemptionsLink}
+                        to={`/store/redemptions?status=reserved&prizes_id=${prize.prizes_id}`}
+                      >
+                        Заявки на выдачу
+                      </Link>
                     <div className={styles.badges}>
                       <span className={[styles.badge, styles.badgeType].join(' ')}>
                         {prizeTypeLabels[prize.prize_type]}
@@ -340,6 +329,7 @@ export function StorePrizesPage() {
                         {prize.is_active ? 'Активен' : 'Выключен'}
                       </span>
                     </div>
+                    </div>
                   </div>
 
                   {prize.description && <p className={styles.prizeDescription}>{prize.description}</p>}
@@ -351,7 +341,7 @@ export function StorePrizesPage() {
                     </div>
                     <div>
                       <span className={styles.metaLabel}>Способ получения</span>
-                      <strong className={styles.metaValue}>{receiveTypeLabels[prize.receive_type]}</strong>
+                      <strong className={styles.metaValue}>{formatReceiveType(prize.receive_type)}</strong>
                     </div>
                     <div>
                       <span className={styles.metaLabel}>Количество</span>

@@ -1,5 +1,5 @@
 export const ADMIN_PRIZE_TYPES = ['merch', 'partner', 'super_prize'] as const;
-export const ADMIN_RECEIVE_TYPES = ['pickup', 'delivery', 'manager_contact'] as const;
+export const ADMIN_RECEIVE_TYPES = ['pickup', 'manager_contact'] as const;
 export const ADMIN_PRIZE_STATUSES = ['available', 'sold_out', 'hidden'] as const;
 
 export type PrizeType = (typeof ADMIN_PRIZE_TYPES)[number];

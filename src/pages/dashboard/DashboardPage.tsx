@@ -26,6 +26,11 @@ const quickLinks: QuickLink[] = [
     description: 'Добавить мерч, партнёрский приз или суперприз в каталог',
   },
   {
+    to: '/store/redemptions',
+    title: 'Выдача призов',
+    description: 'Очередь заявок после покупки: сверка кода и отметка «Выдано»',
+  },
+  {
     to: '/quiz/create',
     title: 'Создать квиз',
     description: 'Новое задание типа «Викторина» с вопросами и вариантами ответов',
@@ -37,7 +42,7 @@ const quickLinks: QuickLink[] = [
   },
 ];
 
-const PROD_ACTIONS_COUNT = 2;
+const PROD_ACTIONS_COUNT = 3;
 
 type SeedButton = {
   key: string;

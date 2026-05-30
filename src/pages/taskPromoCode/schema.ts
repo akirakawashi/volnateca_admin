@@ -11,7 +11,6 @@ export function parsePromoCodes(value: string): string[] {
 
 export const taskPromoCodeFormSchema = z
   .object({
-    code: z.string().optional(),
     task_name: z.string().min(1, 'Название обязательно'),
     description: z.string().optional(),
     points: z.number().int().positive('Очки должны быть > 0'),
@@ -43,7 +42,6 @@ export const taskPromoCodeFormSchema = z
 export type TaskPromoCodeFormValues = z.infer<typeof taskPromoCodeFormSchema>;
 
 export const defaultTaskPromoCodeFormValues: TaskPromoCodeFormValues = {
-  code: '',
   task_name: 'Меняйка: обмен ГБ на промокод',
   description: '',
   points: 15,

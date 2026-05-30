@@ -61,7 +61,7 @@ export function TaskPromoCodeTaskPage() {
 
   const onSubmit = async (values: TaskPromoCodeFormValues) => {
     const created = await create({
-      code: values.code?.trim() || null,
+      code: null,
       task_name: values.task_name.trim(),
       description: values.description?.trim() || null,
       points: values.points,
@@ -114,7 +114,7 @@ export function TaskPromoCodeTaskPage() {
           {result && (
             <Alert variant="success">
               Задание <strong>{result.task_name}</strong> создано — tasks_id: {result.tasks_id},
-              кодов: {result.promo_codes_total}
+              промокодов: {result.promo_codes_total}
             </Alert>
           )}
           {error && <Alert variant="error">{error}</Alert>}
@@ -168,10 +168,6 @@ export function TaskPromoCodeTaskPage() {
 
             <Field label="Название задания" required error={errors.task_name?.message}>
               <Input {...register('task_name')} placeholder="Меняйка: обмен ГБ на промокод" />
-            </Field>
-
-            <Field label="Code" error={errors.code?.message} hint="Можно оставить пустым — backend создаст UUID.">
-              <Input {...register('code')} placeholder="menyayka_partner_promo" />
             </Field>
 
             <Field label="Описание">
