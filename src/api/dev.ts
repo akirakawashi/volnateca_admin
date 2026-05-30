@@ -1,3 +1,5 @@
+// TODO DEV: удалить api/dev.ts перед релизом — только для локальной отладки.
+
 import { apiFetch } from './client';
 
 export type SeedDevScenario =

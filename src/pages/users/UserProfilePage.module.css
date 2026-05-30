@@ -1,0 +1,173 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.loading,
+.empty {
+  margin: 0;
+  padding: 1.25rem;
+  color: var(--text-muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+.vkButton,
+.backLink {
+  font-size: 0.875rem;
+  text-decoration: none;
+}
+
+.vkButton {
+  color: var(--accent, #6ea8fe);
+}
+
+.backLink {
+  color: var(--text-muted);
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tab {
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.12));
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  cursor: pointer;
+}
+
+.tabActive {
+  color: var(--text-primary);
+  border-color: var(--accent, #6ea8fe);
+  background: rgba(110, 168, 254, 0.12);
+}
+
+.statsCard {
+  padding: 1.25rem;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin: 0;
+}
+
+.statItem dt {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.statItem dd {
+  margin: 0.25rem 0 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.metaLine {
+  margin: 1rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.tableCard {
+  padding: 0;
+  overflow: hidden;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.listItem {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+}
+
+.listItem:last-child {
+  border-bottom: none;
+}
+
+.itemMeta {
+  margin: 0.25rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.itemActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.referrals {
+  display: grid;
+  gap: 1.5rem;
+  padding: 1.25rem;
+}
+
+.sectionTitle {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+}
+
+.referralRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.resultLink {
+  font-weight: 600;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.resultLink:hover {
+  text-decoration: underline;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+}
+
+.paginationLabel {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  min-width: 6rem;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .listItem {
+    flex-direction: column;
+  }
+
+  .itemActions {
+    flex-direction: row;
+  }
+}

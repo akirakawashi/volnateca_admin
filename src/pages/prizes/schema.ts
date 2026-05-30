@@ -23,6 +23,10 @@ export const prizeFormSchema = z.object({
 
 export type PrizeFormValues = z.infer<typeof prizeFormSchema>;
 
+export const prizeEditFormSchema = prizeFormSchema.omit({ prize_type: true });
+
+export type PrizeEditFormValues = z.infer<typeof prizeEditFormSchema>;
+
 export const defaultPrizeFormValues: PrizeFormValues = {
   prize_name: '',
   description: '',
@@ -35,3 +39,27 @@ export const defaultPrizeFormValues: PrizeFormValues = {
   sort_order: 0,
   is_active: true,
 };
+
+export function mapPrizeToEditFormValues(prize: {
+  prize_name: string;
+  description: string | null;
+  image_attachment: string | null;
+  status: PrizeFormValues['status'];
+  cost_points: number;
+  quantity_total: number | null;
+  required_level: number | null;
+  sort_order: number;
+  is_active: boolean;
+}): PrizeEditFormValues {
+  return {
+    prize_name: prize.prize_name,
+    description: prize.description ?? '',
+    image_attachment: prize.image_attachment ?? '',
+    status: prize.status,
+    cost_points: prize.cost_points,
+    quantity_total: prize.quantity_total ?? 1,
+    required_level: prize.required_level,
+    sort_order: prize.sort_order,
+    is_active: prize.is_active,
+  };
+}

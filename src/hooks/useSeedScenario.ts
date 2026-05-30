@@ -1,3 +1,5 @@
+// TODO DEV: удалить hooks/useSeedScenario.ts перед релизом — только для локальной отладки.
+
 import { useState } from 'react';
 import { seedDevScenario, type SeedDevScenarioPayload } from '../api/dev';
 

@@ -258,6 +258,7 @@
   transition: color var(--t-fast), transform var(--t-fast);
 }
 
+/* TODO DEV: удалить стили .devPanel, .devTag, .dangerPanel перед релизом. */
 .prodPanel,
 .devPanel,
 .dangerPanel {

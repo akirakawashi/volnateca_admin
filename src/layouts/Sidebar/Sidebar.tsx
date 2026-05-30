@@ -11,6 +11,8 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { to: '/', label: 'Главная' },
+  { to: '/charts', label: 'Графики' },
+  { to: '/users', label: 'Пользователь' },
   { to: '/store/prizes', label: 'Призы магазина' },
   { to: '/store/redemptions', label: 'Выдача призов', badgeCount: null },
   { to: '/quiz/create', label: 'Создать квиз' },

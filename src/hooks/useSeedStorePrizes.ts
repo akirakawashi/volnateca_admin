@@ -1,3 +1,5 @@
+// TODO DEV: удалить hooks/useSeedStorePrizes.ts перед релизом — только для локальной отладки.
+
 import { useState } from 'react';
 import { seedStorePrizes } from '../api/dev';
 

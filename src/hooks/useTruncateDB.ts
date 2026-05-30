@@ -1,3 +1,5 @@
+// TODO DEV: удалить hooks/useTruncateDB.ts перед релизом — truncate только для локальной отладки.
+
 import { useState } from 'react';
 import { truncateDB } from '../api/db';
 

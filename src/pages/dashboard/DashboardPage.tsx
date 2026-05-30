@@ -1,14 +1,15 @@
+// TODO DEV: удалить DEV-импорты и секции devPanel/dangerPanel перед релизом.
 import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../../components/ui/Button/Button';
 import { Alert } from '../../components/ui/Alert/Alert';
 import { PageHero } from '../../components/ui/PageHero/PageHero';
 import { useAutoStatusMessage } from '../../hooks/useAutoStatusMessage';
-import { useTruncateDB } from '../../hooks/useTruncateDB';
-import { useSeedScenario } from '../../hooks/useSeedScenario';
-import { useSeedStorePrizes } from '../../hooks/useSeedStorePrizes';
+import { useTruncateDB } from '../../hooks/useTruncateDB'; // TODO DEV
+import { useSeedScenario } from '../../hooks/useSeedScenario'; // TODO DEV
+import { useSeedStorePrizes } from '../../hooks/useSeedStorePrizes'; // TODO DEV
 import { useAwardMonthlyTop } from '../../hooks/useAwardMonthlyTop';
-import type { SeedDevScenario } from '../../api/dev';
+import type { SeedDevScenario } from '../../api/dev'; // TODO DEV
 import type { AwardMonthlyTopResponse } from '../../types/monthly_top';
 import { formatMonthlyTopAwardLine } from '../../utils/monthlyTop';
 import styles from './DashboardPage.module.css';
@@ -51,6 +52,7 @@ type SeedButton = {
   color: 'primary' | 'secondary' | 'ghost';
 };
 
+// TODO DEV: удалить seedButtons перед релизом.
 const seedButtons: SeedButton[] = [
   { key: 'monthly_top', label: 'Топ-10 месяца (seed)', scenario: 'monthly_top', color: 'secondary' },
   { key: 'project12', label: 'Все 12 недель', scenario: 'project12', color: 'secondary' },
@@ -66,6 +68,7 @@ export function DashboardPage() {
   const prodStatusRef = useRef<HTMLDivElement>(null);
   const devStatusRef = useRef<HTMLDivElement>(null);
   const dangerStatusRef = useRef<HTMLDivElement>(null);
+  // TODO DEV: удалить хуки truncate/seed перед релизом.
   const { truncate, loading: truncateLoading, error: truncateError, reset: resetTruncate } = useTruncateDB();
   const { seed, loading: seedLoading, error: seedError, reset: resetSeed } = useSeedScenario();
   const {
@@ -76,6 +79,7 @@ export function DashboardPage() {
   } = useSeedStorePrizes();
   const { award, loading: awardLoading, error: awardError, reset: resetAward } = useAwardMonthlyTop();
 
+  // TODO DEV: удалить state/handlers truncate и seed перед релизом.
   const [seedResult, setSeedResult] = useState<{ scenario: SeedDevScenario; messages: string[] } | null>(null);
   const [storeSeedResult, setStoreSeedResult] = useState<string[] | null>(null);
   const [awardResult, setAwardResult] = useState<AwardMonthlyTopResponse | null>(null);
@@ -285,6 +289,7 @@ export function DashboardPage() {
         </div>
       </section>
 
+      {/* TODO DEV: удалить секцию devPanel перед релизом. */}
       <section className={styles.devPanel}>
         <header className={styles.panelHead}>
           <div className={styles.panelTitleWrap}>
@@ -358,6 +363,7 @@ export function DashboardPage() {
         </div>
       </section>
 
+      {/* TODO DEV: удалить секцию dangerPanel (truncate) перед релизом. */}
       <section className={styles.dangerPanel}>
         <header className={styles.panelHead}>
           <div className={styles.panelTitleWrap}>

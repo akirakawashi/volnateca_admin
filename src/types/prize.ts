@@ -36,3 +36,15 @@ export interface CreatePrizePayload {
   sort_order: number;
   is_active: boolean;
 }
+
+export interface UpdatePrizePayload {
+  prize_name: string;
+  description: string | null;
+  image_attachment: string | null;
+  status: PrizeStatus;
+  cost_points: number;
+  quantity_total: number;
+  required_level: number | null;
+  sort_order: number;
+  is_active: boolean;
+}

@@ -210,6 +210,27 @@
   font-size: 12px;
 }
 
+.editMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  border: 1px solid var(--sep);
+  border-radius: 16px;
+  background: rgba(7, 12, 22, 0.58);
+}
+
+.editMetaText {
+  color: var(--text-2);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.prizeItemActive {
+  border-color: rgba(139, 157, 255, 0.42);
+  box-shadow: 0 0 0 1px rgba(139, 157, 255, 0.12);
+}
+
 .badges {
   display: flex;
   flex-wrap: wrap;
