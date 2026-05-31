@@ -7,12 +7,13 @@ import styles from './LoginPage.module.css';
 
 interface LoginPageProps {
   checking: boolean;
-  onLogin: (login: string, password: string) => Promise<void>;
+  onLogin: (login: string, password: string, adminToken: string) => Promise<void>;
 }
 
 export function LoginPage({ checking, onLogin }: LoginPageProps) {
   const [login, setLogin] = useState('admin');
   const [password, setPassword] = useState('');
+  const [adminToken, setAdminToken] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -25,7 +26,7 @@ export function LoginPage({ checking, onLogin }: LoginPageProps) {
     setSubmitting(true);
 
     try {
-      await onLogin(login.trim(), password);
+      await onLogin(login.trim(), password, adminToken.trim());
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Не удалось выполнить вход');
     } finally {
@@ -52,7 +53,7 @@ export function LoginPage({ checking, onLogin }: LoginPageProps) {
           <div className={styles.brand}>
             <h1 className={styles.title}>Вход в Волнатека</h1>
             <p className={styles.subtitle}>
-              {checking ? 'Проверяем сохранённую авторизацию…' : 'Введите логин и пароль администратора'}
+              {checking ? 'Проверяем сессию…' : 'Введите логин, пароль и секретный ключ'}
             </p>
           </div>
 
@@ -91,6 +92,17 @@ export function LoginPage({ checking, onLogin }: LoginPageProps) {
                   {showPassword ? 'Скрыть' : 'Показать'}
                 </button>
               </div>
+            </Field>
+
+            <Field label="Секретный ключ" required>
+              <Input
+                type="password"
+                autoComplete="off"
+                value={adminToken}
+                onChange={(event) => setAdminToken(event.target.value)}
+                disabled={disabled}
+                placeholder="Введите секретный ключ"
+              />
             </Field>
 
             <Button type="submit" size="md" loading={submitting} disabled={checking}>

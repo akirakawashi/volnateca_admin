@@ -1,13 +1,7 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { checkAdminSession } from './api/auth';
-import {
-  ADMIN_UNAUTHORIZED_EVENT,
-  buildAdminAuthHeader,
-  clearStoredAdminAuthHeader,
-  getStoredAdminAuthHeader,
-  saveStoredAdminAuthHeader,
-} from './auth/adminAuth';
+import { checkAdminSession, loginAdmin, logoutAdmin } from './api/auth';
+import { ADMIN_UNAUTHORIZED_EVENT } from './auth/adminAuth';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AppLayout } from './layouts/AppLayout/AppLayout';
 import { LoginPage } from './pages/auth/LoginPage';
@@ -32,22 +26,15 @@ export default function App() {
   const [authStatus, setAuthStatus] = useState<AuthStatus>('checking');
 
   useEffect(() => {
-    const storedAuth = getStoredAdminAuthHeader();
-    if (!storedAuth) {
-      setAuthStatus('unauthenticated');
-      return;
-    }
-
     let active = true;
 
-    void checkAdminSession(storedAuth)
+    void checkAdminSession()
       .then(() => {
         if (active) {
           setAuthStatus('authenticated');
         }
       })
       .catch(() => {
-        clearStoredAdminAuthHeader();
         if (active) {
           setAuthStatus('unauthenticated');
         }
@@ -69,15 +56,13 @@ export default function App() {
     };
   }, []);
 
-  const handleLogin = async (login: string, password: string) => {
-    const authHeader = buildAdminAuthHeader(login, password);
-    await checkAdminSession(authHeader);
-    saveStoredAdminAuthHeader(authHeader);
+  const handleLogin = async (login: string, password: string, adminToken: string) => {
+    await loginAdmin(login, password, adminToken);
     setAuthStatus('authenticated');
   };
 
   const handleLogout = () => {
-    clearStoredAdminAuthHeader();
+    void logoutAdmin().catch(() => undefined);
     setAuthStatus('unauthenticated');
   };
 

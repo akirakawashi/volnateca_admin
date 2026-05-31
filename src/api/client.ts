@@ -1,28 +1,13 @@
-import {
-  clearStoredAdminAuthHeader,
-  getStoredAdminAuthHeader,
-  notifyAdminUnauthorized,
-} from '../auth/adminAuth';
+import { notifyAdminUnauthorized } from '../auth/adminAuth';
 
 const DEFAULT_API_BASE =
   window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:8000'
     : window.location.origin;
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL?.trim() || DEFAULT_API_BASE;
-const ADMIN_TOKEN = import.meta.env.VITE_ADMIN_TOKEN?.trim() ?? '';
+const API_BASE = window.__VOLNATECA_ADMIN_CONFIG__?.API_BASE_URL?.trim() || DEFAULT_API_BASE;
 
-function getRequiredAdminToken(): string {
-  if (!ADMIN_TOKEN) {
-    throw new Error('Не настроен VITE_ADMIN_TOKEN в .env');
-  }
-
-  return ADMIN_TOKEN;
-}
-
-interface ApiFetchOptions extends RequestInit {
-  authHeader?: string;
-}
+type ApiFetchOptions = RequestInit;
 
 export class ApiError extends Error {
   readonly status: number;
@@ -35,24 +20,19 @@ export class ApiError extends Error {
 }
 
 export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): Promise<T> {
-  const { authHeader: explicitAuthHeader, headers, ...requestInit } = options;
-  const authHeader = explicitAuthHeader ?? getStoredAdminAuthHeader();
+  const { headers, ...requestInit } = options;
   const requestHeaders = new Headers(headers);
 
   requestHeaders.set('Content-Type', 'application/json');
-  requestHeaders.set('X-Admin-Token', getRequiredAdminToken());
-  if (authHeader) {
-    requestHeaders.set('Authorization', authHeader);
-  }
 
   const response = await fetch(`${API_BASE}${path}`, {
     ...requestInit,
+    credentials: 'include',
     headers: requestHeaders,
   });
 
   if (!response.ok) {
     if (response.status === 401) {
-      clearStoredAdminAuthHeader();
       notifyAdminUnauthorized();
     }
 
