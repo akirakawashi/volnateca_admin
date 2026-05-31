@@ -1,9 +1,10 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState, type ReactNode } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { checkAdminSession, loginAdmin, logoutAdmin } from './api/auth';
 import { ADMIN_UNAUTHORIZED_EVENT } from './auth/adminAuth';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AppLayout } from './layouts/AppLayout/AppLayout';
+import { adminRoutes, type AdminRouteId } from './navigation/adminNavigation';
 import { LoginPage } from './pages/auth/LoginPage';
 import { DashboardPage } from './pages/dashboard/DashboardPage';
 
@@ -19,6 +20,24 @@ import { MessageTemplatesPage } from './pages/message_templates/MessageTemplates
 import { BroadcastPage } from './pages/broadcast/BroadcastPage';
 import { UserSearchPage } from './pages/users/UserSearchPage';
 import { UserProfilePage } from './pages/users/UserProfilePage';
+
+const adminRouteElements = {
+  dashboard: <DashboardPage />,
+  charts: (
+    <Suspense fallback={<p style={{ padding: 24 }}>Загрузка графиков…</p>}>
+      <ChartsPage />
+    </Suspense>
+  ),
+  quizCreate: <CreateQuizPage />,
+  taskPromoCodes: <TaskPromoCodeTaskPage />,
+  storePrizes: <StorePrizesPage />,
+  storeRedemptions: <PrizeRedemptionsPage />,
+  users: <UserSearchPage />,
+  userProfile: <UserProfilePage />,
+  wallPost: <PostToWallPage />,
+  messageTemplates: <MessageTemplatesPage />,
+  broadcast: <BroadcastPage />,
+} satisfies Record<AdminRouteId, ReactNode>;
 
 type AuthStatus = 'checking' | 'unauthenticated' | 'authenticated';
 
@@ -72,24 +91,13 @@ export default function App() {
         <BrowserRouter>
           <AppLayout onLogout={handleLogout}>
             <Routes>
-              <Route path="/" element={<DashboardPage />} />
-              <Route
-                path="/charts"
-                element={
-                  <Suspense fallback={<p style={{ padding: 24 }}>Загрузка графиков…</p>}>
-                    <ChartsPage />
-                  </Suspense>
-                }
-              />
-              <Route path="/quiz/create" element={<CreateQuizPage />} />
-              <Route path="/tasks/promo-codes" element={<TaskPromoCodeTaskPage />} />
-              <Route path="/store/prizes" element={<StorePrizesPage />} />
-              <Route path="/store/redemptions" element={<PrizeRedemptionsPage />} />
-              <Route path="/users" element={<UserSearchPage />} />
-              <Route path="/users/:usersId" element={<UserProfilePage />} />
-              <Route path="/wall/post" element={<PostToWallPage />} />
-              <Route path="/message-templates" element={<MessageTemplatesPage />} />
-              <Route path="/broadcast" element={<BroadcastPage />} />
+              {adminRoutes.map((route) => (
+                <Route
+                  key={route.id}
+                  path={route.path}
+                  element={adminRouteElements[route.id]}
+                />
+              ))}
             </Routes>
           </AppLayout>
         </BrowserRouter>

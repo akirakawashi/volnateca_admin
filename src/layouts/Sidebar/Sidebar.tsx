@@ -1,26 +1,12 @@
 import { NavLink } from 'react-router-dom';
 import { useRedemptionQueue } from '../../contexts/redemptionQueue';
+import { adminSidebarItems, type AdminSidebarItem } from '../../navigation/adminNavigation';
 import styles from './Sidebar.module.css';
 
-interface NavItem {
-  to: string;
-  label: string;
+interface SidebarNavItem extends AdminSidebarItem {
   badgeCount?: number | null;
   badgeCapped?: boolean;
 }
-
-const navItems: NavItem[] = [
-  { to: '/', label: 'Главная' },
-  { to: '/charts', label: 'Графики' },
-  { to: '/users', label: 'Пользователь' },
-  { to: '/store/prizes', label: 'Призы магазина' },
-  { to: '/store/redemptions', label: 'Выдача призов', badgeCount: null },
-  { to: '/quiz/create', label: 'Создать квиз' },
-  { to: '/tasks/promo-codes', label: 'Задание Меняйки' },
-  { to: '/wall/post', label: 'Создать пост' },
-  { to: '/broadcast', label: 'VK-рассылка' },
-  { to: '/message-templates', label: 'Шаблоны' },
-];
 
 interface SidebarProps {
   onLogout: () => void;
@@ -29,8 +15,8 @@ interface SidebarProps {
 export function Sidebar({ onLogout }: SidebarProps) {
   const { queueCount, queueCountCapped } = useRedemptionQueue();
 
-  const items: NavItem[] = navItems.map((item) =>
-    item.to === '/store/redemptions'
+  const items: SidebarNavItem[] = adminSidebarItems.map((item) =>
+    item.badge === 'redemptionQueue'
       ? { ...item, badgeCount: queueCount, badgeCapped: queueCountCapped }
       : item,
   );

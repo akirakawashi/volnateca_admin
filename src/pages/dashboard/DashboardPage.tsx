@@ -11,37 +11,9 @@ import { useSeedStorePrizes } from '../../hooks/useSeedStorePrizes'; // TODO DEV
 import { useAwardMonthlyTop } from '../../hooks/useAwardMonthlyTop';
 import type { SeedDevScenario } from '../../api/dev'; // TODO DEV
 import type { AwardMonthlyTopResponse } from '../../types/monthly_top';
+import { adminDashboardLinks } from '../../navigation/adminNavigation';
 import { formatMonthlyTopAwardLine } from '../../utils/monthlyTop';
 import styles from './DashboardPage.module.css';
-
-interface QuickLink {
-  to: string;
-  title: string;
-  description: string;
-}
-
-const quickLinks: QuickLink[] = [
-  {
-    to: '/store/prizes',
-    title: 'Призы магазина',
-    description: 'Добавить мерч, партнёрский приз или суперприз в каталог',
-  },
-  {
-    to: '/store/redemptions',
-    title: 'Выдача призов',
-    description: 'Очередь заявок после покупки: сверка кода и отметка «Выдано»',
-  },
-  {
-    to: '/quiz/create',
-    title: 'Создать квиз',
-    description: 'Новое задание типа «Викторина» с вопросами и вариантами ответов',
-  },
-  {
-    to: '/wall/post',
-    title: 'Пост на стене',
-    description: 'Опубликовать запись от имени сообщества ВКонтакте',
-  },
-];
 
 const PROD_ACTIONS_COUNT = 3;
 
@@ -191,7 +163,7 @@ export function DashboardPage() {
             <div className={styles.heroMetrics}>
               <div>
                 <span>Разделы</span>
-                <strong>{quickLinks.length}</strong>
+                <strong>{adminDashboardLinks.length}</strong>
               </div>
               <div>
                 <span>PROD</span>
@@ -213,7 +185,7 @@ export function DashboardPage() {
           <span className={styles.sectionMeta}>Контент</span>
         </div>
         <div className={styles.actionGrid}>
-          {quickLinks.map((item) => (
+          {adminDashboardLinks.map((item) => (
             <Link key={item.to} to={item.to} className={styles.actionCard}>
               <div className={styles.actionText}>
                 <span className={styles.actionName}>{item.title}</span>
