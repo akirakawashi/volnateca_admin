@@ -27,6 +27,3 @@ export interface DailyAccrualPointsStats extends DailySeriesStats {
 }
 
 export type StatsRangeDays = 7 | 30 | 90;
-
-/** @deprecated Use StatsRangeDays */
-export type ActivityRangeDays = StatsRangeDays;
