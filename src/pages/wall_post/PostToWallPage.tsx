@@ -34,7 +34,7 @@ export function PostToWallPage() {
     reset,
     formState: { errors },
   } = useForm<FormValues>({
-    resolver: zodResolver(schema) as any,
+    resolver: zodResolver(schema),
     defaultValues: {
       message: '',
       like_points: 10,

@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { useRedemptionQueue } from '../../contexts/RedemptionQueueContext';
+import { useRedemptionQueue } from '../../contexts/redemptionQueue';
 import styles from './Sidebar.module.css';
 
 interface NavItem {

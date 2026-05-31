@@ -22,7 +22,11 @@ export function useDailyActivityStats(rangeDays: StatsRangeDays) {
   }, [rangeDays]);
 
   useEffect(() => {
-    void fetchStats();
+    const timeoutId = window.setTimeout(() => {
+      void fetchStats();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, [fetchStats]);
 
   return {

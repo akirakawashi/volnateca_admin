@@ -5,7 +5,7 @@ import { Button } from '../../components/ui/Button/Button';
 import { Card } from '../../components/ui/Card/Card';
 import { Field, Input, Select, Textarea } from '../../components/ui/Field/Field';
 import { PageHero } from '../../components/ui/PageHero/PageHero';
-import { useRedemptionQueue } from '../../contexts/RedemptionQueueContext';
+import { useRedemptionQueue } from '../../contexts/redemptionQueue';
 import { listPrizes } from '../../api/prizes';
 import { useAutoStatusMessage } from '../../hooks/useAutoStatusMessage';
 import { usePrizeRedemptions } from '../../hooks/usePrizeRedemptions';
@@ -122,9 +122,11 @@ export function PrizeRedemptionsPage() {
   }, []);
 
   useEffect(() => {
-    void reload();
-    setSelectedId(null);
-    setShowCancelForm(false);
+    const timeoutId = window.setTimeout(() => {
+      void reload();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, [reload]);
 
   const visibleItems = useMemo(() => {
@@ -135,11 +137,6 @@ export function PrizeRedemptionsPage() {
   const queueCount = useMemo(
     () => items.filter((item) => item.prize_redemption_status === 'reserved').length,
     [items],
-  );
-
-  const selected = useMemo(
-    () => visibleItems.find((item) => item.prize_redemptions_id === selectedId) ?? null,
-    [visibleItems, selectedId],
   );
 
   const normalizedSearch = normalizeRedemptionCodeQuery(searchQuery);
@@ -154,13 +151,15 @@ export function PrizeRedemptionsPage() {
     );
   }, [items, normalizedSearch]);
 
-  const counterTarget = exactCodeMatch ?? selected;
+  const selected = useMemo(
+    () =>
+      exactCodeMatch ??
+      visibleItems.find((item) => item.prize_redemptions_id === selectedId) ??
+      null,
+    [exactCodeMatch, visibleItems, selectedId],
+  );
 
-  useEffect(() => {
-    if (exactCodeMatch) {
-      setSelectedId(exactCodeMatch.prize_redemptions_id);
-    }
-  }, [exactCodeMatch?.prize_redemptions_id]);
+  const counterTarget = selected;
 
   useAutoStatusMessage({
     active: Boolean(lastAction || error),
@@ -169,31 +168,41 @@ export function PrizeRedemptionsPage() {
     dismissAfter: lastAction ? 6000 : 0,
   });
 
-  const updateFilters = (next: { status?: PrizeRedemptionStatus | null; prizes_id?: number | null }) => {
-    const params = new URLSearchParams(searchParams);
-    const nextStatus = next.status !== undefined ? next.status : statusFilter;
-    const nextPrizeId = next.prizes_id !== undefined ? next.prizes_id : prizesIdFilter;
+  const updateFilters = useCallback(
+    (next: { status?: PrizeRedemptionStatus | null; prizes_id?: number | null }) => {
+      const params = new URLSearchParams(searchParams);
+      const nextStatus = next.status !== undefined ? next.status : statusFilter;
+      const nextPrizeId = next.prizes_id !== undefined ? next.prizes_id : prizesIdFilter;
 
-    if (nextStatus === null) {
-      params.set('status', 'all');
-    } else {
-      params.set('status', nextStatus);
-    }
+      if (nextStatus === null) {
+        params.set('status', 'all');
+      } else {
+        params.set('status', nextStatus);
+      }
 
-    if (nextPrizeId == null) {
-      params.delete('prizes_id');
-    } else {
-      params.set('prizes_id', String(nextPrizeId));
-    }
+      if (nextPrizeId == null) {
+        params.delete('prizes_id');
+      } else {
+        params.set('prizes_id', String(nextPrizeId));
+      }
 
-    setSearchParams(params, { replace: true });
-  };
+      setSelectedId(null);
+      setShowCancelForm(false);
+      setSearchParams(params, { replace: true });
+    },
+    [prizesIdFilter, searchParams, setSearchParams, statusFilter],
+  );
 
   useEffect(() => {
     if (viewMode === 'counter' && statusFilter !== 'reserved') {
-      updateFilters({ status: 'reserved' });
+      const timeoutId = window.setTimeout(() => {
+        updateFilters({ status: 'reserved' });
+      }, 0);
+
+      return () => window.clearTimeout(timeoutId);
     }
-  }, [viewMode, statusFilter]);
+    return undefined;
+  }, [updateFilters, viewMode, statusFilter]);
 
   const persistViewMode = (mode: ViewMode) => {
     setViewMode(mode);
@@ -413,7 +422,7 @@ export function PrizeRedemptionsPage() {
                     <RedemptionListItem
                       key={item.prize_redemptions_id}
                       item={item}
-                      selected={item.prize_redemptions_id === selectedId}
+                      selected={item.prize_redemptions_id === selected?.prize_redemptions_id}
                       onSelect={() => {
                         setSelectedId(item.prize_redemptions_id);
                         setShowCancelForm(false);

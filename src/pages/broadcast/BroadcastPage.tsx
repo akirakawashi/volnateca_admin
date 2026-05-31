@@ -41,7 +41,7 @@ export function BroadcastPage() {
     reset,
     formState: { errors },
   } = useForm<FormValues>({
-    resolver: zodResolver(schema) as any,
+    resolver: zodResolver(schema),
     defaultValues: { message: '' },
   });
 

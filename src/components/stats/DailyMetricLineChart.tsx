@@ -77,24 +77,26 @@ function toChartData(stats: DailySeriesStats): ChartPoint[] {
   }));
 }
 
-function createTooltip(formatValue: (value: number) => string) {
-  return function MetricTooltip({ active, payload }: TooltipProps<number, string>) {
-    if (!active || !payload?.length) {
-      return null;
-    }
+interface MetricTooltipProps extends TooltipProps<number, string> {
+  formatValue: (value: number) => string;
+}
 
-    const point = payload[0]?.payload as ChartPoint | undefined;
-    if (!point) {
-      return null;
-    }
+function MetricTooltip({ active, payload, formatValue }: MetricTooltipProps) {
+  if (!active || !payload?.length) {
+    return null;
+  }
 
-    return (
-      <div className={styles.tooltip}>
-        <strong>{point.fullLabel}</strong>
-        <span>{formatValue(point.value)}</span>
-      </div>
-    );
-  };
+  const point = payload[0]?.payload as ChartPoint | undefined;
+  if (!point) {
+    return null;
+  }
+
+  return (
+    <div className={styles.tooltip}>
+      <strong>{point.fullLabel}</strong>
+      <span>{formatValue(point.value)}</span>
+    </div>
+  );
 }
 
 function formatSummaryNumber(
@@ -118,7 +120,6 @@ export function DailyMetricLineChart({
   labels,
 }: DailyMetricLineChartProps) {
   const chartData = useMemo(() => (stats ? toChartData(stats) : []), [stats]);
-  const TooltipContent = useMemo(() => createTooltip(labels.formatValue), [labels.formatValue]);
 
   const summary = useMemo(() => {
     if (!stats || stats.points.length === 0) {
@@ -238,7 +239,7 @@ export function DailyMetricLineChart({
                     }}
                   />
                   <Tooltip
-                    content={<TooltipContent />}
+                    content={<MetricTooltip formatValue={labels.formatValue} />}
                     cursor={{ stroke: theme.stroke, strokeWidth: 1, strokeDasharray: '4 4' }}
                   />
                   <Area

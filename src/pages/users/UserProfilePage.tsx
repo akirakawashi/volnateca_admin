@@ -146,14 +146,23 @@ export function UserProfilePage() {
   }, [activeTab, listPage, profile]);
 
   useEffect(() => {
-    void loadProfile();
+    const timeoutId = window.setTimeout(() => {
+      void loadProfile();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, [loadProfile]);
 
   useEffect(() => {
     if (!profile || activeTab === 'overview') {
-      return;
+      return undefined;
     }
-    void loadTabData();
+
+    const timeoutId = window.setTimeout(() => {
+      void loadTabData();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, [activeTab, loadTabData, profile]);
 
   const goToListPage = useCallback(

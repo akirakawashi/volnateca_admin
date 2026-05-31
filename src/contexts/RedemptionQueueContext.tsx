@@ -1,7 +1,5 @@
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState,
@@ -9,15 +7,7 @@ import {
 } from 'react';
 import { listPrizeRedemptions } from '../api/prizeRedemptions';
 import { REDEMPTIONS_PAGE_SIZE } from '../utils/prizeRedemption';
-
-interface RedemptionQueueContextValue {
-  queueCount: number | null;
-  queueCountCapped: boolean;
-  loading: boolean;
-  refreshQueueCount: () => Promise<void>;
-}
-
-const RedemptionQueueContext = createContext<RedemptionQueueContextValue | null>(null);
+import { RedemptionQueueContext } from './redemptionQueue';
 
 export function RedemptionQueueProvider({ children }: { children: ReactNode }) {
   const [queueCount, setQueueCount] = useState<number | null>(null);
@@ -39,7 +29,11 @@ export function RedemptionQueueProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    void refreshQueueCount();
+    const timeoutId = window.setTimeout(() => {
+      void refreshQueueCount();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, [refreshQueueCount]);
 
   const value = useMemo(
@@ -55,12 +49,4 @@ export function RedemptionQueueProvider({ children }: { children: ReactNode }) {
   return (
     <RedemptionQueueContext.Provider value={value}>{children}</RedemptionQueueContext.Provider>
   );
-}
-
-export function useRedemptionQueue(): RedemptionQueueContextValue {
-  const context = useContext(RedemptionQueueContext);
-  if (!context) {
-    throw new Error('useRedemptionQueue must be used within RedemptionQueueProvider');
-  }
-  return context;
 }
