@@ -4,28 +4,17 @@ import {
   notifyAdminUnauthorized,
 } from '../auth/adminAuth';
 
-type RuntimeConfig = {
-  API_BASE_URL?: string;
-  ADMIN_TOKEN?: string;
-};
-
-declare global {
-  interface Window {
-    __APP_CONFIG__?: RuntimeConfig;
-  }
-}
-
 const DEFAULT_API_BASE =
   window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:8000'
     : window.location.origin;
 
-const API_BASE = window.__APP_CONFIG__?.API_BASE_URL ?? DEFAULT_API_BASE;
-const ADMIN_TOKEN = window.__APP_CONFIG__?.ADMIN_TOKEN?.trim() ?? '';
+const API_BASE = import.meta.env.VITE_API_BASE_URL?.trim() || DEFAULT_API_BASE;
+const ADMIN_TOKEN = import.meta.env.VITE_ADMIN_TOKEN?.trim() ?? '';
 
 function getRequiredAdminToken(): string {
   if (!ADMIN_TOKEN) {
-    throw new Error('Не настроен ADMIN_TOKEN в runtime-config.js');
+    throw new Error('Не настроен VITE_ADMIN_TOKEN в .env');
   }
 
   return ADMIN_TOKEN;
