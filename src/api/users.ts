@@ -1,4 +1,5 @@
 import { apiFetch } from './client';
+import type { AdminListPage } from '../types/pagination';
 import type { AdminPrizeRedemption } from '../types/prizeRedemption';
 import type {
   UserProfile,
@@ -22,9 +23,9 @@ export function getUserProfile(usersId: number): Promise<UserProfile> {
 export function listUserPrizeRedemptions(
   usersId: number,
   page = 1,
-): Promise<AdminPrizeRedemption[]> {
+): Promise<AdminListPage<AdminPrizeRedemption>> {
   const params = new URLSearchParams({ page: String(page) });
-  return apiFetch<AdminPrizeRedemption[]>(
+  return apiFetch<AdminListPage<AdminPrizeRedemption>>(
     `${USERS_PATH}/${usersId}/prize-redemptions?${params.toString()}`,
   );
 }
@@ -32,16 +33,19 @@ export function listUserPrizeRedemptions(
 export function listUserTaskCompletions(
   usersId: number,
   page = 1,
-): Promise<UserTaskCompletion[]> {
+): Promise<AdminListPage<UserTaskCompletion>> {
   const params = new URLSearchParams({ page: String(page) });
-  return apiFetch<UserTaskCompletion[]>(
+  return apiFetch<AdminListPage<UserTaskCompletion>>(
     `${USERS_PATH}/${usersId}/task-completions?${params.toString()}`,
   );
 }
 
-export function listUserTransactions(usersId: number, page = 1): Promise<UserTransaction[]> {
+export function listUserTransactions(
+  usersId: number,
+  page = 1,
+): Promise<AdminListPage<UserTransaction>> {
   const params = new URLSearchParams({ page: String(page) });
-  return apiFetch<UserTransaction[]>(
+  return apiFetch<AdminListPage<UserTransaction>>(
     `${USERS_PATH}/${usersId}/transactions?${params.toString()}`,
   );
 }

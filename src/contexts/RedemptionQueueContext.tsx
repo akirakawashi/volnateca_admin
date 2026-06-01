@@ -6,7 +6,6 @@ import {
   type ReactNode,
 } from 'react';
 import { listPrizeRedemptions } from '../api/prizeRedemptions';
-import { REDEMPTIONS_PAGE_SIZE } from '../utils/prizeRedemption';
 import { RedemptionQueueContext } from './redemptionQueue';
 
 export function RedemptionQueueProvider({ children }: { children: ReactNode }) {
@@ -17,9 +16,9 @@ export function RedemptionQueueProvider({ children }: { children: ReactNode }) {
   const refreshQueueCount = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await listPrizeRedemptions({ status: 'reserved', page: 1 });
-      setQueueCount(data.length);
-      setQueueCountCapped(data.length >= REDEMPTIONS_PAGE_SIZE);
+      const page = await listPrizeRedemptions({ status: 'reserved', page: 1 });
+      setQueueCount(page.items.length);
+      setQueueCountCapped(page.has_more);
     } catch {
       setQueueCount(null);
       setQueueCountCapped(false);

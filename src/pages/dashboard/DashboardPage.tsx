@@ -15,7 +15,14 @@ import { adminDashboardLinks } from '../../navigation/adminNavigation';
 import { formatMonthlyTopAwardLine } from '../../utils/monthlyTop';
 import styles from './DashboardPage.module.css';
 
-const PROD_ACTIONS_COUNT = 3;
+type ProdAction = {
+  key: string;
+  label: string;
+  variant: 'primary' | 'secondary';
+  onClick: () => void;
+  loading?: boolean;
+  disabled?: boolean;
+};
 
 type SeedButton = {
   key: string;
@@ -116,6 +123,24 @@ export function DashboardPage() {
     }
   };
 
+  const prodActions: ProdAction[] = [
+    {
+      key: 'monthly_top',
+      label: 'Топ-10 месяца',
+      variant: 'primary',
+      loading: awardLoading,
+      disabled: awardLoading,
+      onClick: handleAwardMonthlyTop,
+    },
+    {
+      key: 'broadcast',
+      label: 'VK-рассылка',
+      variant: 'secondary',
+      disabled: awardLoading,
+      onClick: () => navigate('/broadcast'),
+    },
+  ];
+
   const prodError = awardError;
   const hasProdStatus = Boolean(prodError || awardResult);
   const hasProdSuccess = Boolean(awardResult);
@@ -167,7 +192,7 @@ export function DashboardPage() {
               </div>
               <div>
                 <span>PROD</span>
-                <strong>{PROD_ACTIONS_COUNT}</strong>
+                <strong>{prodActions.length}</strong>
               </div>
               <div>
                 <span>DEV</span>
@@ -240,23 +265,18 @@ export function DashboardPage() {
           )}
 
           <div className={styles.prodRow}>
-            <Button
-              variant="primary"
-              size="sm"
-              loading={awardLoading}
-              disabled={awardLoading}
-              onClick={handleAwardMonthlyTop}
-            >
-              Топ-10 месяца
-            </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              disabled={awardLoading}
-              onClick={() => navigate('/broadcast')}
-            >
-              VK-рассылка
-            </Button>
+            {prodActions.map((action) => (
+              <Button
+                key={action.key}
+                variant={action.variant}
+                size="sm"
+                loading={action.loading}
+                disabled={action.disabled}
+                onClick={action.onClick}
+              >
+                {action.label}
+              </Button>
+            ))}
           </div>
         </div>
       </section>

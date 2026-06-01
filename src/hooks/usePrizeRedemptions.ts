@@ -4,7 +4,6 @@ import {
   fulfillPrizeRedemption,
   listPrizeRedemptions,
 } from '../api/prizeRedemptions';
-import { REDEMPTIONS_PAGE_SIZE } from '../utils/prizeRedemption';
 import type {
   AdminPrizeRedemption,
   PrizeRedemptionStatus,
@@ -31,14 +30,14 @@ export function usePrizeRedemptions() {
     setLastAction(null);
 
     try {
-      const data = await listPrizeRedemptions({
+      const page = await listPrizeRedemptions({
         status: filters.status ?? undefined,
         prizes_id: filters.prizes_id ?? undefined,
         page: 1,
       });
-      setItems(data);
+      setItems(page.items);
       setPage(1);
-      setHasMore(data.length >= REDEMPTIONS_PAGE_SIZE);
+      setHasMore(page.has_more);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
       setItems([]);
@@ -59,7 +58,7 @@ export function usePrizeRedemptions() {
       setError(null);
 
       try {
-        const data = await listPrizeRedemptions({
+        const pageData = await listPrizeRedemptions({
           status: filters.status ?? undefined,
           prizes_id: filters.prizes_id ?? undefined,
           page: nextPage,
@@ -67,7 +66,7 @@ export function usePrizeRedemptions() {
         setItems((prev) => {
           const known = new Set(prev.map((item) => item.prize_redemptions_id));
           const merged = [...prev];
-          for (const item of data) {
+          for (const item of pageData.items) {
             if (!known.has(item.prize_redemptions_id)) {
               merged.push(item);
             }
@@ -75,7 +74,7 @@ export function usePrizeRedemptions() {
           return merged;
         });
         setPage(nextPage);
-        setHasMore(data.length >= REDEMPTIONS_PAGE_SIZE);
+        setHasMore(pageData.has_more);
       } catch (e) {
         setError(e instanceof Error ? e.message : String(e));
       } finally {

@@ -1,4 +1,5 @@
 import { apiFetch } from './client';
+import type { AdminListPage } from '../types/pagination';
 import type {
   AdminPrizeRedemption,
   CancelPrizeRedemptionPayload,
@@ -25,8 +26,10 @@ function buildListQuery(params: ListPrizeRedemptionsParams): string {
 
 export function listPrizeRedemptions(
   params: ListPrizeRedemptionsParams = {},
-): Promise<AdminPrizeRedemption[]> {
-  return apiFetch<AdminPrizeRedemption[]>(`${REDEMPTIONS_PATH}${buildListQuery(params)}`);
+): Promise<AdminListPage<AdminPrizeRedemption>> {
+  return apiFetch<AdminListPage<AdminPrizeRedemption>>(
+    `${REDEMPTIONS_PATH}${buildListQuery(params)}`,
+  );
 }
 
 export function getPrizeRedemption(prizeRedemptionsId: number): Promise<AdminPrizeRedemption> {

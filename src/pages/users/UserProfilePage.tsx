@@ -28,7 +28,7 @@ import {
   buildVkUserUrl,
   formatRedemptionDateTime,
 } from '../../utils/prizeRedemption';
-import { hasMoreListPages, parseListPageParam } from '../../utils/userAdmin';
+import { parseListPageParam } from '../../utils/userAdmin';
 import { UserListPagination } from './UserListPagination';
 import styles from './UserProfilePage.module.css';
 
@@ -123,17 +123,17 @@ export function UserProfilePage() {
     setError(null);
     try {
       if (activeTab === 'redemptions') {
-        const data = await listUserPrizeRedemptions(profile.users_id, listPage);
-        setRedemptions(data);
-        setListHasMore(hasMoreListPages(data.length));
+        const page = await listUserPrizeRedemptions(profile.users_id, listPage);
+        setRedemptions(page.items);
+        setListHasMore(page.has_more);
       } else if (activeTab === 'tasks') {
-        const data = await listUserTaskCompletions(profile.users_id, listPage);
-        setTasks(data);
-        setListHasMore(hasMoreListPages(data.length));
+        const page = await listUserTaskCompletions(profile.users_id, listPage);
+        setTasks(page.items);
+        setListHasMore(page.has_more);
       } else if (activeTab === 'transactions') {
-        const data = await listUserTransactions(profile.users_id, listPage);
-        setTransactions(data);
-        setListHasMore(hasMoreListPages(data.length));
+        const page = await listUserTransactions(profile.users_id, listPage);
+        setTransactions(page.items);
+        setListHasMore(page.has_more);
       } else if (activeTab === 'referrals') {
         setReferrals(await getUserReferrals(profile.users_id));
         setListHasMore(false);
@@ -193,9 +193,9 @@ export function UserProfilePage() {
     if (!profile) {
       return;
     }
-    const data = await listUserPrizeRedemptions(profile.users_id, listPage);
-    setRedemptions(data);
-    setListHasMore(hasMoreListPages(data.length));
+    const page = await listUserPrizeRedemptions(profile.users_id, listPage);
+    setRedemptions(page.items);
+    setListHasMore(page.has_more);
     await loadProfile();
   }, [listPage, loadProfile, profile]);
 
