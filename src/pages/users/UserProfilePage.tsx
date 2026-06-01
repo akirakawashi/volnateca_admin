@@ -1,10 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import {
-  cancelPrizeRedemption,
-  fulfillPrizeRedemption,
-} from '../../api/prizeRedemptions';
-import {
   getUserProfile,
   getUserReferrals,
   listUserPrizeRedemptions,
@@ -12,7 +8,6 @@ import {
   listUserTransactions,
 } from '../../api/users';
 import { Alert } from '../../components/ui/Alert/Alert';
-import { Button } from '../../components/ui/Button/Button';
 import { Card } from '../../components/ui/Card/Card';
 import { PageHero } from '../../components/ui/PageHero/PageHero';
 import type { AdminPrizeRedemption } from '../../types/prizeRedemption';
@@ -73,6 +68,14 @@ function parseTab(value: string | null): UserProfileTab {
   return 'overview';
 }
 
+function buildRedemptionQueueUrl(redemption: AdminPrizeRedemption): string {
+  const params = new URLSearchParams({
+    status: 'reserved',
+    q: redemption.redemption_code,
+  });
+  return `/store/redemptions?${params.toString()}`;
+}
+
 export function UserProfilePage() {
   const { usersId: usersIdParam } = useParams();
   const usersId = Number.parseInt(usersIdParam ?? '', 10);
@@ -88,9 +91,7 @@ export function UserProfilePage() {
   const [loading, setLoading] = useState(true);
   const [tabLoading, setTabLoading] = useState(false);
   const [listHasMore, setListHasMore] = useState(false);
-  const [acting, setActing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [lastAction, setLastAction] = useState<string | null>(null);
 
   const listPage = parseListPageParam(searchParams.get('page'));
 
@@ -189,47 +190,6 @@ export function UserProfilePage() {
     setSearchParams(next, { replace: true });
   };
 
-  const refreshRedemptions = useCallback(async () => {
-    if (!profile) {
-      return;
-    }
-    const page = await listUserPrizeRedemptions(profile.users_id, listPage);
-    setRedemptions(page.items);
-    setListHasMore(page.has_more);
-    await loadProfile();
-  }, [listPage, loadProfile, profile]);
-
-  const handleFulfill = async (redemption: AdminPrizeRedemption) => {
-    setActing(true);
-    setLastAction(null);
-    try {
-      await fulfillPrizeRedemption(redemption.prize_redemptions_id);
-      setLastAction('Заявка отмечена как выданная');
-      await refreshRedemptions();
-    } catch (e) {
-      setError(e instanceof Error ? e.message : String(e));
-    } finally {
-      setActing(false);
-    }
-  };
-
-  const handleCancel = async (redemption: AdminPrizeRedemption) => {
-    const reason = window.prompt('Причина отмены (необязательно)') ?? '';
-    setActing(true);
-    setLastAction(null);
-    try {
-      await cancelPrizeRedemption(redemption.prize_redemptions_id, {
-        cancel_reason: reason.trim() || null,
-      });
-      setLastAction('Заявка отменена, баллы возвращены');
-      await refreshRedemptions();
-    } catch (e) {
-      setError(e instanceof Error ? e.message : String(e));
-    } finally {
-      setActing(false);
-    }
-  };
-
   const overviewStats = useMemo(() => {
     if (!profile) {
       return [];
@@ -304,7 +264,6 @@ export function UserProfilePage() {
       </nav>
 
       {error ? <Alert variant="error">{error}</Alert> : null}
-      {lastAction ? <Alert variant="success">{lastAction}</Alert> : null}
 
       {activeTab === 'overview' ? (
         <Card className={styles.statsCard}>
@@ -346,25 +305,11 @@ export function UserProfilePage() {
                       {formatRedemptionDateTime(item.created_at)}
                     </p>
                   </div>
-                  {item.prize_redemption_status === 'reserved' ? (
-                    <div className={styles.itemActions}>
-                      <Button
-                        type="button"
-                        disabled={acting}
-                        onClick={() => void handleFulfill(item)}
-                      >
-                        Выдать
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="secondary"
-                        disabled={acting}
-                        onClick={() => void handleCancel(item)}
-                      >
-                        Отменить
-                      </Button>
-                    </div>
-                  ) : null}
+                  <div className={styles.itemActions}>
+                    <Link to={buildRedemptionQueueUrl(item)} className={styles.actionLink}>
+                      Открыть в выдаче
+                    </Link>
+                  </div>
                 </li>
               ))}
             </ul>

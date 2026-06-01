@@ -420,6 +420,10 @@
   gap: 10px;
 }
 
+.monthlyTopControls {
+  max-width: 280px;
+}
+
 .awardRow {
   padding-top: 14px;
   border-top: 1px solid var(--sep);
@@ -484,6 +488,91 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(2, 6, 18, 0.68);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  opacity: 1;
+  animation: modalOverlayIn 180ms var(--ease-out) both;
+}
+
+.modalDialog {
+  width: min(460px, 100%);
+  padding: 22px;
+  border: 1px solid var(--sep-2);
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0)),
+    var(--surface);
+  box-shadow: 0 34px 90px rgba(2, 6, 18, 0.54);
+  animation: modalDialogIn 220ms var(--ease-out) both;
+}
+
+.modalHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.modalTitle {
+  margin: 0;
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.confirmDetails {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 0 14px;
+}
+
+.confirmDetails div {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--sep);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.confirmDetails dt {
+  margin: 0 0 4px;
+  color: var(--text-3);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.confirmDetails dd {
+  margin: 0;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.modalText {
+  margin: 0 0 16px;
+  color: var(--text-2);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
 @media (hover: hover) {
@@ -586,6 +675,26 @@
   }
 }
 
+@keyframes modalOverlayIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes modalDialogIn {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 @media (max-width: 940px) {
   .heroPanel {
     width: 100%;
@@ -619,8 +728,24 @@
     padding: 16px;
   }
 
+  .monthlyTopControls {
+    max-width: none;
+  }
+
   .dangerRow {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .confirmDetails {
+    grid-template-columns: 1fr;
+  }
+
+  .modalActions {
+    justify-content: stretch;
+  }
+
+  .modalActions > * {
+    flex: 1;
   }
 }

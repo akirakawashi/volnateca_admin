@@ -3,6 +3,7 @@ import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../../components/ui/Button/Button';
 import { Alert } from '../../components/ui/Alert/Alert';
+import { Field, Input } from '../../components/ui/Field/Field';
 import { PageHero } from '../../components/ui/PageHero/PageHero';
 import { useAutoStatusMessage } from '../../hooks/useAutoStatusMessage';
 import { useTruncateDB } from '../../hooks/useTruncateDB'; // TODO DEV
@@ -40,9 +41,19 @@ const seedButtons: SeedButton[] = [
   { key: 'referral10', label: 'Рефералы: 10 друзей', scenario: 'referral10', color: 'ghost' },
 ];
 
+function formatMonthKey(date: Date): string {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+}
+
+function getPreviousMonthKey(): string {
+  const now = new Date();
+  return formatMonthKey(new Date(now.getFullYear(), now.getMonth() - 1, 1));
+}
+
 export function DashboardPage() {
   const navigate = useNavigate();
   const [confirmPending, setConfirmPending] = useState(false);
+  const [monthlyTopConfirmOpen, setMonthlyTopConfirmOpen] = useState(false);
   const [done, setDone] = useState(false);
   const prodStatusRef = useRef<HTMLDivElement>(null);
   const devStatusRef = useRef<HTMLDivElement>(null);
@@ -62,6 +73,7 @@ export function DashboardPage() {
   const [seedResult, setSeedResult] = useState<{ scenario: SeedDevScenario; messages: string[] } | null>(null);
   const [storeSeedResult, setStoreSeedResult] = useState<string[] | null>(null);
   const [awardResult, setAwardResult] = useState<AwardMonthlyTopResponse | null>(null);
+  const [awardMonth, setAwardMonth] = useState(getPreviousMonthKey);
   const [activeScenario, setActiveScenario] = useState<SeedDevScenario | null>(null);
 
   const handleTruncateClick = () => {
@@ -108,19 +120,29 @@ export function DashboardPage() {
     }
   };
 
-  const handleAwardMonthlyTop = async () => {
+  const handleAwardMonthlyTopClick = () => {
     resetAward();
     setAwardResult(null);
     setSeedResult(null);
     setStoreSeedResult(null);
-    const now = new Date();
-    const month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    setMonthlyTopConfirmOpen(true);
+  };
+
+  const handleAwardMonthlyTopConfirm = async () => {
     try {
-      const result = await award({ month, limit: 10 });
+      const result = await award({ month: awardMonth, limit: 10 });
       setAwardResult(result);
+      setMonthlyTopConfirmOpen(false);
     } catch {
       // Error text is exposed through awardError.
     }
+  };
+
+  const handleAwardMonthlyTopCancel = () => {
+    if (awardLoading) {
+      return;
+    }
+    setMonthlyTopConfirmOpen(false);
   };
 
   const prodActions: ProdAction[] = [
@@ -129,8 +151,8 @@ export function DashboardPage() {
       label: 'Топ-10 месяца',
       variant: 'primary',
       loading: awardLoading,
-      disabled: awardLoading,
-      onClick: handleAwardMonthlyTop,
+      disabled: awardLoading || !awardMonth,
+      onClick: handleAwardMonthlyTopClick,
     },
     {
       key: 'broadcast',
@@ -264,6 +286,17 @@ export function DashboardPage() {
             </div>
           )}
 
+          <div className={styles.monthlyTopControls}>
+            <Field label="Месяц для топ-10">
+              <Input
+                type="month"
+                value={awardMonth}
+                disabled={awardLoading}
+                onChange={(event) => setAwardMonth(event.target.value)}
+              />
+            </Field>
+          </div>
+
           <div className={styles.prodRow}>
             {prodActions.map((action) => (
               <Button
@@ -280,6 +313,63 @@ export function DashboardPage() {
           </div>
         </div>
       </section>
+
+      {monthlyTopConfirmOpen && (
+        <div
+          className={styles.modalOverlay}
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) {
+              handleAwardMonthlyTopCancel();
+            }
+          }}
+        >
+          <div
+            className={styles.modalDialog}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="monthly-top-confirm-title"
+          >
+            <div className={styles.modalHead}>
+              <span className={styles.prodTag}>PROD</span>
+              <h2 id="monthly-top-confirm-title" className={styles.modalTitle}>
+                Начислить топ-10 месяца
+              </h2>
+            </div>
+            <dl className={styles.confirmDetails}>
+              <div>
+                <dt>Месяц</dt>
+                <dd>{awardMonth}</dd>
+              </div>
+              <div>
+                <dt>Достижение</dt>
+                <dd>monthly_top_10</dd>
+              </div>
+              <div>
+                <dt>Лимит</dt>
+                <dd>10 пользователей</dd>
+              </div>
+            </dl>
+            <p className={styles.modalText}>
+              Начисление отправит награду выбранным пользователям и запишет результат операции.
+            </p>
+            <div className={styles.modalActions}>
+              <Button variant="secondary" size="sm" disabled={awardLoading} onClick={handleAwardMonthlyTopCancel}>
+                Отмена
+              </Button>
+              <Button
+                variant="primary"
+                size="sm"
+                loading={awardLoading}
+                disabled={!awardMonth}
+                onClick={handleAwardMonthlyTopConfirm}
+              >
+                Начислить
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* TODO DEV: удалить секцию devPanel перед релизом. */}
       <section className={styles.devPanel}>

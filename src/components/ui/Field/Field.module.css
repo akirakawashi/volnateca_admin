@@ -68,7 +68,8 @@
   line-height: 1.6;
 }
 
-.input[type='datetime-local'] {
+.input[type='datetime-local'],
+.input[type='month'] {
   color-scheme: dark;
 }
 

@@ -89,10 +89,13 @@ export function PrizeRedemptionsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const statusFilter = parseStatusParam(searchParams.get('status'));
   const prizesIdFilter = parsePrizesIdParam(searchParams.get('prizes_id'));
+  const initialSearchQuery = searchParams.get('q') ?? '';
 
-  const [viewMode, setViewMode] = useState<ViewMode>(readViewMode);
+  const [viewMode, setViewMode] = useState<ViewMode>(() =>
+    initialSearchQuery ? 'counter' : readViewMode(),
+  );
   const [prizes, setPrizes] = useState<AdminPrize[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [operatorComment, setOperatorComment] = useState('');
   const [cancelReason, setCancelReason] = useState('');

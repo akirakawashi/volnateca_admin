@@ -117,6 +117,26 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  align-items: flex-end;
+}
+
+.actionLink {
+  display: inline-flex;
+  min-height: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.85rem;
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.12));
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.actionLink:hover {
+  border-color: var(--accent, #6ea8fe);
+  background: rgba(110, 168, 254, 0.12);
 }
 
 .referrals {
@@ -169,5 +189,6 @@
 
   .itemActions {
     flex-direction: row;
+    align-items: flex-start;
   }
 }
