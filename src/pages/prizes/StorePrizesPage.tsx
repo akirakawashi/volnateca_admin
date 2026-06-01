@@ -112,6 +112,11 @@ function StorePrizeFormPanel({
     name: 'prize_type',
     disabled: isEditing,
   });
+  const editQuantityTotal = useWatch({
+    control: editForm.control,
+    name: 'quantity_total',
+    disabled: !isEditing,
+  });
 
   useEffect(() => {
     if (isEditing || selectedPrizeType !== 'super_prize') {
@@ -129,12 +134,32 @@ function StorePrizeFormPanel({
     if (!editingPrize) {
       return;
     }
+    if (values.status === 'available' && values.quantity_total <= editingPrize.quantity_claimed) {
+      editForm.setError('status', {
+        type: 'manual',
+        message: `Увеличьте количество выше ${editingPrize.quantity_claimed}, чтобы сделать приз доступным.`,
+      });
+      return;
+    }
     await onUpdate(editingPrize.prizes_id, values);
   });
 
   if (isEditing && editingPrize) {
     const { register, control, formState: { errors } } = editForm;
     const editPrizeType = editingPrize.prize_type;
+    const editQuantityTotalValue = typeof editQuantityTotal === 'number' ? editQuantityTotal : Number.NaN;
+    const canSetAvailable = Number.isFinite(editQuantityTotalValue)
+      && editQuantityTotalValue > editingPrize.quantity_claimed;
+    const editStatusOptions = statusOptions.map((option) => {
+      if (option.value !== 'available' || canSetAvailable) {
+        return option;
+      }
+      return {
+        ...option,
+        disabled: true,
+        disabledHint: `Увеличьте количество выше ${editingPrize.quantity_claimed}`,
+      };
+    });
 
     return (
       <Card title="Редактировать приз" className={styles.formCard}>
@@ -147,7 +172,16 @@ function StorePrizeFormPanel({
           </div>
 
           <div className={styles.row2}>
-            <Field label="Статус" required error={errors.status?.message}>
+            <Field
+              label="Статус"
+              required
+              error={errors.status?.message}
+              hint={
+                canSetAvailable
+                  ? undefined
+                  : `Чтобы сделать доступным, увеличьте количество выше ${editingPrize.quantity_claimed}.`
+              }
+            >
               <Controller
                 control={control}
                 name="status"
@@ -157,7 +191,7 @@ function StorePrizeFormPanel({
                     value={field.value}
                     onChange={field.onChange}
                     onBlur={field.onBlur}
-                    options={statusOptions}
+                    options={editStatusOptions}
                   />
                 )}
               />

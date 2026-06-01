@@ -40,6 +40,8 @@ type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement>;
 interface SelectOption {
   value: string;
   label: string;
+  disabled?: boolean;
+  disabledHint?: string;
 }
 
 interface SelectProps {
@@ -137,7 +139,11 @@ export function Select({
     setOpen((current) => !current);
   };
 
-  const handleSelect = (nextValue: string) => {
+  const handleSelect = (option: SelectOption) => {
+    if (option.disabled) {
+      return;
+    }
+    const nextValue = option.value;
     onChange?.(nextValue);
     onBlur?.();
     setOpen(false);
@@ -217,11 +223,15 @@ export function Select({
                 type="button"
                 role="option"
                 aria-selected={isSelected}
+                aria-disabled={option.disabled ? 'true' : undefined}
+                disabled={option.disabled}
+                title={option.disabledHint}
                 className={[
                   styles.selectOption,
                   isSelected ? styles.selectOptionSelected : '',
+                  option.disabled ? styles.selectOptionDisabled : '',
                 ].filter(Boolean).join(' ')}
-                onClick={() => handleSelect(option.value)}
+                onClick={() => handleSelect(option)}
               >
                 <span>{option.label}</span>
                 {isSelected && <span className={styles.selectOptionCheck}>✓</span>}
