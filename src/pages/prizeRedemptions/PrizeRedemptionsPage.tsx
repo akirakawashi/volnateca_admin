@@ -7,6 +7,7 @@ import { Field, Input, Select, Textarea } from '../../components/ui/Field/Field'
 import { PageHero } from '../../components/ui/PageHero/PageHero';
 import { useRedemptionQueue } from '../../contexts/redemptionQueue';
 import { listPrizes } from '../../api/prizes';
+import { getPrizeRedemptionByCode } from '../../api/prizeRedemptions';
 import { useAutoStatusMessage } from '../../hooks/useAutoStatusMessage';
 import { usePrizeRedemptions } from '../../hooks/usePrizeRedemptions';
 import type { AdminPrize } from '../../types/prize';
@@ -42,8 +43,18 @@ const statusFilterOptions = [
 const VIEW_MODE_STORAGE_KEY = 'volnateca_admin_redemption_view_mode';
 const CODE_SEARCH_INPUT_ID = 'redemption-code-search';
 const COUNTER_CODE_INPUT_ID = 'redemption-counter-code';
+const COUNTER_CODE_LOOKUP_DELAY_MS = 250;
+const MIN_COUNTER_CODE_LOOKUP_LENGTH = 3;
 
 type ViewMode = 'counter' | 'full';
+
+interface CounterCodeLookupState {
+  query: string;
+  result: AdminPrizeRedemption | null;
+  loading: boolean;
+  searched: boolean;
+  error: string | null;
+}
 
 function readViewMode(): ViewMode {
   try {
@@ -86,6 +97,13 @@ export function PrizeRedemptionsPage() {
   const [operatorComment, setOperatorComment] = useState('');
   const [cancelReason, setCancelReason] = useState('');
   const [showCancelForm, setShowCancelForm] = useState(false);
+  const [counterCodeLookup, setCounterCodeLookup] = useState<CounterCodeLookupState>({
+    query: '',
+    result: null,
+    loading: false,
+    searched: false,
+    error: null,
+  });
 
   const statusRef = useRef<HTMLDivElement>(null);
   const { refreshQueueCount } = useRedemptionQueue();
@@ -140,7 +158,7 @@ export function PrizeRedemptionsPage() {
   );
 
   const normalizedSearch = normalizeRedemptionCodeQuery(searchQuery);
-  const exactCodeMatch = useMemo(() => {
+  const localExactCodeMatch = useMemo(() => {
     if (!normalizedSearch) {
       return null;
     }
@@ -151,6 +169,29 @@ export function PrizeRedemptionsPage() {
     );
   }, [items, normalizedSearch]);
 
+  const remoteExactCodeMatch = useMemo(() => {
+    if (
+      counterCodeLookup.query !== normalizedSearch ||
+      counterCodeLookup.result == null ||
+      normalizeRedemptionCodeQuery(counterCodeLookup.result.redemption_code) !== normalizedSearch
+    ) {
+      return null;
+    }
+    return counterCodeLookup.result;
+  }, [counterCodeLookup, normalizedSearch]);
+
+  const exactCodeMatch = localExactCodeMatch ?? remoteExactCodeMatch;
+  const currentCodeLookup =
+    counterCodeLookup.query === normalizedSearch
+      ? counterCodeLookup
+      : {
+          query: normalizedSearch,
+          result: null,
+          loading: false,
+          searched: false,
+          error: null,
+        };
+
   const selected = useMemo(
     () =>
       exactCodeMatch ??
@@ -160,6 +201,60 @@ export function PrizeRedemptionsPage() {
   );
 
   const counterTarget = selected;
+
+  useEffect(() => {
+    if (
+      viewMode !== 'counter' ||
+      normalizedSearch.length < MIN_COUNTER_CODE_LOOKUP_LENGTH ||
+      localExactCodeMatch != null
+    ) {
+      return undefined;
+    }
+
+    let active = true;
+    const lookupQuery = normalizedSearch;
+
+    const timeoutId = window.setTimeout(() => {
+      setCounterCodeLookup({
+        query: lookupQuery,
+        result: null,
+        loading: true,
+        searched: false,
+        error: null,
+      });
+
+      void getPrizeRedemptionByCode(lookupQuery)
+        .then((result) => {
+          if (!active) {
+            return;
+          }
+          setCounterCodeLookup({
+            query: lookupQuery,
+            result,
+            loading: false,
+            searched: true,
+            error: null,
+          });
+        })
+        .catch((e) => {
+          if (!active) {
+            return;
+          }
+          setCounterCodeLookup({
+            query: lookupQuery,
+            result: null,
+            loading: false,
+            searched: true,
+            error: e instanceof Error ? e.message : String(e),
+          });
+        });
+    }, COUNTER_CODE_LOOKUP_DELAY_MS);
+
+    return () => {
+      active = false;
+      window.clearTimeout(timeoutId);
+    };
+  }, [localExactCodeMatch, normalizedSearch, viewMode]);
 
   useAutoStatusMessage({
     active: Boolean(lastAction || error),
@@ -327,6 +422,9 @@ export function PrizeRedemptionsPage() {
           normalizedSearch={normalizedSearch}
           itemsLoaded={items.length > 0}
           loading={loading}
+          codeLookupLoading={currentCodeLookup.loading}
+          codeLookupSearched={currentCodeLookup.searched}
+          codeLookupError={currentCodeLookup.error}
           acting={acting}
           operatorComment={operatorComment}
           onOperatorCommentChange={setOperatorComment}
@@ -481,6 +579,9 @@ interface CounterModePanelProps {
   normalizedSearch: string;
   itemsLoaded: boolean;
   loading: boolean;
+  codeLookupLoading: boolean;
+  codeLookupSearched: boolean;
+  codeLookupError: string | null;
   acting: boolean;
   operatorComment: string;
   onOperatorCommentChange: (value: string) => void;
@@ -498,6 +599,9 @@ function CounterModePanel({
   normalizedSearch,
   itemsLoaded,
   loading,
+  codeLookupLoading,
+  codeLookupSearched,
+  codeLookupError,
   acting,
   operatorComment,
   onOperatorCommentChange,
@@ -540,22 +644,23 @@ function CounterModePanel({
 
         {loading && !itemsLoaded && <p className={styles.empty}>Загрузка очереди…</p>}
 
-        {!loading && normalizedSearch && !counterTarget && (
+        {codeLookupLoading && !counterTarget && (
+          <p className={styles.empty}>Ищем код выдачи…</p>
+        )}
+
+        {codeLookupError && !counterTarget && (
           <Alert variant="error">
-            Код «{searchQuery.trim()}» не найден среди загруженных заявок в статусе «ожидает выдачи».
-            {hasMore && (
-              <>
-                {' '}
-                <button type="button" className={styles.inlineAction} onClick={onLoadMore}>
-                  Загрузить ещё
-                </button>{' '}
-                или перейдите в{' '}
-                <button type="button" className={styles.inlineAction} onClick={onSwitchToFull}>
-                  полный список
-                </button>
-                .
-              </>
-            )}
+            {codeLookupError}
+          </Alert>
+        )}
+
+        {!loading && !codeLookupLoading && codeLookupSearched && normalizedSearch && !counterTarget && (
+          <Alert variant="error">
+            Код «{searchQuery.trim()}» не найден. Проверьте код или откройте{' '}
+            <button type="button" className={styles.inlineAction} onClick={onSwitchToFull}>
+              полный список
+            </button>
+            .
           </Alert>
         )}
 

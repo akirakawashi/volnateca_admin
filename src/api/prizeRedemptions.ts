@@ -1,4 +1,4 @@
-import { apiFetch } from './client';
+import { ApiError, apiFetch } from './client';
 import type { AdminListPage } from '../types/pagination';
 import type {
   AdminPrizeRedemption,
@@ -34,6 +34,21 @@ export function listPrizeRedemptions(
 
 export function getPrizeRedemption(prizeRedemptionsId: number): Promise<AdminPrizeRedemption> {
   return apiFetch<AdminPrizeRedemption>(`${REDEMPTIONS_PATH}/${prizeRedemptionsId}`);
+}
+
+export async function getPrizeRedemptionByCode(
+  redemptionCode: string,
+): Promise<AdminPrizeRedemption | null> {
+  try {
+    return await apiFetch<AdminPrizeRedemption>(
+      `${REDEMPTIONS_PATH}/by-code/${encodeURIComponent(redemptionCode)}`,
+    );
+  } catch (e) {
+    if (e instanceof ApiError && e.status === 404) {
+      return null;
+    }
+    throw e;
+  }
 }
 
 export function fulfillPrizeRedemption(

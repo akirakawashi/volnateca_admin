@@ -1,7 +1,7 @@
 import type { AdminPrizeRedemption, PrizeRedemptionStatus } from '../types/prizeRedemption';
 
 export function normalizeRedemptionCodeQuery(value: string): string {
-  return value.trim().replace(/\s+/g, '').toUpperCase();
+  return value.trim().replace(/[\s-]+/g, '').toUpperCase();
 }
 
 export function matchesRedemptionSearch(
