@@ -1,12 +1,11 @@
 import { apiFetch } from './client';
 import { buildAdminAuthHeader } from '../auth/adminAuth';
 
-export function loginAdmin(login: string, password: string, adminToken: string): Promise<void> {
+export function loginAdmin(login: string, password: string): Promise<void> {
   return apiFetch<void>('/v1/admin/auth/login', {
     method: 'POST',
     headers: {
       Authorization: buildAdminAuthHeader(login, password),
-      'X-Admin-Token': adminToken,
     },
   });
 }

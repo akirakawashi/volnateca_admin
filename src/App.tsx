@@ -75,8 +75,8 @@ export default function App() {
     };
   }, []);
 
-  const handleLogin = async (login: string, password: string, adminToken: string) => {
-    await loginAdmin(login, password, adminToken);
+  const handleLogin = async (login: string, password: string) => {
+    await loginAdmin(login, password);
     setAuthStatus('authenticated');
   };
 
