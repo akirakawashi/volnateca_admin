@@ -11,7 +11,3 @@ export function formatReceiveType(value: string): string {
   }
   return value;
 }
-
-export const receiveTypeOptions = (Object.entries(RECEIVE_TYPE_LABELS) as [PrizeReceiveType, string][]).map(
-  ([value, label]) => ({ value, label }),
-);

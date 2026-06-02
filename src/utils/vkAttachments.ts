@@ -48,7 +48,3 @@ export function extractVkAttachment(value?: string | null): string | null {
 export function extractVkPhotoAttachment(value?: string | null): string | null {
   return extractVkAttachmentByTypes(value, ['photo']);
 }
-
-export function extractVkPollAttachment(value?: string | null): string | null {
-  return extractVkAttachmentByTypes(value, ['poll']);
-}

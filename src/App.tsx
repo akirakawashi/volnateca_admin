@@ -2,7 +2,6 @@ import { lazy, Suspense, useEffect, useState, type ReactNode } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { checkAdminSession, loginAdmin, logoutAdmin } from './api/auth';
 import { ADMIN_UNAUTHORIZED_EVENT } from './auth/adminAuth';
-import { ThemeProvider } from './contexts/ThemeContext';
 import { AppLayout } from './layouts/AppLayout/AppLayout';
 import { adminRoutes, type AdminRouteId } from './navigation/adminNavigation';
 import { LoginPage } from './pages/auth/LoginPage';
@@ -85,25 +84,23 @@ export default function App() {
     setAuthStatus('unauthenticated');
   };
 
-  return (
-    <ThemeProvider>
-      {authStatus === 'authenticated' ? (
-        <BrowserRouter>
-          <AppLayout onLogout={handleLogout}>
-            <Routes>
-              {adminRoutes.map((route) => (
-                <Route
-                  key={route.id}
-                  path={route.path}
-                  element={adminRouteElements[route.id]}
-                />
-              ))}
-            </Routes>
-          </AppLayout>
-        </BrowserRouter>
-      ) : (
-        <LoginPage checking={authStatus === 'checking'} onLogin={handleLogin} />
-      )}
-    </ThemeProvider>
-  );
+  if (authStatus === 'authenticated') {
+    return (
+      <BrowserRouter>
+        <AppLayout onLogout={handleLogout}>
+          <Routes>
+            {adminRoutes.map((route) => (
+              <Route
+                key={route.id}
+                path={route.path}
+                element={adminRouteElements[route.id]}
+              />
+            ))}
+          </Routes>
+        </AppLayout>
+      </BrowserRouter>
+    );
+  }
+
+  return <LoginPage checking={authStatus === 'checking'} onLogin={handleLogin} />;
 }

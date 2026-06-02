@@ -32,10 +32,6 @@ export function listPrizeRedemptions(
   );
 }
 
-export function getPrizeRedemption(prizeRedemptionsId: number): Promise<AdminPrizeRedemption> {
-  return apiFetch<AdminPrizeRedemption>(`${REDEMPTIONS_PATH}/${prizeRedemptionsId}`);
-}
-
 export async function getPrizeRedemptionQueueCount(): Promise<number> {
   const response = await apiFetch<{ count: number }>(`${REDEMPTIONS_PATH}/queue-count`);
   return response.count;
