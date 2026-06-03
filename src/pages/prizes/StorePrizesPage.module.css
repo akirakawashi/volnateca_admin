@@ -277,18 +277,6 @@
   color: var(--text-3);
 }
 
-.badgeActive {
-  border: 1px solid rgba(124, 242, 174, 0.16);
-  background: rgba(124, 242, 174, 0.09);
-  color: var(--green);
-}
-
-.badgeInactive {
-  border: 1px solid rgba(255, 143, 151, 0.16);
-  background: var(--red-muted);
-  color: var(--red);
-}
-
 .prizeDescription {
   margin: 0;
   color: var(--text-2);

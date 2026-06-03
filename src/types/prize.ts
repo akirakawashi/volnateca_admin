@@ -34,7 +34,6 @@ export interface CreatePrizePayload {
   quantity_total: number | null;
   required_level: number | null;
   sort_order: number;
-  is_active: boolean;
 }
 
 export interface UpdatePrizePayload {
@@ -46,5 +45,4 @@ export interface UpdatePrizePayload {
   quantity_total: number;
   required_level: number | null;
   sort_order: number;
-  is_active: boolean;
 }

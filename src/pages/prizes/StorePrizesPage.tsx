@@ -96,17 +96,8 @@ function StorePrizeFormPanel({
       quantity_total: 10,
       required_level: null,
       sort_order: 0,
-      is_active: true,
     }),
   });
-
-  useEffect(() => {
-    if (editingPrize) {
-      editForm.reset(mapPrizeToEditFormValues(editingPrize));
-    } else {
-      createForm.reset(defaultPrizeFormValues);
-    }
-  }, [editingPrize, createForm, editForm]);
 
   const selectedPrizeType = useWatch({
     control: createForm.control,
@@ -266,13 +257,6 @@ function StorePrizeFormPanel({
             </Field>
           </div>
 
-          <Field label="Публикация">
-            <label className={styles.toggle}>
-              <input {...register('is_active')} type="checkbox" className={styles.toggleInput} />
-              <span className={styles.toggleText}>Показывать приз в магазине</span>
-            </label>
-          </Field>
-
           <FormFooter inCard>
             <Button type="button" variant="secondary" size="sm" onClick={onCancelEdit}>
               Отмена
@@ -392,13 +376,6 @@ function StorePrizeFormPanel({
           </Field>
         </div>
 
-        <Field label="Публикация">
-          <label className={styles.toggle}>
-            <input {...register('is_active')} type="checkbox" className={styles.toggleInput} />
-            <span className={styles.toggleText}>Показывать приз в магазине</span>
-          </label>
-        </Field>
-
         <div className={styles.helperBox}>
           <strong>{prizeTypeLabels[selectedPrizeType ?? 'merch']}</strong>
           <span>
@@ -448,7 +425,6 @@ export function StorePrizesPage() {
     const items = prizes ?? [];
     return {
       total: items.length,
-      active: items.filter((prize) => prize.is_active).length,
       withImages: items.filter((prize) => prize.image_attachment !== null).length,
     };
   }, [prizes]);
@@ -462,7 +438,6 @@ export function StorePrizesPage() {
     quantity_total: values.quantity_total,
     required_level: values.required_level ?? null,
     sort_order: values.sort_order,
-    is_active: values.is_active,
   });
 
   const handleCreate = async (values: PrizeFormValues) => {
@@ -477,7 +452,6 @@ export function StorePrizesPage() {
       quantity_total: values.quantity_total,
       required_level: values.required_level ?? null,
       sort_order: values.sort_order,
-      is_active: values.is_active,
     });
 
     if (created) {
@@ -505,10 +479,6 @@ export function StorePrizesPage() {
             <span className={styles.headerChip}>
               <span className={styles.headerChipLabel}>Всего</span>
               <strong>{prizeStats.total}</strong>
-            </span>
-            <span className={styles.headerChip}>
-              <span className={styles.headerChipLabel}>Активных</span>
-              <strong>{prizeStats.active}</strong>
             </span>
             <span className={styles.headerChip}>
               <span className={styles.headerChipLabel}>С фото</span>
@@ -588,14 +558,6 @@ export function StorePrizesPage() {
                         <span className={[styles.badge, getStatusBadgeClass(prize.status, styles)].join(' ')}>
                           {statusLabels[prize.status]}
                         </span>
-                        <span
-                          className={[
-                            styles.badge,
-                            prize.is_active ? styles.badgeActive : styles.badgeInactive,
-                          ].join(' ')}
-                        >
-                          {prize.is_active ? 'Активен' : 'Выключен'}
-                        </span>
                       </div>
                     </div>
                   </div>
@@ -639,6 +601,7 @@ export function StorePrizesPage() {
         </Card>
 
         <StorePrizeFormPanel
+          key={editingPrize?.prizes_id ?? 'create-prize'}
           editingPrize={editingPrize}
           creating={creating}
           updating={updating}

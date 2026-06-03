@@ -18,7 +18,6 @@ export const prizeFormSchema = z.object({
   quantity_total: z.number().int().positive('Укажите количество не меньше 1'),
   required_level: z.number().int().min(1).max(4).nullable().optional(),
   sort_order: z.number().int().min(0, 'sort_order не может быть отрицательным'),
-  is_active: z.boolean(),
 });
 
 export type PrizeFormValues = z.infer<typeof prizeFormSchema>;
@@ -37,7 +36,6 @@ export const defaultPrizeFormValues: PrizeFormValues = {
   quantity_total: 10,
   required_level: null,
   sort_order: 0,
-  is_active: true,
 };
 
 export function mapPrizeToEditFormValues(prize: {
@@ -49,7 +47,6 @@ export function mapPrizeToEditFormValues(prize: {
   quantity_total: number | null;
   required_level: number | null;
   sort_order: number;
-  is_active: boolean;
 }): PrizeEditFormValues {
   return {
     prize_name: prize.prize_name,
@@ -60,6 +57,5 @@ export function mapPrizeToEditFormValues(prize: {
     quantity_total: prize.quantity_total ?? 1,
     required_level: prize.required_level,
     sort_order: prize.sort_order,
-    is_active: prize.is_active,
   };
 }
