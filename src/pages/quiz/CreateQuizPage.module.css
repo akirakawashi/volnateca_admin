@@ -1,54 +1,33 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
   width: 100%;
 }
 
 .form {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
+  /* layout via .formStack in global.css */
 }
 
 .statusRegion {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   scroll-margin-top: 24px;
 }
 
 .row2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 12px;
 }
 
 .mt {
-  margin-top: 18px;
-}
-
-.formActions {
-  position: sticky;
-  bottom: 10px;
-  z-index: 3;
-  display: flex;
-  justify-content: flex-end;
-  padding: 8px;
-  border: 1px solid var(--sep);
-  border-radius: 22px;
-  background: rgba(7, 12, 22, 0.72);
-  box-shadow: var(--sh-card);
-  backdrop-filter: blur(var(--blur));
-  -webkit-backdrop-filter: blur(var(--blur));
+  margin-top: 14px;
 }
 
 @media (max-width: 760px) {
   .row2 {
     grid-template-columns: 1fr;
-  }
-
-  .formActions {
-    position: static;
   }
 }

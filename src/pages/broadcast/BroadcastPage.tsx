@@ -9,6 +9,7 @@ import { Card } from '../../components/ui/Card/Card';
 import { PageHero } from '../../components/ui/PageHero/PageHero';
 import { Field, Textarea } from '../../components/ui/Field/Field';
 import { Alert } from '../../components/ui/Alert/Alert';
+import { FormFooter } from '../../components/ui/FormFooter/FormFooter';
 import type { BroadcastStatus } from '../../types/broadcast';
 import styles from './BroadcastPage.module.css';
 
@@ -113,7 +114,7 @@ export function BroadcastPage() {
         onSubmit={handleSubmit(onSubmit as Parameters<typeof handleSubmit>[0])}
         onFocus={resetMutation}
         noValidate
-        className={styles.form}
+        className={`formStack ${styles.form}`}
       >
         <Card title="Текст рассылки">
           <Field label="Сообщение" required error={errors.message?.message}>
@@ -126,11 +127,11 @@ export function BroadcastPage() {
           </Field>
         </Card>
 
-        <div className={styles.formActions}>
-          <Button type="submit" variant="primary" loading={loading} disabled={isActive}>
+        <FormFooter>
+          <Button type="submit" variant="primary" size="md" loading={loading} disabled={isActive}>
             {isActive ? 'Рассылка выполняется...' : 'Запустить рассылку'}
           </Button>
-        </div>
+        </FormFooter>
       </form>
     </div>
   );

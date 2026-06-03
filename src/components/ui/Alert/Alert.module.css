@@ -1,30 +1,27 @@
 .alert {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  padding: 14px 16px;
-  border-radius: 20px;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--r);
   border: 1px solid transparent;
-  font-size: 13.5px;
-  line-height: 1.55;
-  backdrop-filter: blur(var(--blur));
-  -webkit-backdrop-filter: blur(var(--blur));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+  font-size: 13px;
+  line-height: 1.5;
 }
 
 .iconBubble {
   flex-shrink: 0;
-  min-width: 34px;
-  height: 34px;
-  padding: 0 10px;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
   margin-top: 1px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.16em;
+  border-radius: var(--r-sm);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
@@ -34,41 +31,41 @@
 }
 
 .body strong {
-  color: #ffffff;
+  color: var(--text);
 }
 
 .success {
-  background: linear-gradient(180deg, rgba(124, 242, 174, 0.12), rgba(124, 242, 174, 0.04));
-  border-color: rgba(124, 242, 174, 0.18);
-  color: #d8ffe8;
+  background: var(--green-muted);
+  border-color: rgba(110, 231, 168, 0.22);
+  color: var(--text-2);
 }
 
 .success .iconBubble {
-  background: rgba(124, 242, 174, 0.12);
-  border: 1px solid rgba(124, 242, 174, 0.2);
+  background: rgba(110, 231, 168, 0.08);
+  border: 1px solid rgba(110, 231, 168, 0.2);
   color: var(--green);
 }
 
 .error {
-  background: linear-gradient(180deg, rgba(255, 143, 151, 0.12), rgba(255, 143, 151, 0.04));
-  border-color: rgba(255, 143, 151, 0.18);
-  color: #ffd9dc;
+  background: var(--red-muted);
+  border-color: rgba(248, 113, 113, 0.22);
+  color: var(--text-2);
 }
 
 .error .iconBubble {
-  background: rgba(255, 143, 151, 0.12);
-  border: 1px solid rgba(255, 143, 151, 0.2);
+  background: rgba(248, 113, 113, 0.08);
+  border: 1px solid rgba(248, 113, 113, 0.2);
   color: var(--red);
 }
 
 .info {
-  background: linear-gradient(180deg, rgba(130, 216, 255, 0.12), rgba(130, 216, 255, 0.04));
-  border-color: rgba(130, 216, 255, 0.18);
-  color: #dbf4ff;
+  background: var(--blue-muted);
+  border-color: rgba(96, 165, 250, 0.22);
+  color: var(--text-2);
 }
 
 .info .iconBubble {
-  background: rgba(130, 216, 255, 0.12);
-  border: 1px solid rgba(130, 216, 255, 0.2);
+  background: rgba(96, 165, 250, 0.08);
+  border: 1px solid rgba(96, 165, 250, 0.2);
   color: var(--blue);
 }

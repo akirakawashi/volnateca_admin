@@ -2,46 +2,13 @@
   position: relative;
   overflow: hidden;
   border: 1px solid var(--sep);
-  border-radius: 28px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)), var(--surface);
-  backdrop-filter: blur(var(--blur));
-  -webkit-backdrop-filter: blur(var(--blur));
-  box-shadow: var(--sh-card);
-  animation: cardReveal 620ms var(--ease-out) both;
+  border-radius: var(--r-lg);
+  background: var(--surface-2);
+  animation: cardReveal 520ms var(--ease-out) both;
   transition:
     transform var(--t-slow),
     border-color var(--t-slow),
-    box-shadow var(--t-slow);
-}
-
-.card::before {
-  content: "";
-  position: absolute;
-  top: -90px;
-  right: -90px;
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  background: rgba(249, 126, 184, 0.14);
-  filter: blur(70px);
-  opacity: 0.45;
-  pointer-events: none;
-  animation: cardGlowFloat 14s ease-in-out infinite alternate;
-}
-
-.card::after {
-  content: "";
-  position: absolute;
-  left: 20px;
-  right: 20px;
-  top: 0;
-  height: 1px;
-  background: linear-gradient(90deg, rgba(249, 126, 184, 0), rgba(249, 126, 184, 0.56), rgba(139, 157, 255, 0.32), rgba(130, 216, 255, 0));
-  opacity: 0.55;
-  transform: scaleX(0.72);
-  transform-origin: center;
-  transition: opacity var(--t-slow), transform var(--t-slow);
-  pointer-events: none;
+    background var(--t-slow);
 }
 
 .cardHead,
@@ -55,13 +22,15 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 18px 20px;
+  box-sizing: border-box;
+  min-height: 54px;
+  padding: 12px 14px;
   border-bottom: 1px solid var(--sep);
 }
 
 .cardTitle {
   margin: 0;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--text);
 }
@@ -69,30 +38,25 @@
 .cardActions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .cardBody {
-  padding: 20px;
+  padding: 14px;
 }
 
 @media (hover: hover) {
   .card:hover {
-    transform: translateY(-3px);
-    border-color: rgba(249, 126, 184, 0.22);
-    box-shadow: 0 32px 72px rgba(2, 6, 18, 0.36);
-  }
-
-  .card:hover::after {
-    opacity: 0.9;
-    transform: scaleX(1);
+    transform: translateY(-2px);
+    border-color: var(--sep-2);
+    background: var(--surface-2);
   }
 }
 
 @keyframes cardReveal {
   0% {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(12px);
   }
   100% {
     opacity: 1;
@@ -100,23 +64,14 @@
   }
 }
 
-@keyframes cardGlowFloat {
-  0% {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  100% {
-    transform: translate3d(-18px, 16px, 0) scale(1.06);
-  }
-}
-
 @media (max-width: 640px) {
   .cardHead {
     align-items: flex-start;
     flex-direction: column;
-    padding: 16px;
+    padding: 12px;
   }
 
   .cardBody {
-    padding: 16px;
+    padding: 12px;
   }
 }

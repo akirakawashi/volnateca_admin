@@ -25,9 +25,24 @@
 
 .toolbarRow {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(160px, 0.6fr)) auto;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 220px) minmax(0, 220px);
   gap: 12px;
-  align-items: end;
+  align-items: start;
+}
+
+.toolbarField {
+  min-width: 0;
+}
+
+.toolbarField .label {
+  min-height: 18px;
+}
+
+.toolbarSearchHint {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-3);
 }
 
 .toolbarActions {
@@ -38,38 +53,49 @@
 
 .layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
-  gap: 18px;
-  align-items: start;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: 14px;
+  align-items: stretch;
 }
 
 .listCard,
 .detailCard {
-  min-height: 280px;
-}
-
-.queueMeta {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
+  flex-direction: column;
+  min-height: 320px;
+  height: 100%;
 }
 
-.queueCount {
+.listCard :global(.cardBody),
+.detailCard :global(.cardBody) {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.queueChip {
   display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: 999px;
+  align-items: baseline;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: var(--r-sm);
   border: 1px solid var(--sep);
-  background: rgba(7, 12, 22, 0.58);
-  color: var(--text-muted);
-  font-size: 13px;
+  background: var(--surface-2);
 }
 
-.queueCount strong {
+.queueChipLabel {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.queueChip strong {
   color: var(--text);
-  font-size: 15px;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .hint {
@@ -80,25 +106,31 @@
 }
 
 .empty {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
   margin: 0;
   color: var(--text-muted);
 }
 
 .list {
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 10px;
+  min-height: 0;
 }
 
 .redemptionItem {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
-  padding: 14px 16px;
+  padding: 10px 12px;
   border: 1px solid var(--sep);
-  border-radius: 16px;
-  background: rgba(7, 12, 22, 0.42);
+  border-radius: var(--r);
+  background: var(--surface-2);
   color: inherit;
   text-align: left;
   cursor: pointer;
@@ -109,14 +141,14 @@
 }
 
 .redemptionItem:hover {
-  border-color: rgba(139, 157, 255, 0.24);
-  background: rgba(10, 16, 28, 0.62);
+  border-color: var(--sep-2);
+  background: var(--surface-3);
 }
 
 .redemptionItemSelected {
-  border-color: rgba(139, 157, 255, 0.42);
-  box-shadow: 0 0 0 3px rgba(139, 157, 255, 0.12);
-  background: rgba(10, 16, 28, 0.72);
+  border-color: var(--sep-2);
+  box-shadow: 0 0 0 2px var(--accent-muted);
+  background: var(--accent-muted);
 }
 
 .redemptionHead {
@@ -208,6 +240,7 @@
 .listFooter {
   display: flex;
   justify-content: center;
+  margin-top: auto;
   padding-top: 8px;
 }
 
@@ -219,10 +252,11 @@
 
 .detailPlaceholder {
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 8px;
-  min-height: 220px;
   justify-content: center;
+  min-height: 240px;
   color: var(--text-muted);
 }
 
@@ -271,7 +305,7 @@
 }
 
 .counterCard {
-  max-width: 720px;
+  width: 100%;
 }
 
 .counterBody {
@@ -290,11 +324,11 @@
 .counterMatch {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 16px 18px;
-  border-radius: 18px;
-  border: 1px solid rgba(139, 157, 255, 0.28);
-  background: rgba(139, 157, 255, 0.08);
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: var(--r);
+  border: 1px solid var(--sep-2);
+  background: var(--accent-muted);
 }
 
 .counterMatchCode {

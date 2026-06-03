@@ -82,9 +82,7 @@ export function UserSearchPage() {
             {results.map((user) => (
               <li key={user.users_id} className={styles.resultItem}>
                 <div className={styles.resultMain}>
-                  <Link to={`/users/${user.users_id}`} className={styles.resultLink}>
-                    {user.display_name}
-                  </Link>
+                  <span className={styles.resultName}>{user.display_name}</span>
                   <span className={styles.resultMeta}>
                     VK {user.vk_user_id}
                     {user.vk_screen_name ? ` · @${user.vk_screen_name}` : ''}
@@ -101,6 +99,9 @@ export function UserSearchPage() {
                   >
                     VK ↗
                   </a>
+                  <Link to={`/users/${user.users_id}`} className={styles.profileBtn}>
+                    Профиль
+                  </Link>
                 </div>
               </li>
             ))}

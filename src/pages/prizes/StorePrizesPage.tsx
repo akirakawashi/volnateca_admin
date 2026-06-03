@@ -6,6 +6,7 @@ import { Alert } from '../../components/ui/Alert/Alert';
 import { Button } from '../../components/ui/Button/Button';
 import { Card } from '../../components/ui/Card/Card';
 import { Field, Input, Select, Textarea } from '../../components/ui/Field/Field';
+import { FormFooter } from '../../components/ui/FormFooter/FormFooter';
 import { PageHero } from '../../components/ui/PageHero/PageHero';
 import { useAutoStatusMessage } from '../../hooks/useAutoStatusMessage';
 import { usePrizes } from '../../hooks/usePrizes';
@@ -163,7 +164,7 @@ function StorePrizeFormPanel({
 
     return (
       <Card title="Редактировать приз" className={styles.formCard}>
-        <form onSubmit={onSubmitEdit} onFocus={onFocus} noValidate className={styles.form}>
+        <form onSubmit={onSubmitEdit} onFocus={onFocus} noValidate className={`formStack ${styles.form}`}>
           <div className={styles.editMeta}>
             <code className={styles.prizeCode}>{editingPrize.code}</code>
             <span className={styles.editMetaText}>
@@ -272,14 +273,14 @@ function StorePrizeFormPanel({
             </label>
           </Field>
 
-          <div className={styles.formActions}>
+          <FormFooter inCard>
             <Button type="button" variant="secondary" size="sm" onClick={onCancelEdit}>
               Отмена
             </Button>
-            <Button type="submit" variant="primary" loading={saving}>
+            <Button type="submit" variant="primary" size="md" loading={saving}>
               Сохранить изменения
             </Button>
-          </div>
+          </FormFooter>
         </form>
       </Card>
     );
@@ -289,7 +290,7 @@ function StorePrizeFormPanel({
 
   return (
     <Card title="Создать приз" className={styles.formCard}>
-      <form onSubmit={onSubmitCreate} onFocus={onFocus} noValidate className={styles.form}>
+      <form onSubmit={onSubmitCreate} onFocus={onFocus} noValidate className={`formStack ${styles.form}`}>
         <Field label="Тип приза" required error={errors.prize_type?.message}>
           <Controller
             control={control}
@@ -406,11 +407,11 @@ function StorePrizeFormPanel({
           </span>
         </div>
 
-        <div className={styles.formActions}>
-          <Button type="submit" variant="primary" loading={saving}>
+        <FormFooter inCard>
+          <Button type="submit" variant="primary" size="md" loading={saving}>
             Создать приз
           </Button>
-        </div>
+        </FormFooter>
       </form>
     </Card>
   );
@@ -500,19 +501,19 @@ export function StorePrizesPage() {
         title="Призы магазина"
         subtitle="Добавление мерча, партнёрских призов и суперпризов без промокодов"
         aside={
-          <div className={styles.heroStats} aria-hidden="true">
-            <div className={styles.metricCard}>
-              <span>Всего призов</span>
+          <div className={styles.headerChips}>
+            <span className={styles.headerChip}>
+              <span className={styles.headerChipLabel}>Всего</span>
               <strong>{prizeStats.total}</strong>
-            </div>
-            <div className={styles.metricCard}>
-              <span>Активных</span>
+            </span>
+            <span className={styles.headerChip}>
+              <span className={styles.headerChipLabel}>Активных</span>
               <strong>{prizeStats.active}</strong>
-            </div>
-            <div className={styles.metricCard}>
-              <span>С картинкой</span>
+            </span>
+            <span className={styles.headerChip}>
+              <span className={styles.headerChipLabel}>С фото</span>
               <strong>{prizeStats.withImages}</strong>
-            </div>
+            </span>
           </div>
         }
       />
@@ -530,16 +531,6 @@ export function StorePrizesPage() {
       )}
 
       <div className={styles.layout}>
-        <StorePrizeFormPanel
-          editingPrize={editingPrize}
-          creating={creating}
-          updating={updating}
-          onCancelEdit={() => setEditingPrize(null)}
-          onCreate={handleCreate}
-          onUpdate={handleUpdate}
-          onFocus={resetStatus}
-        />
-
         <Card
           title="Список призов"
           className={styles.listCard}
@@ -646,6 +637,16 @@ export function StorePrizesPage() {
             </div>
           )}
         </Card>
+
+        <StorePrizeFormPanel
+          editingPrize={editingPrize}
+          creating={creating}
+          updating={updating}
+          onCancelEdit={() => setEditingPrize(null)}
+          onCreate={handleCreate}
+          onUpdate={handleUpdate}
+          onFocus={resetStatus}
+        />
       </div>
     </div>
   );

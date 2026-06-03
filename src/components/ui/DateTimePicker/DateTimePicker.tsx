@@ -1,6 +1,6 @@
-import { useEffect, useId, useMemo, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
-import type { CSSProperties } from 'react';
+import { useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { PopoverOverlay } from '../popover/PopoverOverlay';
+import { useFixedPopoverOverlay } from '../popover/useFixedPopoverOverlay';
 import styles from './DateTimePicker.module.css';
 
 interface DateTimePickerProps {
@@ -14,6 +14,22 @@ interface DateTimePickerProps {
 const DAY_LABELS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'] as const;
 const HOURS = Array.from({ length: 24 }, (_, index) => index);
 const MINUTES = Array.from({ length: 60 }, (_, index) => index);
+const POPOVER_MIN_WIDTH = 380;
+const POPOVER_ESTIMATED_HEIGHT = 320;
+
+function scrollColumnToSelected(column: HTMLDivElement | null) {
+  if (!column) {
+    return;
+  }
+
+  const selected = column.querySelector<HTMLElement>('[data-selected="true"]');
+  if (!selected) {
+    return;
+  }
+
+  const top = selected.offsetTop - column.clientHeight / 2 + selected.clientHeight / 2;
+  column.scrollTop = Math.max(0, top);
+}
 
 export function DateTimePicker({
   value,
@@ -22,93 +38,43 @@ export function DateTimePicker({
   disabled,
   placeholder = 'дд.мм.гггг --:--',
 }: DateTimePickerProps) {
-  const [open, setOpen] = useState(false);
-  const [menuStyle, setMenuStyle] = useState<CSSProperties>({});
   const [viewMonth, setViewMonth] = useState(() => startOfMonth(parseLocalDateTime(value) ?? getDefaultDate()));
-  const rootRef = useRef<HTMLDivElement>(null);
-  const popoverRef = useRef<HTMLDivElement>(null);
   const hoursRef = useRef<HTMLDivElement>(null);
   const minutesRef = useRef<HTMLDivElement>(null);
   const popoverId = useId();
+  const {
+    rootRef,
+    overlayRef: popoverRef,
+    open,
+    style: menuStyle,
+    overlayReady,
+    toggleOpen,
+    closeOverlay,
+  } = useFixedPopoverOverlay({
+    onBlur,
+    minWidth: POPOVER_MIN_WIDTH,
+    estimatedHeight: POPOVER_ESTIMATED_HEIGHT,
+  });
 
   const selectedDate = useMemo(() => parseLocalDateTime(value), [value]);
   const calendarDays = useMemo(() => buildCalendarDays(viewMonth), [viewMonth]);
 
-  useEffect(() => {
-    if (!open) {
-      return undefined;
-    }
-
-    const updatePosition = () => {
-      const trigger = rootRef.current?.querySelector('button');
-      if (!(trigger instanceof HTMLButtonElement)) {
-        return;
-      }
-
-      const rect = trigger.getBoundingClientRect();
-      setMenuStyle({
-        position: 'fixed',
-        top: rect.bottom + 10,
-        left: rect.left,
-        width: Math.max(rect.width, 380),
-      });
-    };
-
-    updatePosition();
-
-    const handlePointerDown = (event: MouseEvent) => {
-      const target = event.target as Node;
-      const insideTrigger = rootRef.current?.contains(target) ?? false;
-      const insidePopover = popoverRef.current?.contains(target) ?? false;
-
-      if (!insideTrigger && !insidePopover) {
-        setOpen(false);
-        onBlur?.();
-      }
-    };
-
-    const handleEscape = (event: globalThis.KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setOpen(false);
-        onBlur?.();
-      }
-    };
-
-    window.addEventListener('mousedown', handlePointerDown);
-    window.addEventListener('keydown', handleEscape);
-    window.addEventListener('resize', updatePosition);
-    window.addEventListener('scroll', updatePosition, true);
-
-    return () => {
-      window.removeEventListener('mousedown', handlePointerDown);
-      window.removeEventListener('keydown', handleEscape);
-      window.removeEventListener('resize', updatePosition);
-      window.removeEventListener('scroll', updatePosition, true);
-    };
-  }, [onBlur, open]);
-
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!open || selectedDate === null) {
       return;
     }
 
-    const selectedHour = hoursRef.current?.querySelector<HTMLElement>('[data-selected="true"]');
-    const selectedMinute = minutesRef.current?.querySelector<HTMLElement>('[data-selected="true"]');
-
-    selectedHour?.scrollIntoView({ block: 'center' });
-    selectedMinute?.scrollIntoView({ block: 'center' });
+    scrollColumnToSelected(hoursRef.current);
+    scrollColumnToSelected(minutesRef.current);
   }, [open, selectedDate]);
 
   const handleToggle = () => {
     if (disabled) {
       return;
     }
-    setOpen((current) => {
-      if (!current) {
-        const currentDate = selectedDate ?? getDefaultDate();
-        setViewMonth(startOfMonth(currentDate));
-      }
-      return !current;
+    toggleOpen(() => {
+      const currentDate = selectedDate ?? getDefaultDate();
+      setViewMonth(startOfMonth(currentDate));
     });
   };
 
@@ -148,7 +114,7 @@ export function DateTimePicker({
 
   const handleClear = () => {
     onChange?.('');
-    setOpen(false);
+    closeOverlay();
     onBlur?.();
   };
 
@@ -167,7 +133,7 @@ export function DateTimePicker({
             const insideTrigger = !!activeElement && (rootRef.current?.contains(activeElement) ?? false);
             const insidePopover = !!activeElement && (popoverRef.current?.contains(activeElement) ?? false);
             if (!insideTrigger && !insidePopover) {
-              setOpen(false);
+              closeOverlay();
               onBlur?.();
             }
           }, 0);
@@ -180,15 +146,15 @@ export function DateTimePicker({
         <span className={[styles.caret, open ? styles.caretOpen : ''].filter(Boolean).join(' ')} aria-hidden="true" />
       </button>
 
-      {open && typeof document !== 'undefined' && createPortal(
-        <div
-          ref={popoverRef}
-          id={popoverId}
-          role="dialog"
-          aria-modal="false"
-          className={styles.popover}
-          style={menuStyle}
-        >
+      <PopoverOverlay
+        show={overlayReady}
+        overlayRef={popoverRef}
+        id={popoverId}
+        role="dialog"
+        aria-modal="false"
+        style={menuStyle}
+        panelClassName={styles.popover}
+      >
           <div className={styles.calendarPane}>
             <div className={styles.calendarHeader}>
               <button
@@ -298,9 +264,7 @@ export function DateTimePicker({
               </div>
             </div>
           </div>
-        </div>,
-        document.body,
-      )}
+      </PopoverOverlay>
     </div>
   );
 }

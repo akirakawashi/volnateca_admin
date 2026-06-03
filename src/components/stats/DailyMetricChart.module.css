@@ -1,21 +1,21 @@
 .root {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
 }
 
 .head {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
+  gap: 14px;
   flex-wrap: wrap;
 }
 
 .copy {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   max-width: 520px;
 }
 
@@ -34,23 +34,23 @@
 
 .rangeSwitch {
   display: inline-flex;
-  gap: 6px;
-  padding: 4px;
+  gap: 2px;
+  padding: 3px;
   border: 1px solid var(--sep);
-  border-radius: var(--r-full);
-  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--r);
+  background: var(--surface-2);
 }
 
 .rangeBtn,
 .rangeBtnActive {
-  min-width: 44px;
-  padding: 8px 12px;
+  min-width: 36px;
+  padding: 5px 10px;
   border: none;
-  border-radius: var(--r-full);
+  border-radius: var(--r-sm);
   background: transparent;
   color: var(--text-2);
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 600;
   cursor: pointer;
   transition:
     background var(--t-fast),
@@ -62,49 +62,50 @@
 }
 
 .rangeBtnActive {
-  background: rgba(139, 157, 255, 0.16);
+  background: var(--accent-muted);
   color: var(--accent);
 }
 
 .summary {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
 .summaryItem {
-  min-width: 120px;
-  padding: 12px 14px;
+  min-width: 100px;
+  padding: 10px 12px;
   border: 1px solid var(--sep);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--r);
+  background: var(--surface);
 }
 
 .summaryItem span {
   display: block;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text-3);
 }
 
 .summaryItem strong {
   display: block;
-  margin-top: 6px;
-  font-size: 22px;
+  margin-top: 4px;
+  font-size: 20px;
   line-height: 1;
   color: var(--text);
+  font-weight: 600;
 }
 
 .chartPanel {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 12px 8px 8px;
+  gap: 6px;
+  padding: 10px 8px 6px;
   border: 1px solid var(--sep);
-  border-radius: 20px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0));
+  border-radius: var(--r-lg);
+  background: var(--surface);
 }
 
 .chartViewport {
@@ -120,29 +121,29 @@
 .tooltip {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 10px 12px;
-  border: 1px solid rgba(139, 157, 255, 0.35);
-  border-radius: 12px;
-  background: rgba(12, 16, 32, 0.96);
+  gap: 2px;
+  padding: 8px 10px;
+  border: 1px solid var(--sep);
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
   box-shadow: var(--sh-md);
 }
 
 .tooltip strong {
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 600;
   color: var(--text);
 }
 
 .tooltip span {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--accent);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .hint {
   margin: 0;
-  padding: 0 8px 4px;
+  padding: 0 6px 4px;
   font-size: 11px;
   color: var(--text-3);
 }
@@ -150,8 +151,8 @@
 .loading,
 .empty {
   margin: 0;
-  padding: 28px 12px;
+  padding: 24px 12px;
   text-align: center;
   color: var(--text-2);
-  font-size: 14px;
+  font-size: 13px;
 }

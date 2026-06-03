@@ -1,20 +1,17 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
   width: 100%;
 }
 
 .empty {
   margin: 0;
   color: var(--text-2);
-  padding: 22px;
+  padding: 16px;
   border: 1px solid var(--sep);
-  border-radius: 24px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)), var(--surface);
-  backdrop-filter: blur(var(--blur));
-  -webkit-backdrop-filter: blur(var(--blur));
-  box-shadow: var(--sh-card);
+  border-radius: var(--r-lg);
+  background: var(--surface);
 }
 
 .card {
@@ -24,19 +21,19 @@
 .meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px 14px;
+  gap: 8px 12px;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .code {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--accent);
   background: var(--accent-muted);
-  border: 1px solid rgba(139, 157, 255, 0.22);
-  padding: 5px 9px;
-  border-radius: 12px;
+  border: 1px solid var(--sep);
+  padding: 3px 7px;
+  border-radius: var(--r-sm);
 }
 
 .vars {
@@ -44,39 +41,38 @@
   color: var(--text-2);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
 .varLegend {
   color: var(--orange);
-  font-weight: 800;
-  font-size: 12px;
+  font-weight: 600;
+  font-size: 11px;
   margin-left: 0;
-  letter-spacing: 0.02em;
 }
 
 .varExample {
   background: var(--orange-muted);
-  border: 1px solid rgba(255, 187, 118, 0.22);
+  border: 1px solid rgba(251, 191, 36, 0.22);
   color: var(--orange);
-  padding: 3px 8px;
-  border-radius: 12px;
+  padding: 2px 6px;
+  border-radius: var(--r-sm);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 12px;
-  font-weight: 600;
-  margin-left: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  margin-left: 4px;
 }
 
 .mt {
-  margin-top: 16px;
+  margin-top: 12px;
 }
 
 .actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 14px;
-  padding-top: 14px;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
   border-top: 1px solid var(--sep);
 }

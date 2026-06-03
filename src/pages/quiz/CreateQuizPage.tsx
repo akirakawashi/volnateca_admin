@@ -12,6 +12,7 @@ import { DateTimePicker } from '../../components/ui/DateTimePicker/DateTimePicke
 import { PageHero } from '../../components/ui/PageHero/PageHero';
 import { Field, Input, Textarea } from '../../components/ui/Field/Field';
 import { Alert } from '../../components/ui/Alert/Alert';
+import { FormFooter } from '../../components/ui/FormFooter/FormFooter';
 import { extractVkPhotoAttachment } from '../../utils/vkAttachments';
 import styles from './CreateQuizPage.module.css';
 
@@ -88,7 +89,7 @@ export function CreateQuizPage() {
           onSubmit={handleSubmit(onSubmit as Parameters<typeof handleSubmit>[0])}
           onFocus={resetMutation}
           noValidate
-          className={styles.form}
+          className={`formStack ${styles.form}`}
         >
           <Card title="Основная информация">
             <div className={styles.row2}>
@@ -161,11 +162,11 @@ export function CreateQuizPage() {
 
           <QuestionsEditor />
 
-          <div className={styles.formActions}>
-            <Button type="submit" variant="primary" loading={loading}>
+          <FormFooter>
+            <Button type="submit" variant="primary" size="md" loading={loading}>
               Создать квиз
             </Button>
-          </div>
+          </FormFooter>
         </form>
       </FormProvider>
     </div>

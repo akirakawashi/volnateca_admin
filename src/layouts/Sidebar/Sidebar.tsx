@@ -23,15 +23,22 @@ export function Sidebar({ onLogout }: SidebarProps) {
 
   return (
     <aside className={styles.sidebar}>
-      <div className={styles.brand}>
-        <div className={styles.brandMeta}>
+      <div className={styles.top}>
+        <div className={styles.brand}>
           <span className={styles.brandName}>Волнатека</span>
-          <span className={styles.brandRole}>Control room</span>
+          <span className={styles.brandRole}>Admin</span>
         </div>
+        <button
+          type="button"
+          className={styles.logoutBtn}
+          onClick={onLogout}
+          aria-label="Выйти из админ-панели"
+        >
+          Выйти
+        </button>
       </div>
 
       <nav className={styles.nav} aria-label="Основное меню">
-        <p className={styles.sectionLabel}>Навигация</p>
         <ul className={styles.navList} role="list">
           {items.map((item) => (
             <li key={item.to}>
@@ -55,22 +62,9 @@ export function Sidebar({ onLogout }: SidebarProps) {
         </ul>
       </nav>
 
-      <div className={styles.foot}>
-        <div className={styles.sessionCard} aria-hidden="true">
-          <span className={styles.sessionDot} />
-          <div>
-            <span className={styles.sessionLabel}>Сессия</span>
-            <strong className={styles.sessionValue}>Активна</strong>
-          </div>
-        </div>
-        <button
-          type="button"
-          className={[styles.footBtn, styles.logoutBtn].join(' ')}
-          onClick={onLogout}
-          aria-label="Выйти из админ-панели"
-        >
-          <span className={styles.themeLabel}>Выйти</span>
-        </button>
+      <div className={styles.status} aria-hidden="true">
+        <span className={styles.statusDot} />
+        <span className={styles.statusText}>Сессия активна</span>
       </div>
     </aside>
   );

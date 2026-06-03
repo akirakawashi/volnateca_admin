@@ -45,14 +45,9 @@
   min-width: 0;
 }
 
-.resultLink {
+.resultName {
   font-weight: 600;
   color: var(--text-primary);
-  text-decoration: none;
-}
-
-.resultLink:hover {
-  text-decoration: underline;
 }
 
 .resultMeta {
@@ -64,9 +59,35 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 0.25rem;
+  gap: 0.35rem;
   font-size: 0.875rem;
   white-space: nowrap;
+}
+
+.profileBtn {
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.15rem;
+  padding: 0 10px;
+  border: 1px solid var(--sep);
+  border-radius: var(--r-sm);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: border-color var(--t-fast), background var(--t-fast);
+}
+
+.profileBtn:hover {
+  border-color: var(--sep-2);
+  background: var(--accent-muted);
+}
+
+.profileBtn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent-muted);
 }
 
 .vkLink {

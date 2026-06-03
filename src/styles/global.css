@@ -1,50 +1,57 @@
 :root {
   color-scheme: dark;
 
-  --bg: #060b15;
-  --surface: rgba(11, 18, 32, 0.76);
-  --surface-2: rgba(17, 27, 45, 0.82);
-  --surface-3: rgba(23, 38, 64, 0.9);
+  --bg: #22232c;
+  --bg-elevated: #2a2b36;
+  --surface: #31323d;
+  --surface-2: #3a3b48;
+  --surface-3: #444552;
 
-  --sep: rgba(148, 163, 184, 0.14);
-  --sep-2: rgba(139, 157, 255, 0.28);
+  --sep: rgba(255, 255, 255, 0.1);
+  --sep-2: rgba(148, 156, 255, 0.45);
+  --border: var(--sep);
+  --border-subtle: rgba(255, 255, 255, 0.06);
 
-  --accent: #8b9dff;
-  --accent-2: #6a7dff;
-  --accent-hover: #9aa9ff;
-  --accent-muted: rgba(139, 157, 255, 0.16);
-  --accent-glow: rgba(139, 157, 255, 0.34);
+  --accent: #949cff;
+  --accent-2: #7f86eb;
+  --accent-hover: #a8afff;
+  --accent-muted: rgba(148, 156, 255, 0.16);
+  --accent-glow: rgba(148, 156, 255, 0.24);
 
-  --text: #f4f7ff;
-  --text-2: #bcc6db;
-  --text-3: #8f9ab3;
-  --text-4: #67728c;
+  --text: #f8f8fa;
+  --text-primary: var(--text);
+  --text-2: #c4c5d0;
+  --text-3: #9496a6;
+  --text-4: #727485;
+  --text-muted: var(--text-3);
 
-  --green: #7cf2ae;
-  --green-muted: rgba(124, 242, 174, 0.12);
-  --red: #ff8f97;
-  --red-muted: rgba(255, 143, 151, 0.12);
-  --orange: #ffbb76;
-  --orange-muted: rgba(255, 187, 118, 0.12);
-  --blue: #82d8ff;
-  --blue-muted: rgba(130, 216, 255, 0.12);
-  --pink: #f97eb8;
-  --pink-muted: rgba(249, 126, 184, 0.14);
-  --pink-glow: rgba(249, 126, 184, 0.3);
+  --green: #7ae7b0;
+  --green-muted: rgba(122, 231, 176, 0.14);
+  --red: #fb8f8f;
+  --red-muted: rgba(251, 143, 143, 0.14);
+  --orange: #fccf66;
+  --orange-muted: rgba(252, 207, 102, 0.14);
+  --blue: #7ab8ff;
+  --blue-muted: rgba(122, 184, 255, 0.14);
+  --pink: var(--accent);
+  --pink-muted: var(--accent-muted);
+  --pink-glow: transparent;
 
-  --sidebar-w: 248px;
+  --sidebar-w: 216px;
+  --layout-max: 1080px;
 
-  --r-sm: 10px;
-  --r: 16px;
-  --r-lg: 24px;
-  --r-xl: 32px;
+  --r-sm: 4px;
+  --r: 6px;
+  --r-lg: 8px;
+  --r-xl: 10px;
   --r-full: 9999px;
 
-  --blur: 18px;
-  --sh-sm: 0 14px 34px rgba(2, 6, 18, 0.18);
-  --sh: 0 24px 64px rgba(2, 6, 18, 0.34);
-  --sh-card: 0 26px 58px rgba(2, 6, 18, 0.34);
-  --sh-primary: 0 0 0 1px rgba(139, 157, 255, 0.26), 0 18px 38px rgba(106, 125, 255, 0.3);
+  --blur: 0px;
+  --sh-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+  --sh: 0 4px 14px rgba(0, 0, 0, 0.16);
+  --sh-md: 0 10px 28px rgba(0, 0, 0, 0.2);
+  --sh-card: none;
+  --sh-primary: none;
 
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --t-fast: 140ms var(--ease-out);
@@ -72,15 +79,11 @@ html {
 }
 
 body {
-  font-family: "Manrope", "Segoe UI", sans-serif;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
   font-size: 14px;
   line-height: 1.5;
   color: var(--text);
-  background:
-    radial-gradient(circle at 14% 18%, rgba(130, 216, 255, 0.12), transparent 24%),
-    radial-gradient(circle at 82% 10%, rgba(139, 157, 255, 0.2), transparent 28%),
-    linear-gradient(180deg, #09101c 0%, #050914 52%, #03060d 100%);
-  background-attachment: fixed;
+  background: var(--bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -92,7 +95,8 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Space Grotesk", "Manrope", "Segoe UI", sans-serif;
+  font-family: inherit;
+  font-weight: 600;
 }
 
 a {
@@ -112,8 +116,17 @@ select {
 }
 
 ::selection {
-  background: rgba(139, 157, 255, 0.28);
-  color: #ffffff;
+  background: var(--accent-muted);
+  color: var(--text);
+}
+
+/* Общая колонка формы: карточки + футер на всю ширину */
+.formStack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  max-width: 100%;
 }
 
 @media (prefers-reduced-motion: reduce) {
