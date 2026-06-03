@@ -1,38 +1,36 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
   width: 100%;
 }
 
 .form {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
+  /* layout via .formStack */
 }
 
 .statusRegion {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   scroll-margin-top: 24px;
 }
 
 .mt {
-  margin-top: 18px;
+  margin-top: 14px;
 }
 
 .row3 {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  gap: 12px;
 }
 
 .attachRow {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
 .attachRow input {
@@ -40,72 +38,51 @@
 }
 
 .removeAttach {
-  width: 40px;
-  height: 40px;
+  width: 34px;
+  height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--surface-2);
   border: 1px solid var(--sep);
   color: var(--text-3);
-  border-radius: 14px;
+  border-radius: var(--r-sm);
   cursor: pointer;
   flex-shrink: 0;
-  font-size: 26px;
+  font-size: 22px;
   line-height: 1;
   transition: background var(--t-fast), border-color var(--t-fast), color var(--t-fast);
 }
 
 .removeAttach:hover {
   background: var(--red-muted);
-  border-color: rgba(255, 143, 151, 0.22);
+  border-color: rgba(248, 113, 113, 0.28);
   color: var(--red);
 }
 
 .addAttach {
   width: 100%;
-  padding: 12px 14px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px dashed rgba(139, 157, 255, 0.3);
-  border-radius: 18px;
+  padding: 10px 12px;
+  background: var(--surface-2);
+  border: 1px dashed var(--sep-2);
+  border-radius: var(--r);
   color: var(--accent);
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 600;
   font-family: inherit;
   text-align: left;
   cursor: pointer;
   transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 }
 
 .addAttach:hover {
-  border-color: rgba(139, 157, 255, 0.42);
+  border-color: var(--accent);
   background: var(--accent-muted);
-}
-
-.formActions {
-  position: sticky;
-  bottom: 10px;
-  z-index: 3;
-  display: flex;
-  justify-content: flex-end;
-  padding: 8px;
-  border: 1px solid var(--sep);
-  border-radius: 22px;
-  background: rgba(7, 12, 22, 0.72);
-  box-shadow: var(--sh-card);
-  backdrop-filter: blur(var(--blur));
-  -webkit-backdrop-filter: blur(var(--blur));
 }
 
 @media (max-width: 780px) {
   .row3 {
     grid-template-columns: 1fr;
-  }
-
-  .formActions {
-    position: static;
   }
 }
 

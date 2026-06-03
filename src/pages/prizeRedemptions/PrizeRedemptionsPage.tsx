@@ -372,12 +372,10 @@ export function PrizeRedemptionsPage() {
             : 'Очередь заявок после покупки в магазине: сверка кода, отметка «Выдано» или отмена с возвратом ✦'
         }
         aside={
-          <div className={styles.queueMeta} aria-hidden="true">
-            <div className={styles.queueCount}>
-              <span>В очереди</span>
-              <strong>{queueCount}</strong>
-            </div>
-          </div>
+          <span className={styles.queueChip}>
+            <span className={styles.queueChipLabel}>В очереди</span>
+            <strong>{queueCount}</strong>
+          </span>
         }
       />
 
@@ -442,10 +440,7 @@ export function PrizeRedemptionsPage() {
           <Card title="Поиск и фильтры" className={styles.toolbarCard}>
             <div className={styles.toolbar}>
               <div className={styles.toolbarRow}>
-                <Field
-                  label="Код выдачи, VK ID или приз"
-                  hint="Поиск по уже загруженным заявкам. Если кода нет в списке — нажмите «Загрузить ещё» или смените фильтр статуса."
-                >
+                <Field label="Код выдачи, VK ID или приз" className={styles.toolbarField}>
                   <Input
                     id={CODE_SEARCH_INPUT_ID}
                     value={searchQuery}
@@ -455,7 +450,7 @@ export function PrizeRedemptionsPage() {
                   />
                 </Field>
 
-                <Field label="Статус">
+                <Field label="Статус" className={styles.toolbarField}>
                   <Select
                     name="status_filter"
                     value={statusFilter ?? ''}
@@ -468,7 +463,7 @@ export function PrizeRedemptionsPage() {
                   />
                 </Field>
 
-                <Field label="Приз">
+                <Field label="Приз" className={styles.toolbarField}>
                   <Select
                     name="prize_filter"
                     value={prizesIdFilter == null ? '' : String(prizesIdFilter)}
@@ -481,6 +476,11 @@ export function PrizeRedemptionsPage() {
                   />
                 </Field>
               </div>
+
+              <p className={styles.toolbarSearchHint}>
+                Поиск по уже загруженным заявкам. Если кода нет в списке — нажмите «Загрузить ещё»
+                или смените фильтр статуса.
+              </p>
 
               <p className={styles.hint}>
                 Для пункта выдачи удобнее режим «Стойка». Отмена доступна только для статуса

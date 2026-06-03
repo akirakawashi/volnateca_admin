@@ -8,12 +8,12 @@ import {
 
 const THEME: DailyMetricLineChartTheme = {
   gradientId: 'economyAreaGradient',
-  gradientTop: '#ffd27a',
-  gradientBottom: '#e8a030',
-  stroke: '#ffc857',
-  activeDotFill: '#ffe08a',
-  brushStroke: '#ffc857',
-  brushFill: 'rgba(255, 200, 87, 0.1)',
+  gradientTop: 'rgba(251, 191, 36, 0.28)',
+  gradientBottom: 'rgba(251, 191, 36, 0.02)',
+  stroke: '#fbbf24',
+  activeDotFill: '#fcd34d',
+  brushStroke: '#fbbf24',
+  brushFill: 'rgba(251, 191, 36, 0.06)',
 };
 
 const LABELS: DailyMetricLineChartLabels = {

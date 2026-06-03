@@ -12,14 +12,10 @@ export function QuestionsEditor() {
   const { fields, append, remove } = useFieldArray({ control, name: 'questions' });
 
   return (
-    <section className={styles.section}>
-      <header className={styles.sectionHead}>
-        <div className={styles.sectionHeadLeft}>
-          <h3 className={styles.sectionTitle}>Вопросы</h3>
-          {typeof errors.questions?.message === 'string' && (
-            <span className={styles.globalError}>{errors.questions.message}</span>
-          )}
-        </div>
+    <Card
+      title="Вопросы"
+      className={styles.questionsCard}
+      action={
         <Button
           type="button"
           variant="secondary"
@@ -28,15 +24,18 @@ export function QuestionsEditor() {
         >
           + Добавить вопрос
         </Button>
-      </header>
+      }
+    >
+      {typeof errors.questions?.message === 'string' && (
+        <p className={styles.globalError}>{errors.questions.message}</p>
+      )}
 
       <div className={styles.questionsList}>
         {fields.map((field, qIdx) => (
-          <Card
-            key={field.id}
-            title={`Вопрос ${qIdx + 1}`}
-            action={
-              fields.length > 1 ? (
+          <article key={field.id} className={styles.questionBlock}>
+            <header className={styles.questionHead}>
+              <h4 className={styles.questionTitle}>Вопрос {qIdx + 1}</h4>
+              {fields.length > 1 && (
                 <Button
                   type="button"
                   variant="danger"
@@ -45,9 +44,9 @@ export function QuestionsEditor() {
                 >
                   Удалить
                 </Button>
-              ) : undefined
-            }
-          >
+              )}
+            </header>
+
             <div className={styles.questionBody}>
               <Field
                 label="Текст вопроса"
@@ -76,9 +75,9 @@ export function QuestionsEditor() {
 
               <OptionsEditor questionIndex={qIdx} />
             </div>
-          </Card>
+          </article>
         ))}
       </div>
-    </section>
+    </Card>
   );
 }

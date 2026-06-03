@@ -13,7 +13,7 @@
 }
 
 .formCard {
-  max-width: 920px;
+  width: 100%;
   overflow: visible !important;
   z-index: 4;
 }
@@ -28,11 +28,6 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
-}
-
-.formActions {
-  display: flex;
-  justify-content: flex-end;
 }
 
 @media (max-width: 860px) {

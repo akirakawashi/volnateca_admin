@@ -8,12 +8,12 @@ import {
 
 const THEME: DailyMetricLineChartTheme = {
   gradientId: 'growthLineGradient',
-  gradientTop: '#8ef0b8',
-  gradientBottom: '#3eb87a',
-  stroke: '#7cf2ae',
-  activeDotFill: '#b4f5d0',
-  brushStroke: '#7cf2ae',
-  brushFill: 'rgba(124, 242, 174, 0.1)',
+  gradientTop: 'rgba(110, 231, 168, 0.28)',
+  gradientBottom: 'rgba(110, 231, 168, 0.02)',
+  stroke: '#6ee7a8',
+  activeDotFill: '#8ef0b8',
+  brushStroke: '#6ee7a8',
+  brushFill: 'rgba(110, 231, 168, 0.06)',
 };
 
 const LABELS: DailyMetricLineChartLabels = {

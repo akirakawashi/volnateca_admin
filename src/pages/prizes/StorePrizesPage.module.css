@@ -14,14 +14,29 @@
 
 .layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(340px, 0.92fr);
-  gap: 18px;
-  align-items: start;
+  grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
+  gap: 14px;
+  align-items: stretch;
 }
 
 .formCard,
 .listCard {
-  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+
+.formCard :global(.cardBody),
+.listCard :global(.cardBody) {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.listCard {
+  min-width: 0;
 }
 
 .formCard {
@@ -50,23 +65,23 @@
 .toggle {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  min-height: 48px;
-  padding: 12px 14px;
+  gap: 10px;
+  min-height: 34px;
+  padding: 8px 10px;
   border: 1px solid var(--sep);
-  border-radius: 16px;
-  background: rgba(7, 12, 22, 0.58);
+  border-radius: var(--r);
+  background: var(--surface-2);
   transition: border-color var(--t-fast), box-shadow var(--t-fast), background var(--t-fast);
 }
 
 .toggle:hover {
-  border-color: rgba(139, 157, 255, 0.22);
+  border-color: var(--sep-2);
 }
 
 .toggle:focus-within {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(139, 157, 255, 0.14);
-  background: rgba(10, 16, 28, 0.72);
+  box-shadow: 0 0 0 2px var(--accent-muted);
+  background: var(--surface);
 }
 
 .toggleInput {
@@ -83,11 +98,11 @@
 
 .helperBox {
   display: grid;
-  gap: 6px;
-  padding: 14px 16px;
-  border: 1px solid rgba(130, 216, 255, 0.18);
-  border-radius: 18px;
-  background: linear-gradient(180deg, rgba(130, 216, 255, 0.08), rgba(130, 216, 255, 0.03));
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid rgba(96, 165, 250, 0.22);
+  border-radius: var(--r);
+  background: var(--blue-muted);
 }
 
 .helperBox strong {
@@ -101,44 +116,34 @@
   line-height: 1.55;
 }
 
-.formActions {
+.headerChips {
   display: flex;
-  justify-content: flex-end;
-}
-
-.heroStats {
-  width: 320px;
-  max-width: 100%;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.metricCard {
-  min-height: 102px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  flex-wrap: wrap;
   gap: 8px;
-  padding: 14px;
+}
+
+.headerChip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 5px 10px;
   border: 1px solid var(--sep);
-  border-radius: 20px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0)), var(--surface-2);
-  box-shadow: var(--sh-card);
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
 }
 
-.metricCard span {
-  color: var(--text-3);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+.headerChipLabel {
+  font-size: 10px;
+  font-weight: 600;
   text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
 }
 
-.metricCard strong {
+.headerChip strong {
+  font-size: 14px;
+  font-weight: 600;
   color: var(--text);
-  font-size: 24px;
-  line-height: 1;
 }
 
 .empty {
@@ -155,12 +160,11 @@
 .prizeItem {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: 16px;
+  gap: 12px;
+  padding: 12px;
   border: 1px solid var(--sep);
-  border-radius: 20px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)), rgba(7, 12, 22, 0.42);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+  border-radius: var(--r);
+  background: var(--surface-2);
 }
 
 .prizeHead {
@@ -213,11 +217,11 @@
 .editMeta {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 12px 14px;
+  gap: 4px;
+  padding: 10px 12px;
   border: 1px solid var(--sep);
-  border-radius: 16px;
-  background: rgba(7, 12, 22, 0.58);
+  border-radius: var(--r);
+  background: var(--surface);
 }
 
 .editMetaText {
@@ -227,8 +231,8 @@
 }
 
 .prizeItemActive {
-  border-color: rgba(139, 157, 255, 0.42);
-  box-shadow: 0 0 0 1px rgba(139, 157, 255, 0.12);
+  border-color: var(--sep-2);
+  background: var(--accent-muted);
 }
 
 .badges {
@@ -323,7 +327,6 @@
 @media (max-width: 860px) {
   .row2,
   .row3,
-  .heroStats,
   .metaGrid {
     grid-template-columns: 1fr;
   }

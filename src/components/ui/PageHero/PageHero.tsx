@@ -5,6 +5,7 @@ interface PageHeroProps {
   eyebrow: string;
   title: ReactNode;
   subtitle: ReactNode;
+  /** Компактные метрики или действия справа от заголовка */
   aside?: ReactNode;
   asideClassName?: string;
   className?: string;
@@ -20,16 +21,18 @@ export function PageHero({
 }: PageHeroProps) {
   return (
     <header className={[styles.hero, className].filter(Boolean).join(' ')}>
-      <div className={styles.content}>
+      <div className={styles.leading}>
         <span className={styles.eyebrow}>{eyebrow}</span>
-        <h1 className={styles.title}>{title}</h1>
+        <div className={styles.titleRow}>
+          <h1 className={styles.title}>{title}</h1>
+          {aside ? (
+            <div className={[styles.meta, asideClassName].filter(Boolean).join(' ')}>
+              {aside}
+            </div>
+          ) : null}
+        </div>
         <p className={styles.subtitle}>{subtitle}</p>
       </div>
-      {aside ? (
-        <div className={[styles.aside, asideClassName].filter(Boolean).join(' ')}>
-          {aside}
-        </div>
-      ) : null}
     </header>
   );
 }

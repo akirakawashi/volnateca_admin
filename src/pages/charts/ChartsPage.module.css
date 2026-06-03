@@ -1,61 +1,103 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 0;
   width: 100%;
 }
 
-.page > * {
+.page > .shell {
   opacity: 0;
-  animation: chartsSectionReveal 700ms var(--ease-out) both;
+  animation: chartsSectionReveal 520ms var(--ease-out) 100ms both;
 }
 
-.page > *:nth-child(1) {
-  animation-delay: 90ms;
-}
-
-.page > *:nth-child(2) {
-  animation-delay: 180ms;
-}
-
-.page > *:nth-child(3) {
-  animation-delay: 270ms;
-}
-
-.section {
+.shell {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
-.sectionHead {
+.tabBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--sep);
+  border-radius: var(--r);
+  background: var(--surface);
+  width: 100%;
+}
+
+.tab {
+  min-height: 32px;
+  padding: 6px 14px;
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--text-2);
+  font-size: 13px;
+  font-weight: 500;
+  transition:
+    background var(--t-fast),
+    color var(--t-fast),
+    border-color var(--t-fast);
+}
+
+.tab:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.tabActive {
+  color: var(--text);
+  background: var(--accent-muted);
+  border-color: var(--sep-2);
+}
+
+.panel {
+  padding: 14px;
+  border: 1px solid var(--sep);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+
+.panelHead {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--sep);
 }
 
-.sectionTitle {
+.panelTitle {
   margin: 0;
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 600;
   color: var(--text);
 }
 
-.sectionDescription {
+.panelDescription {
   margin: 0;
   max-width: 640px;
-  font-size: 13px;
-  line-height: 1.55;
+  font-size: 12px;
+  line-height: 1.5;
   color: var(--text-2);
 }
 
 @keyframes chartsSectionReveal {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .tab {
+    flex: 1;
+    text-align: center;
   }
 }

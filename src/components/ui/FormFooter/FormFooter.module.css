@@ -1,0 +1,19 @@
+.footer {
+  width: 100%;
+  flex: 1 1 100%;
+  align-self: stretch;
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  padding-top: 14px;
+  margin-top: 2px;
+  border-top: 1px solid var(--sep);
+}
+
+.inCard {
+  margin-top: 0;
+  padding-top: 12px;
+}

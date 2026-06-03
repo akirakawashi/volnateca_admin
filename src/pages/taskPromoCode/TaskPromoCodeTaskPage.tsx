@@ -6,6 +6,7 @@ import { Button } from '../../components/ui/Button/Button';
 import { Card } from '../../components/ui/Card/Card';
 import { DateTimePicker } from '../../components/ui/DateTimePicker/DateTimePicker';
 import { Field, Input, Textarea } from '../../components/ui/Field/Field';
+import { FormFooter } from '../../components/ui/FormFooter/FormFooter';
 import { PageHero } from '../../components/ui/PageHero/PageHero';
 import { useAutoStatusMessage } from '../../hooks/useAutoStatusMessage';
 import { useTaskPromoCodeTask } from '../../hooks/useTaskPromoCodeTask';
@@ -80,7 +81,7 @@ export function TaskPromoCodeTaskPage() {
           onSubmit={handleSubmit(onSubmit as Parameters<typeof handleSubmit>[0])}
           onFocus={resetStatus}
           noValidate
-          className={styles.form}
+          className={`formStack ${styles.form}`}
         >
           <div className={styles.row2}>
             <Field label="Очки" required error={errors.points?.message}>
@@ -153,11 +154,11 @@ export function TaskPromoCodeTaskPage() {
             <Input {...register('promo_code')} placeholder="BOT-CODE-1" />
           </Field>
 
-          <div className={styles.formActions}>
-            <Button type="submit" variant="primary" loading={creating}>
+          <FormFooter inCard>
+            <Button type="submit" variant="primary" size="md" loading={creating}>
               Создать задание
             </Button>
-          </div>
+          </FormFooter>
         </form>
       </Card>
     </div>

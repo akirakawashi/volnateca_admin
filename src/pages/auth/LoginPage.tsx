@@ -35,70 +35,57 @@ export function LoginPage({ checking, onLogin }: LoginPageProps) {
 
   return (
     <main className={styles.page}>
-      <div className={styles.shell}>
-        <aside className={styles.visual} aria-hidden="true">
-          <div className={styles.visualText}>
-            <span>Volnateca Admin</span>
-            <strong>Панель управления</strong>
-          </div>
-          <div className={styles.visualGrid}>
-            <span />
-            <span />
-            <span />
-            <span />
-          </div>
-        </aside>
-        <section className={styles.card}>
-          <div className={styles.brand}>
-            <h1 className={styles.title}>Вход в Волнатека</h1>
-            <p className={styles.subtitle}>
-              {checking ? 'Проверяем сессию…' : 'Введите логин и пароль'}
-            </p>
-          </div>
+      <section className={styles.card}>
+        <header className={styles.head}>
+          <span className={styles.kicker}>Volnateca Admin</span>
+          <h1 className={styles.title}>Вход</h1>
+          <p className={styles.subtitle}>
+            {checking ? 'Проверяем сессию…' : 'Логин и пароль администратора'}
+          </p>
+        </header>
 
-          {error && <Alert variant="error">{error}</Alert>}
+        {error && <Alert variant="error">{error}</Alert>}
 
-          <form className={styles.form} onSubmit={handleSubmit}>
-            <Field label="Логин" required>
+        <form className={styles.form} onSubmit={handleSubmit}>
+          <Field label="Логин" required>
+            <Input
+              autoFocus
+              autoComplete="username"
+              value={login}
+              onChange={(event) => setLogin(event.target.value)}
+              disabled={disabled}
+              placeholder="admin"
+            />
+          </Field>
+
+          <Field label="Пароль" required>
+            <div className={styles.passwordControl}>
               <Input
-                autoFocus
-                autoComplete="username"
-                value={login}
-                onChange={(event) => setLogin(event.target.value)}
+                className={styles.passwordInput}
+                type={showPassword ? 'text' : 'password'}
+                autoComplete="current-password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
                 disabled={disabled}
-                placeholder="admin"
+                placeholder="Введите пароль"
               />
-            </Field>
+              <button
+                type="button"
+                className={styles.passwordToggle}
+                onClick={() => setShowPassword((value) => !value)}
+                disabled={disabled}
+                aria-pressed={showPassword}
+              >
+                {showPassword ? 'Скрыть' : 'Показать'}
+              </button>
+            </div>
+          </Field>
 
-            <Field label="Пароль" required>
-              <div className={styles.passwordControl}>
-                <Input
-                  className={styles.passwordInput}
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  disabled={disabled}
-                  placeholder="Введите пароль"
-                />
-                <button
-                  type="button"
-                  className={styles.passwordToggle}
-                  onClick={() => setShowPassword((value) => !value)}
-                  disabled={disabled}
-                  aria-pressed={showPassword}
-                >
-                  {showPassword ? 'Скрыть' : 'Показать'}
-                </button>
-              </div>
-            </Field>
-
-            <Button type="submit" size="md" loading={submitting} disabled={checking}>
-              Войти
-            </Button>
-          </form>
-        </section>
-      </div>
+          <Button type="submit" size="md" loading={submitting} disabled={checking}>
+            Войти
+          </Button>
+        </form>
+      </section>
     </main>
   );
 }

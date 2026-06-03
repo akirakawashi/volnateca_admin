@@ -9,7 +9,31 @@ import { useDailyNewUsersStats } from '../../hooks/useDailyNewUsersStats';
 import type { StatsRangeDays } from '../../types/stats';
 import styles from './ChartsPage.module.css';
 
+type ChartTab = 'activity' | 'growth' | 'economy';
+
+const chartTabs: { id: ChartTab; label: string; description: string }[] = [
+  {
+    id: 'activity',
+    label: 'Активность',
+    description:
+      'Уникальные пользователи с начислением баллов за календарный день — пики вовлечённости и спокойные дни.',
+  },
+  {
+    id: 'growth',
+    label: 'Рост',
+    description:
+      'Новые регистрации в боте по дням. Сравнивайте с активностью: аудитория может расти без начислений в тот же день.',
+  },
+  {
+    id: 'economy',
+    label: 'Экономика',
+    description:
+      'Сумма начисленных баллов за день — отличает массовую активность от редких крупных начислений.',
+  },
+];
+
 export function ChartsPage() {
+  const [activeTab, setActiveTab] = useState<ChartTab>('activity');
   const [activityRangeDays, setActivityRangeDays] = useState<StatsRangeDays>(30);
   const [growthRangeDays, setGrowthRangeDays] = useState<StatsRangeDays>(30);
   const [economyRangeDays, setEconomyRangeDays] = useState<StatsRangeDays>(30);
@@ -35,76 +59,80 @@ export function ChartsPage() {
     refresh: refreshEconomy,
   } = useDailyAccrualPointsStats(economyRangeDays);
 
+  const activeMeta = chartTabs.find((tab) => tab.id === activeTab)!;
+
   return (
     <div className={styles.page}>
       <PageHero
         eyebrow="Аналитика"
         title="Графики"
-        subtitle="Сводки по проекту: активность, рост аудитории и другие метрики"
+        subtitle="Сводки по активности, росту и экономике проекта"
       />
 
-      <section className={styles.section} aria-labelledby="charts-activity-title">
-        <header className={styles.sectionHead}>
-          <h2 id="charts-activity-title" className={styles.sectionTitle}>
-            Активность
-          </h2>
-          <p className={styles.sectionDescription}>
-            Сколько уникальных пользователей получили начисление баллов в каждый календарный день.
-            Помогает увидеть пики вовлечённости и спокойные дни.
-          </p>
-        </header>
+      <div className={styles.shell}>
+        <div className={styles.tabBar} role="tablist" aria-label="Разделы графиков">
+          {chartTabs.map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              role="tab"
+              aria-selected={activeTab === tab.id}
+              className={[styles.tab, activeTab === tab.id ? styles.tabActive : '']
+                .filter(Boolean)
+                .join(' ')}
+              onClick={() => setActiveTab(tab.id)}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
 
-        <DailyActivityChart
-          stats={activityStats}
-          loading={activityLoading}
-          error={activityError}
-          rangeDays={activityRangeDays}
-          onRangeChange={setActivityRangeDays}
-          onRefresh={() => void refreshActivity()}
-        />
-      </section>
+        <section
+          className={styles.panel}
+          role="tabpanel"
+          aria-labelledby={`charts-tab-${activeTab}`}
+        >
+          <header className={styles.panelHead}>
+            <h2 id={`charts-tab-${activeTab}`} className={styles.panelTitle}>
+              {activeMeta.label}
+            </h2>
+            <p className={styles.panelDescription}>{activeMeta.description}</p>
+          </header>
 
-      <section className={styles.section} aria-labelledby="charts-growth-title">
-        <header className={styles.sectionHead}>
-          <h2 id="charts-growth-title" className={styles.sectionTitle}>
-            Рост
-          </h2>
-          <p className={styles.sectionDescription}>
-            Сколько новых участников зарегистрировалось в боте по дням. Сравнивайте с активностью:
-            можно набрать аудиторию без начислений в тот же день.
-          </p>
-        </header>
+          {activeTab === 'activity' && (
+            <DailyActivityChart
+              stats={activityStats}
+              loading={activityLoading}
+              error={activityError}
+              rangeDays={activityRangeDays}
+              onRangeChange={setActivityRangeDays}
+              onRefresh={() => void refreshActivity()}
+            />
+          )}
 
-        <DailyNewUsersChart
-          stats={growthStats}
-          loading={growthLoading}
-          error={growthError}
-          rangeDays={growthRangeDays}
-          onRangeChange={setGrowthRangeDays}
-          onRefresh={() => void refreshGrowth()}
-        />
-      </section>
+          {activeTab === 'growth' && (
+            <DailyNewUsersChart
+              stats={growthStats}
+              loading={growthLoading}
+              error={growthError}
+              rangeDays={growthRangeDays}
+              onRangeChange={setGrowthRangeDays}
+              onRefresh={() => void refreshGrowth()}
+            />
+          )}
 
-      <section className={styles.section} aria-labelledby="charts-economy-title">
-        <header className={styles.sectionHead}>
-          <h2 id="charts-economy-title" className={styles.sectionTitle}>
-            Экономика
-          </h2>
-          <p className={styles.sectionDescription}>
-            Сколько баллов начислено за день в сумме. Помогает отличить дни с высокой активностью
-            от дней, когда немного людей получили много баллов (топ месяца, крупные задания).
-          </p>
-        </header>
-
-        <DailyAccrualPointsChart
-          stats={economyStats}
-          loading={economyLoading}
-          error={economyError}
-          rangeDays={economyRangeDays}
-          onRangeChange={setEconomyRangeDays}
-          onRefresh={() => void refreshEconomy()}
-        />
-      </section>
+          {activeTab === 'economy' && (
+            <DailyAccrualPointsChart
+              stats={economyStats}
+              loading={economyLoading}
+              error={economyError}
+              rangeDays={economyRangeDays}
+              onRangeChange={setEconomyRangeDays}
+              onRefresh={() => void refreshEconomy()}
+            />
+          )}
+        </section>
+      </div>
     </div>
   );
 }

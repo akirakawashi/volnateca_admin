@@ -9,6 +9,7 @@ import { Card } from '../../components/ui/Card/Card';
 import { PageHero } from '../../components/ui/PageHero/PageHero';
 import { Field, Input, Textarea } from '../../components/ui/Field/Field';
 import { Alert } from '../../components/ui/Alert/Alert';
+import { FormFooter } from '../../components/ui/FormFooter/FormFooter';
 import { extractVkAttachment } from '../../utils/vkAttachments';
 import styles from './PostToWallPage.module.css';
 
@@ -95,7 +96,7 @@ export function PostToWallPage() {
         onSubmit={handleSubmit(onSubmit as Parameters<typeof handleSubmit>[0])}
         onFocus={resetMutation}
         noValidate
-        className={styles.form}
+        className={`formStack ${styles.form}`}
       >
         <Card title="Содержание поста">
           <Field label="Текст" required error={errors.message?.message}>
@@ -183,11 +184,11 @@ export function PostToWallPage() {
           </div>
         </Card>
 
-        <div className={styles.formActions}>
-          <Button type="submit" variant="primary" loading={loading}>
+        <FormFooter>
+          <Button type="submit" variant="primary" size="md" loading={loading}>
             Опубликовать
           </Button>
-        </div>
+        </FormFooter>
       </form>
     </div>
   );
