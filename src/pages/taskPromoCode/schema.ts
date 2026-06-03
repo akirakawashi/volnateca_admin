@@ -1,12 +1,7 @@
 import { z } from 'zod';
 
-export const repeatPolicies = ['once', 'daily', 'weekly'] as const;
-
-export function parsePromoCodes(value: string): string[] {
-  return value
-    .split(/[\n,;]+/)
-    .map((item) => item.trim().replace(/\s+/g, '').toUpperCase())
-    .filter(Boolean);
+export function normalizePromoCode(value: string): string {
+  return value.replace(/\s+/g, '').toUpperCase();
 }
 
 export const taskPromoCodeFormSchema = z
@@ -17,8 +12,7 @@ export const taskPromoCodeFormSchema = z
     week_number: z.number().int().min(1).max(12).nullable().optional(),
     starts_at: z.string().optional(),
     ends_at: z.string().optional(),
-    repeat_policy: z.enum(repeatPolicies),
-    promo_codes_text: z.string().min(1, 'Добавь хотя бы один промокод'),
+    promo_code: z.string().min(1, 'Добавь промокод'),
   })
   .refine(
     (data) => {
@@ -27,17 +21,10 @@ export const taskPromoCodeFormSchema = z
     },
     { message: 'starts_at должно быть раньше ends_at', path: ['ends_at'] },
   )
-  .refine((data) => parsePromoCodes(data.promo_codes_text).length > 0, {
-    message: 'Добавь хотя бы один непустой промокод',
-    path: ['promo_codes_text'],
-  })
-  .refine(
-    (data) => {
-      const codes = parsePromoCodes(data.promo_codes_text);
-      return new Set(codes).size === codes.length;
-    },
-    { message: 'В списке есть дубликаты промокодов', path: ['promo_codes_text'] },
-  );
+  .refine((data) => normalizePromoCode(data.promo_code).length > 0, {
+    message: 'Добавь непустой промокод',
+    path: ['promo_code'],
+  });
 
 export type TaskPromoCodeFormValues = z.infer<typeof taskPromoCodeFormSchema>;
 
@@ -48,6 +35,5 @@ export const defaultTaskPromoCodeFormValues: TaskPromoCodeFormValues = {
   week_number: null,
   starts_at: '',
   ends_at: '',
-  repeat_policy: 'once',
-  promo_codes_text: '',
+  promo_code: '',
 };

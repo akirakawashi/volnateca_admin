@@ -30,72 +30,13 @@
   gap: 16px;
 }
 
-.row3 {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-}
-
-.heroStats {
-  width: 160px;
-  max-width: 100%;
-}
-
-.metricCard {
-  min-height: 102px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 14px;
-  border: 1px solid var(--sep);
-  border-radius: 20px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0)), var(--surface-2);
-  box-shadow: var(--sh-card);
-}
-
-.metricCard span {
-  color: var(--text-3);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.metricCard strong {
-  color: var(--text);
-  font-size: 24px;
-  line-height: 1;
-}
-
-.helperBox {
-  display: grid;
-  gap: 6px;
-  padding: 14px 16px;
-  border: 1px solid rgba(130, 216, 255, 0.18);
-  border-radius: 18px;
-  background: linear-gradient(180deg, rgba(130, 216, 255, 0.08), rgba(130, 216, 255, 0.03));
-}
-
-.helperBox strong {
-  color: var(--blue);
-  font-size: 13px;
-}
-
-.helperBox span {
-  color: var(--text-2);
-  font-size: 13px;
-  line-height: 1.55;
-}
-
 .formActions {
   display: flex;
   justify-content: flex-end;
 }
 
 @media (max-width: 860px) {
-  .row2,
-  .row3 {
+  .row2 {
     grid-template-columns: 1fr;
   }
 }

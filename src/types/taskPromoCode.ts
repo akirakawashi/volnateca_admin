@@ -1,5 +1,3 @@
-export type TaskRepeatPolicy = 'once' | 'daily' | 'weekly';
-
 export interface CreateTaskPromoCodeTaskPayload {
   code: string | null;
   task_name: string;
@@ -8,13 +6,12 @@ export interface CreateTaskPromoCodeTaskPayload {
   week_number: number | null;
   starts_at: string | null;
   ends_at: string | null;
-  repeat_policy: TaskRepeatPolicy;
-  promo_codes: string[];
+  promo_code: string;
 }
 
 export interface CreatedTaskPromoCodeTask {
   tasks_id: number;
   code: string;
   task_name: string;
-  promo_codes_total: number;
+  promo_code: string;
 }

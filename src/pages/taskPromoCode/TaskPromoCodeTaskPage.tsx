@@ -1,34 +1,21 @@
-import { useMemo, useRef } from 'react';
-import { Controller, useForm, useWatch } from 'react-hook-form';
+import { useRef } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Alert } from '../../components/ui/Alert/Alert';
 import { Button } from '../../components/ui/Button/Button';
 import { Card } from '../../components/ui/Card/Card';
 import { DateTimePicker } from '../../components/ui/DateTimePicker/DateTimePicker';
-import { Field, Input, Select, Textarea } from '../../components/ui/Field/Field';
+import { Field, Input, Textarea } from '../../components/ui/Field/Field';
 import { PageHero } from '../../components/ui/PageHero/PageHero';
 import { useAutoStatusMessage } from '../../hooks/useAutoStatusMessage';
 import { useTaskPromoCodeTask } from '../../hooks/useTaskPromoCodeTask';
-import type { TaskRepeatPolicy } from '../../types/taskPromoCode';
 import {
   defaultTaskPromoCodeFormValues,
-  parsePromoCodes,
-  repeatPolicies,
+  normalizePromoCode,
   taskPromoCodeFormSchema,
   type TaskPromoCodeFormValues,
 } from './schema';
 import styles from './TaskPromoCodeTaskPage.module.css';
-
-const repeatPolicyLabels: Record<TaskRepeatPolicy, string> = {
-  once: 'Разово',
-  daily: 'Ежедневно',
-  weekly: 'Еженедельно',
-};
-
-const repeatPolicyOptions = repeatPolicies.map((policy) => ({
-  value: policy,
-  label: repeatPolicyLabels[policy],
-}));
 
 export function TaskPromoCodeTaskPage() {
   const { creating, error, result, create, resetStatus } = useTaskPromoCodeTask();
@@ -45,12 +32,6 @@ export function TaskPromoCodeTaskPage() {
     defaultValues: defaultTaskPromoCodeFormValues,
   });
 
-  const promoCodesText = useWatch({
-    control,
-    name: 'promo_codes_text',
-  });
-  const promoCodeCount = useMemo(() => parsePromoCodes(promoCodesText).length, [promoCodesText]);
-
   useAutoStatusMessage({
     active: Boolean(result || error),
     scrollRef: statusRef,
@@ -66,8 +47,7 @@ export function TaskPromoCodeTaskPage() {
       week_number: values.week_number ?? null,
       starts_at: values.starts_at ? new Date(values.starts_at).toISOString() : null,
       ends_at: values.ends_at ? new Date(values.ends_at).toISOString() : null,
-      repeat_policy: values.repeat_policy,
-      promo_codes: parsePromoCodes(values.promo_codes_text),
+      promo_code: normalizePromoCode(values.promo_code),
     });
 
     if (created) {
@@ -80,23 +60,15 @@ export function TaskPromoCodeTaskPage() {
       <PageHero
         eyebrow="Promo task"
         title="Задание Меняйки"
-        subtitle="Создание задания и загрузка банка промокодов для проверки в боте"
-        aside={
-          <div className={styles.heroStats} aria-hidden="true">
-            <div className={styles.metricCard}>
-              <span>Кодов в форме</span>
-              <strong>{promoCodeCount}</strong>
-            </div>
-          </div>
-        }
+        subtitle="Создание одного задания с одним промокодом для проверки в боте"
       />
 
       {(result || error) && (
         <div ref={statusRef} className={styles.statusRegion}>
           {result && (
             <Alert variant="success">
-              Задание <strong>{result.task_name}</strong> создано — загружено промокодов:{' '}
-              {result.promo_codes_total}
+              Задание <strong>{result.task_name}</strong> создано с промокодом{' '}
+              <strong>{result.promo_code}</strong>
             </Alert>
           )}
           {error && <Alert variant="error">{error}</Alert>}
@@ -110,7 +82,7 @@ export function TaskPromoCodeTaskPage() {
           noValidate
           className={styles.form}
         >
-          <div className={styles.row3}>
+          <div className={styles.row2}>
             <Field label="Очки" required error={errors.points?.message}>
               <Input
                 {...register('points', { valueAsNumber: true })}
@@ -128,21 +100,6 @@ export function TaskPromoCodeTaskPage() {
                 min={1}
                 max={12}
                 placeholder="Без недели"
-              />
-            </Field>
-            <Field label="Повтор" required error={errors.repeat_policy?.message}>
-              <Controller
-                control={control}
-                name="repeat_policy"
-                render={({ field }) => (
-                  <Select
-                    name={field.name}
-                    value={field.value}
-                    onChange={(value) => field.onChange(value as TaskRepeatPolicy)}
-                    onBlur={field.onBlur}
-                    options={repeatPolicyOptions}
-                  />
-                )}
               />
             </Field>
           </div>
@@ -189,25 +146,12 @@ export function TaskPromoCodeTaskPage() {
           </div>
 
           <Field
-            label="Промокоды"
+            label="Промокод"
             required
-            error={errors.promo_codes_text?.message}
-            hint="Каждый код с новой строки. Также можно разделять запятой или точкой с запятой."
+            error={errors.promo_code?.message}
           >
-            <Textarea
-              {...register('promo_codes_text')}
-              rows={12}
-              placeholder={'BOT-CODE-001\nBOT-CODE-002\nBOT-CODE-003'}
-            />
+            <Input {...register('promo_code')} placeholder="BOT-CODE-1" />
           </Field>
-
-          <div className={styles.helperBox}>
-            <strong>Текущее количество: {promoCodeCount}</strong>
-            <span>
-              Задание будет показываться пользователям, пока оно активно и у пользователя нет
-              выполненного периода. Backend отключит задание после активации последнего кода.
-            </span>
-          </div>
 
           <div className={styles.formActions}>
             <Button type="submit" variant="primary" loading={creating}>
