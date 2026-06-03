@@ -208,6 +208,10 @@
   animation-delay: 420ms;
 }
 
+.form > *:nth-child(4) {
+  animation-delay: 500ms;
+}
+
 .passwordControl {
   position: relative;
 }

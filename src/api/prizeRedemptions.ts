@@ -1,0 +1,73 @@
+import { ApiError, apiFetch } from './client';
+import type { AdminListPage } from '../types/pagination';
+import type {
+  AdminPrizeRedemption,
+  CancelPrizeRedemptionPayload,
+  FulfillPrizeRedemptionPayload,
+  ListPrizeRedemptionsParams,
+} from '../types/prizeRedemption';
+
+const REDEMPTIONS_PATH = '/v1/admin/prize-redemptions';
+
+function buildListQuery(params: ListPrizeRedemptionsParams): string {
+  const search = new URLSearchParams();
+  if (params.status) {
+    search.set('status', params.status);
+  }
+  if (params.prizes_id != null && params.prizes_id > 0) {
+    search.set('prizes_id', String(params.prizes_id));
+  }
+  if (params.page != null && params.page > 0) {
+    search.set('page', String(params.page));
+  }
+  const query = search.toString();
+  return query ? `?${query}` : '';
+}
+
+export function listPrizeRedemptions(
+  params: ListPrizeRedemptionsParams = {},
+): Promise<AdminListPage<AdminPrizeRedemption>> {
+  return apiFetch<AdminListPage<AdminPrizeRedemption>>(
+    `${REDEMPTIONS_PATH}${buildListQuery(params)}`,
+  );
+}
+
+export async function getPrizeRedemptionQueueCount(): Promise<number> {
+  const response = await apiFetch<{ count: number }>(`${REDEMPTIONS_PATH}/queue-count`);
+  return response.count;
+}
+
+export async function getPrizeRedemptionByCode(
+  redemptionCode: string,
+): Promise<AdminPrizeRedemption | null> {
+  try {
+    return await apiFetch<AdminPrizeRedemption>(
+      `${REDEMPTIONS_PATH}/by-code/${encodeURIComponent(redemptionCode)}`,
+    );
+  } catch (e) {
+    if (e instanceof ApiError && e.status === 404) {
+      return null;
+    }
+    throw e;
+  }
+}
+
+export function fulfillPrizeRedemption(
+  prizeRedemptionsId: number,
+  payload: FulfillPrizeRedemptionPayload = {},
+): Promise<AdminPrizeRedemption> {
+  return apiFetch<AdminPrizeRedemption>(`${REDEMPTIONS_PATH}/${prizeRedemptionsId}/fulfill`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function cancelPrizeRedemption(
+  prizeRedemptionsId: number,
+  payload: CancelPrizeRedemptionPayload,
+): Promise<AdminPrizeRedemption> {
+  return apiFetch<AdminPrizeRedemption>(`${REDEMPTIONS_PATH}/${prizeRedemptionsId}/cancel`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}

@@ -1,5 +1,8 @@
-import { useState } from 'react';
+// TODO DEV: удалить hooks/useSeedStorePrizes.ts перед релизом — только для локальной отладки.
+
+import { useCallback } from 'react';
 import { seedStorePrizes } from '../api/dev';
+import { useAsyncAction } from './useAsyncAction';
 
 interface UseSeedStorePrizesResult {
   seedStore: () => Promise<string[]>;
@@ -9,25 +12,15 @@ interface UseSeedStorePrizesResult {
 }
 
 export function useSeedStorePrizes(): UseSeedStorePrizesResult {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const seedStoreAction = useCallback(async (): Promise<string[]> => {
+    const result = await seedStorePrizes();
+    return result.messages;
+  }, []);
 
-  const seedStore = async (): Promise<string[]> => {
-    setLoading(true);
-    setError(null);
-    try {
-      const result = await seedStorePrizes();
-      return result.messages;
-    } catch (e) {
-      const message = e instanceof Error ? e.message : 'Неизвестная ошибка';
-      setError(message);
-      throw e;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const reset = () => setError(null);
+  const { run: seedStore, loading, error, reset } = useAsyncAction(seedStoreAction, {
+    rethrow: true,
+    unknownErrorMessage: 'Неизвестная ошибка',
+  });
 
   return { seedStore, loading, error, reset };
 }

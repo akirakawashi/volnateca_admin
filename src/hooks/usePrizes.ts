@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
-import { createPrize, listPrizes } from '../api/prizes';
-import type { AdminPrize, CreatePrizePayload } from '../types/prize';
+import { createPrize, listPrizes, updatePrize } from '../api/prizes';
+import type { AdminPrize, CreatePrizePayload, UpdatePrizePayload } from '../types/prize';
 
 function sortPrizes(prizes: AdminPrize[]): AdminPrize[] {
   return [...prizes].sort((left, right) => {
@@ -18,6 +18,7 @@ export function usePrizes() {
   const [prizes, setPrizes] = useState<AdminPrize[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [creating, setCreating] = useState(false);
+  const [updating, setUpdating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<AdminPrize | null>(null);
 
@@ -51,6 +52,32 @@ export function usePrizes() {
     }
   }, []);
 
+  const update = useCallback(
+    async (prizesId: number, payload: UpdatePrizePayload): Promise<AdminPrize | null> => {
+      setUpdating(true);
+      setError(null);
+      setResult(null);
+      try {
+        const updated = await updatePrize(prizesId, payload);
+        setResult(updated);
+        setPrizes((prev) =>
+          sortPrizes(
+            prev
+              ? prev.map((item) => (item.prizes_id === updated.prizes_id ? updated : item))
+              : [updated],
+          ),
+        );
+        return updated;
+      } catch (e) {
+        setError(e instanceof Error ? e.message : String(e));
+        return null;
+      } finally {
+        setUpdating(false);
+      }
+    },
+    [],
+  );
+
   const resetStatus = useCallback(() => {
     setError(null);
     setResult(null);
@@ -60,10 +87,12 @@ export function usePrizes() {
     prizes,
     loading,
     creating,
+    updating,
     error,
     result,
     fetch,
     create,
+    update,
     resetStatus,
   };
 }

@@ -1,5 +1,8 @@
-import { useState } from 'react';
+// TODO DEV: удалить hooks/useTruncateDB.ts перед релизом — truncate только для локальной отладки.
+
+import { useCallback } from 'react';
 import { truncateDB } from '../api/db';
+import { useAsyncAction } from './useAsyncAction';
 
 interface UseTruncateDBResult {
   truncate: () => Promise<boolean>;
@@ -9,24 +12,18 @@ interface UseTruncateDBResult {
 }
 
 export function useTruncateDB(): UseTruncateDBResult {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const truncateAction = useCallback(async (): Promise<boolean> => {
+    await truncateDB();
+    return true;
+  }, []);
 
-  const truncate = async (): Promise<boolean> => {
-    setLoading(true);
-    setError(null);
-    try {
-      await truncateDB();
-      return true;
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Неизвестная ошибка');
-      return false;
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { run, loading, error, reset } = useAsyncAction(truncateAction, {
+    unknownErrorMessage: 'Неизвестная ошибка',
+  });
 
-  const reset = () => setError(null);
+  const truncate = useCallback(async (): Promise<boolean> => {
+    return (await run()) ?? false;
+  }, [run]);
 
   return { truncate, loading, error, reset };
 }

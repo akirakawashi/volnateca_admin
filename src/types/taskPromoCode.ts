@@ -18,10 +18,3 @@ export interface CreatedTaskPromoCodeTask {
   task_name: string;
   promo_codes_total: number;
 }
-
-export interface TaskPromoCodeStats {
-  tasks_id: number;
-  total_count: number;
-  available_count: number;
-  used_count: number;
-}

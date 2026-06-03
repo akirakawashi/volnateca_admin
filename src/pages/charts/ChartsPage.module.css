@@ -1,0 +1,61 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: 100%;
+}
+
+.page > * {
+  opacity: 0;
+  animation: chartsSectionReveal 700ms var(--ease-out) both;
+}
+
+.page > *:nth-child(1) {
+  animation-delay: 90ms;
+}
+
+.page > *:nth-child(2) {
+  animation-delay: 180ms;
+}
+
+.page > *:nth-child(3) {
+  animation-delay: 270ms;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sectionHead {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.sectionDescription {
+  margin: 0;
+  max-width: 640px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-2);
+}
+
+@keyframes chartsSectionReveal {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,43 +1,29 @@
+// TODO DEV: удалить DEV-импорты и секции devPanel/dangerPanel перед релизом.
 import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../../components/ui/Button/Button';
 import { Alert } from '../../components/ui/Alert/Alert';
+import { Field, Input } from '../../components/ui/Field/Field';
 import { PageHero } from '../../components/ui/PageHero/PageHero';
 import { useAutoStatusMessage } from '../../hooks/useAutoStatusMessage';
-import { useTruncateDB } from '../../hooks/useTruncateDB';
-import { useSeedScenario } from '../../hooks/useSeedScenario';
-import { useSeedStorePrizes } from '../../hooks/useSeedStorePrizes';
+import { useTruncateDB } from '../../hooks/useTruncateDB'; // TODO DEV
+import { useSeedScenario } from '../../hooks/useSeedScenario'; // TODO DEV
+import { useSeedStorePrizes } from '../../hooks/useSeedStorePrizes'; // TODO DEV
 import { useAwardMonthlyTop } from '../../hooks/useAwardMonthlyTop';
-import type { SeedDevScenario } from '../../api/dev';
+import type { SeedDevScenario } from '../../api/dev'; // TODO DEV
 import type { AwardMonthlyTopResponse } from '../../types/monthly_top';
+import { adminDashboardLinks } from '../../navigation/adminNavigation';
 import { formatMonthlyTopAwardLine } from '../../utils/monthlyTop';
 import styles from './DashboardPage.module.css';
 
-interface QuickLink {
-  to: string;
-  title: string;
-  description: string;
-}
-
-const quickLinks: QuickLink[] = [
-  {
-    to: '/store/prizes',
-    title: 'Призы магазина',
-    description: 'Добавить мерч, партнёрский приз или суперприз в каталог',
-  },
-  {
-    to: '/quiz/create',
-    title: 'Создать квиз',
-    description: 'Новое задание типа «Викторина» с вопросами и вариантами ответов',
-  },
-  {
-    to: '/wall/post',
-    title: 'Пост на стене',
-    description: 'Опубликовать запись от имени сообщества ВКонтакте',
-  },
-];
-
-const PROD_ACTIONS_COUNT = 2;
+type ProdAction = {
+  key: string;
+  label: string;
+  variant: 'primary' | 'secondary';
+  onClick: () => void;
+  loading?: boolean;
+  disabled?: boolean;
+};
 
 type SeedButton = {
   key: string;
@@ -46,6 +32,7 @@ type SeedButton = {
   color: 'primary' | 'secondary' | 'ghost';
 };
 
+// TODO DEV: удалить seedButtons перед релизом.
 const seedButtons: SeedButton[] = [
   { key: 'monthly_top', label: 'Топ-10 месяца (seed)', scenario: 'monthly_top', color: 'secondary' },
   { key: 'project12', label: 'Все 12 недель', scenario: 'project12', color: 'secondary' },
@@ -54,13 +41,24 @@ const seedButtons: SeedButton[] = [
   { key: 'referral10', label: 'Рефералы: 10 друзей', scenario: 'referral10', color: 'ghost' },
 ];
 
+function formatMonthKey(date: Date): string {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+}
+
+function getPreviousMonthKey(): string {
+  const now = new Date();
+  return formatMonthKey(new Date(now.getFullYear(), now.getMonth() - 1, 1));
+}
+
 export function DashboardPage() {
   const navigate = useNavigate();
   const [confirmPending, setConfirmPending] = useState(false);
+  const [monthlyTopConfirmOpen, setMonthlyTopConfirmOpen] = useState(false);
   const [done, setDone] = useState(false);
   const prodStatusRef = useRef<HTMLDivElement>(null);
   const devStatusRef = useRef<HTMLDivElement>(null);
   const dangerStatusRef = useRef<HTMLDivElement>(null);
+  // TODO DEV: удалить хуки truncate/seed перед релизом.
   const { truncate, loading: truncateLoading, error: truncateError, reset: resetTruncate } = useTruncateDB();
   const { seed, loading: seedLoading, error: seedError, reset: resetSeed } = useSeedScenario();
   const {
@@ -71,9 +69,11 @@ export function DashboardPage() {
   } = useSeedStorePrizes();
   const { award, loading: awardLoading, error: awardError, reset: resetAward } = useAwardMonthlyTop();
 
+  // TODO DEV: удалить state/handlers truncate и seed перед релизом.
   const [seedResult, setSeedResult] = useState<{ scenario: SeedDevScenario; messages: string[] } | null>(null);
   const [storeSeedResult, setStoreSeedResult] = useState<string[] | null>(null);
   const [awardResult, setAwardResult] = useState<AwardMonthlyTopResponse | null>(null);
+  const [awardMonth, setAwardMonth] = useState(getPreviousMonthKey);
   const [activeScenario, setActiveScenario] = useState<SeedDevScenario | null>(null);
 
   const handleTruncateClick = () => {
@@ -120,20 +120,48 @@ export function DashboardPage() {
     }
   };
 
-  const handleAwardMonthlyTop = async () => {
+  const handleAwardMonthlyTopClick = () => {
     resetAward();
     setAwardResult(null);
     setSeedResult(null);
     setStoreSeedResult(null);
-    const now = new Date();
-    const month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    setMonthlyTopConfirmOpen(true);
+  };
+
+  const handleAwardMonthlyTopConfirm = async () => {
     try {
-      const result = await award({ month, limit: 10 });
+      const result = await award({ month: awardMonth, limit: 10 });
       setAwardResult(result);
+      setMonthlyTopConfirmOpen(false);
     } catch {
       // Error text is exposed through awardError.
     }
   };
+
+  const handleAwardMonthlyTopCancel = () => {
+    if (awardLoading) {
+      return;
+    }
+    setMonthlyTopConfirmOpen(false);
+  };
+
+  const prodActions: ProdAction[] = [
+    {
+      key: 'monthly_top',
+      label: 'Топ-10 месяца',
+      variant: 'primary',
+      loading: awardLoading,
+      disabled: awardLoading || !awardMonth,
+      onClick: handleAwardMonthlyTopClick,
+    },
+    {
+      key: 'broadcast',
+      label: 'VK-рассылка',
+      variant: 'secondary',
+      disabled: awardLoading,
+      onClick: () => navigate('/broadcast'),
+    },
+  ];
 
   const prodError = awardError;
   const hasProdStatus = Boolean(prodError || awardResult);
@@ -182,11 +210,11 @@ export function DashboardPage() {
             <div className={styles.heroMetrics}>
               <div>
                 <span>Разделы</span>
-                <strong>{quickLinks.length}</strong>
+                <strong>{adminDashboardLinks.length}</strong>
               </div>
               <div>
                 <span>PROD</span>
-                <strong>{PROD_ACTIONS_COUNT}</strong>
+                <strong>{prodActions.length}</strong>
               </div>
               <div>
                 <span>DEV</span>
@@ -204,7 +232,7 @@ export function DashboardPage() {
           <span className={styles.sectionMeta}>Контент</span>
         </div>
         <div className={styles.actionGrid}>
-          {quickLinks.map((item) => (
+          {adminDashboardLinks.map((item) => (
             <Link key={item.to} to={item.to} className={styles.actionCard}>
               <div className={styles.actionText}>
                 <span className={styles.actionName}>{item.title}</span>
@@ -258,28 +286,92 @@ export function DashboardPage() {
             </div>
           )}
 
+          <div className={styles.monthlyTopControls}>
+            <Field label="Месяц для топ-10">
+              <Input
+                type="month"
+                value={awardMonth}
+                disabled={awardLoading}
+                onChange={(event) => setAwardMonth(event.target.value)}
+              />
+            </Field>
+          </div>
+
           <div className={styles.prodRow}>
-            <Button
-              variant="primary"
-              size="sm"
-              loading={awardLoading}
-              disabled={awardLoading}
-              onClick={handleAwardMonthlyTop}
-            >
-              Топ-10 месяца
-            </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              disabled={awardLoading}
-              onClick={() => navigate('/broadcast')}
-            >
-              VK-рассылка
-            </Button>
+            {prodActions.map((action) => (
+              <Button
+                key={action.key}
+                variant={action.variant}
+                size="sm"
+                loading={action.loading}
+                disabled={action.disabled}
+                onClick={action.onClick}
+              >
+                {action.label}
+              </Button>
+            ))}
           </div>
         </div>
       </section>
 
+      {monthlyTopConfirmOpen && (
+        <div
+          className={styles.modalOverlay}
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) {
+              handleAwardMonthlyTopCancel();
+            }
+          }}
+        >
+          <div
+            className={styles.modalDialog}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="monthly-top-confirm-title"
+          >
+            <div className={styles.modalHead}>
+              <span className={styles.prodTag}>PROD</span>
+              <h2 id="monthly-top-confirm-title" className={styles.modalTitle}>
+                Начислить топ-10 месяца
+              </h2>
+            </div>
+            <dl className={styles.confirmDetails}>
+              <div>
+                <dt>Месяц</dt>
+                <dd>{awardMonth}</dd>
+              </div>
+              <div>
+                <dt>Достижение</dt>
+                <dd>monthly_top_10</dd>
+              </div>
+              <div>
+                <dt>Лимит</dt>
+                <dd>10 пользователей</dd>
+              </div>
+            </dl>
+            <p className={styles.modalText}>
+              Начисление отправит награду выбранным пользователям и запишет результат операции.
+            </p>
+            <div className={styles.modalActions}>
+              <Button variant="secondary" size="sm" disabled={awardLoading} onClick={handleAwardMonthlyTopCancel}>
+                Отмена
+              </Button>
+              <Button
+                variant="primary"
+                size="sm"
+                loading={awardLoading}
+                disabled={!awardMonth}
+                onClick={handleAwardMonthlyTopConfirm}
+              >
+                Начислить
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* TODO DEV: удалить секцию devPanel перед релизом. */}
       <section className={styles.devPanel}>
         <header className={styles.panelHead}>
           <div className={styles.panelTitleWrap}>
@@ -353,6 +445,7 @@ export function DashboardPage() {
         </div>
       </section>
 
+      {/* TODO DEV: удалить секцию dangerPanel (truncate) перед релизом. */}
       <section className={styles.dangerPanel}>
         <header className={styles.panelHead}>
           <div className={styles.panelTitleWrap}>

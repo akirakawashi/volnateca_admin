@@ -1,26 +1,26 @@
 import { NavLink } from 'react-router-dom';
+import { useRedemptionQueue } from '../../contexts/redemptionQueue';
+import { adminSidebarItems, type AdminSidebarItem } from '../../navigation/adminNavigation';
 import styles from './Sidebar.module.css';
 
-interface NavItem {
-  to: string;
-  label: string;
+interface SidebarNavItem extends AdminSidebarItem {
+  badgeCount?: number | null;
+  badgeCapped?: boolean;
 }
-
-const navItems: NavItem[] = [
-  { to: '/', label: 'Главная' },
-  { to: '/store/prizes', label: 'Призы магазина' },
-  { to: '/quiz/create', label: 'Создать квиз' },
-  { to: '/tasks/promo-codes', label: 'Задание Меняйки' },
-  { to: '/wall/post', label: 'Создать пост' },
-  { to: '/broadcast', label: 'VK-рассылка' },
-  { to: '/message-templates', label: 'Шаблоны' },
-];
 
 interface SidebarProps {
   onLogout: () => void;
 }
 
 export function Sidebar({ onLogout }: SidebarProps) {
+  const { queueCount, queueCountCapped } = useRedemptionQueue();
+
+  const items: SidebarNavItem[] = adminSidebarItems.map((item) =>
+    item.badge === 'redemptionQueue'
+      ? { ...item, badgeCount: queueCount, badgeCapped: queueCountCapped }
+      : item,
+  );
+
   return (
     <aside className={styles.sidebar}>
       <div className={styles.brand}>
@@ -33,7 +33,7 @@ export function Sidebar({ onLogout }: SidebarProps) {
       <nav className={styles.nav} aria-label="Основное меню">
         <p className={styles.sectionLabel}>Навигация</p>
         <ul className={styles.navList} role="list">
-          {navItems.map((item) => (
+          {items.map((item) => (
             <li key={item.to}>
               <NavLink
                 to={item.to}
@@ -43,6 +43,12 @@ export function Sidebar({ onLogout }: SidebarProps) {
                 }
               >
                 <span className={styles.navLabel}>{item.label}</span>
+                {item.badgeCount != null && item.badgeCount > 0 && (
+                  <span className={styles.navBadge} aria-label={`В очереди: ${item.badgeCount}`}>
+                    {item.badgeCount}
+                    {item.badgeCapped ? '+' : ''}
+                  </span>
+                )}
               </NavLink>
             </li>
           ))}

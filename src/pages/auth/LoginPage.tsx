@@ -52,7 +52,7 @@ export function LoginPage({ checking, onLogin }: LoginPageProps) {
           <div className={styles.brand}>
             <h1 className={styles.title}>Вход в Волнатека</h1>
             <p className={styles.subtitle}>
-              {checking ? 'Проверяем сохранённую авторизацию…' : 'Введите логин и пароль администратора'}
+              {checking ? 'Проверяем сессию…' : 'Введите логин и пароль'}
             </p>
           </div>
 

@@ -1,0 +1,157 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 520px;
+}
+
+.description {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-2);
+}
+
+.meta {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+.rangeSwitch {
+  display: inline-flex;
+  gap: 6px;
+  padding: 4px;
+  border: 1px solid var(--sep);
+  border-radius: var(--r-full);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.rangeBtn,
+.rangeBtnActive {
+  min-width: 44px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: var(--r-full);
+  background: transparent;
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background var(--t-fast),
+    color var(--t-fast);
+}
+
+.rangeBtn:hover {
+  color: var(--text);
+}
+
+.rangeBtnActive {
+  background: rgba(139, 157, 255, 0.16);
+  color: var(--accent);
+}
+
+.summary {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.summaryItem {
+  min-width: 120px;
+  padding: 12px 14px;
+  border: 1px solid var(--sep);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.summaryItem span {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.summaryItem strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.chartPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 8px 8px;
+  border: 1px solid var(--sep);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0));
+}
+
+.chartViewport {
+  width: 100%;
+  min-height: 360px;
+}
+
+.chartViewport :global(.recharts-brush-texts text) {
+  fill: var(--text-3);
+  font-size: 10px;
+}
+
+.tooltip {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid rgba(139, 157, 255, 0.35);
+  border-radius: 12px;
+  background: rgba(12, 16, 32, 0.96);
+  box-shadow: var(--sh-md);
+}
+
+.tooltip strong {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.tooltip span {
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.hint {
+  margin: 0;
+  padding: 0 8px 4px;
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+.loading,
+.empty {
+  margin: 0;
+  padding: 28px 12px;
+  text-align: center;
+  color: var(--text-2);
+  font-size: 14px;
+}

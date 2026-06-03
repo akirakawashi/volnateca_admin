@@ -1,9 +1,5 @@
 import { z } from 'zod';
-import {
-  ADMIN_PRIZE_STATUSES,
-  ADMIN_PRIZE_TYPES,
-  ADMIN_RECEIVE_TYPES,
-} from '../../types/prize';
+import { ADMIN_PRIZE_STATUSES, ADMIN_PRIZE_TYPES } from '../../types/prize';
 import { extractVkPhotoAttachment } from '../../utils/vkAttachments';
 
 export const prizeFormSchema = z.object({
@@ -17,10 +13,9 @@ export const prizeFormSchema = z.object({
       'Не удалось распознать VK attachment изображения',
     ),
   prize_type: z.enum(ADMIN_PRIZE_TYPES),
-  receive_type: z.enum(ADMIN_RECEIVE_TYPES),
   status: z.enum(ADMIN_PRIZE_STATUSES),
   cost_points: z.number().int().positive('Стоимость должна быть больше 0'),
-  quantity_total: z.number().int().positive('Количество должно быть больше 0').nullable().optional(),
+  quantity_total: z.number().int().positive('Укажите количество не меньше 1'),
   required_level: z.number().int().min(1).max(4).nullable().optional(),
   sort_order: z.number().int().min(0, 'sort_order не может быть отрицательным'),
   is_active: z.boolean(),
@@ -28,16 +23,43 @@ export const prizeFormSchema = z.object({
 
 export type PrizeFormValues = z.infer<typeof prizeFormSchema>;
 
+export const prizeEditFormSchema = prizeFormSchema.omit({ prize_type: true });
+
+export type PrizeEditFormValues = z.infer<typeof prizeEditFormSchema>;
+
 export const defaultPrizeFormValues: PrizeFormValues = {
   prize_name: '',
   description: '',
   image_attachment: '',
   prize_type: 'merch',
-  receive_type: 'pickup',
   status: 'available',
   cost_points: 60,
-  quantity_total: null,
+  quantity_total: 10,
   required_level: null,
   sort_order: 0,
   is_active: true,
 };
+
+export function mapPrizeToEditFormValues(prize: {
+  prize_name: string;
+  description: string | null;
+  image_attachment: string | null;
+  status: PrizeFormValues['status'];
+  cost_points: number;
+  quantity_total: number | null;
+  required_level: number | null;
+  sort_order: number;
+  is_active: boolean;
+}): PrizeEditFormValues {
+  return {
+    prize_name: prize.prize_name,
+    description: prize.description ?? '',
+    image_attachment: prize.image_attachment ?? '',
+    status: prize.status,
+    cost_points: prize.cost_points,
+    quantity_total: prize.quantity_total ?? 1,
+    required_level: prize.required_level,
+    sort_order: prize.sort_order,
+    is_active: prize.is_active,
+  };
+}
