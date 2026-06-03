@@ -1,5 +1,9 @@
 import { z } from 'zod';
-import { ADMIN_PRIZE_STATUSES, ADMIN_PRIZE_TYPES } from '../../types/prize';
+import {
+  ADMIN_MANUAL_PRIZE_STATUSES,
+  ADMIN_PRIZE_TYPES,
+  type PrizeStatus,
+} from '../../types/prize';
 import { extractVkPhotoAttachment } from '../../utils/vkAttachments';
 
 export const prizeFormSchema = z.object({
@@ -13,7 +17,7 @@ export const prizeFormSchema = z.object({
       'Не удалось распознать VK attachment изображения',
     ),
   prize_type: z.enum(ADMIN_PRIZE_TYPES),
-  status: z.enum(ADMIN_PRIZE_STATUSES),
+  status: z.enum(ADMIN_MANUAL_PRIZE_STATUSES),
   cost_points: z.number().int().positive('Стоимость должна быть больше 0'),
   quantity_total: z.number().int().positive('Укажите количество не меньше 1'),
   required_level: z.number().int().min(1).max(4).nullable().optional(),
@@ -42,7 +46,7 @@ export function mapPrizeToEditFormValues(prize: {
   prize_name: string;
   description: string | null;
   image_attachment: string | null;
-  status: PrizeFormValues['status'];
+  status: PrizeStatus;
   cost_points: number;
   quantity_total: number | null;
   required_level: number | null;
@@ -52,7 +56,7 @@ export function mapPrizeToEditFormValues(prize: {
     prize_name: prize.prize_name,
     description: prize.description ?? '',
     image_attachment: prize.image_attachment ?? '',
-    status: prize.status,
+    status: prize.status === 'hidden' ? 'hidden' : 'available',
     cost_points: prize.cost_points,
     quantity_total: prize.quantity_total ?? 1,
     required_level: prize.required_level,

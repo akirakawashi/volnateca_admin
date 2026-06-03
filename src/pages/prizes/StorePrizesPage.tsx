@@ -11,7 +11,7 @@ import { PageHero } from '../../components/ui/PageHero/PageHero';
 import { useAutoStatusMessage } from '../../hooks/useAutoStatusMessage';
 import { usePrizes } from '../../hooks/usePrizes';
 import {
-  ADMIN_PRIZE_STATUSES,
+  ADMIN_MANUAL_PRIZE_STATUSES,
   ADMIN_PRIZE_TYPES,
   type AdminPrize,
   type PrizeStatus,
@@ -46,7 +46,7 @@ const prizeTypeOptions = ADMIN_PRIZE_TYPES.map((type) => ({
   label: prizeTypeLabels[type],
 }));
 
-const statusOptions = ADMIN_PRIZE_STATUSES.map((status) => ({
+const statusOptions = ADMIN_MANUAL_PRIZE_STATUSES.map((status) => ({
   value: status,
   label: statusLabels[status],
 }));
@@ -64,7 +64,7 @@ interface StorePrizeFormPanelProps {
   updating: boolean;
   onCancelEdit: () => void;
   onCreate: (values: PrizeFormValues) => Promise<void>;
-  onUpdate: (prizesId: number, values: PrizeEditFormValues) => Promise<void>;
+  onUpdate: (prize: AdminPrize, values: PrizeEditFormValues) => Promise<void>;
   onFocus: () => void;
 }
 
@@ -126,14 +126,23 @@ function StorePrizeFormPanel({
     if (!editingPrize) {
       return;
     }
-    if (values.status === 'available' && values.quantity_total <= editingPrize.quantity_claimed) {
+    const keepSystemSoldOut = (
+      editingPrize.status === 'sold_out'
+      && values.status === 'available'
+      && values.quantity_total <= editingPrize.quantity_claimed
+    );
+    if (
+      values.status === 'available'
+      && values.quantity_total <= editingPrize.quantity_claimed
+      && !keepSystemSoldOut
+    ) {
       editForm.setError('status', {
         type: 'manual',
         message: `Увеличьте количество выше ${editingPrize.quantity_claimed}, чтобы сделать приз доступным.`,
       });
       return;
     }
-    await onUpdate(editingPrize.prizes_id, values);
+    await onUpdate(editingPrize, values);
   });
 
   if (isEditing && editingPrize) {
@@ -429,16 +438,26 @@ export function StorePrizesPage() {
     };
   }, [prizes]);
 
-  const buildUpdatePayload = (values: PrizeEditFormValues) => ({
-    prize_name: values.prize_name.trim(),
-    description: values.description?.trim() || null,
-    image_attachment: extractVkPhotoAttachment(values.image_attachment),
-    status: values.status,
-    cost_points: values.cost_points,
-    quantity_total: values.quantity_total,
-    required_level: values.required_level ?? null,
-    sort_order: values.sort_order,
-  });
+  const buildUpdatePayload = (prize: AdminPrize, values: PrizeEditFormValues) => {
+    const status: PrizeStatus = (
+      prize.status === 'sold_out'
+      && values.status === 'available'
+      && values.quantity_total <= prize.quantity_claimed
+    )
+      ? 'sold_out'
+      : values.status;
+
+    return {
+      prize_name: values.prize_name.trim(),
+      description: values.description?.trim() || null,
+      image_attachment: extractVkPhotoAttachment(values.image_attachment),
+      status,
+      cost_points: values.cost_points,
+      quantity_total: values.quantity_total,
+      required_level: values.required_level ?? null,
+      sort_order: values.sort_order,
+    };
+  };
 
   const handleCreate = async (values: PrizeFormValues) => {
     const created = await create({
@@ -460,8 +479,8 @@ export function StorePrizesPage() {
     }
   };
 
-  const handleUpdate = async (prizesId: number, values: PrizeEditFormValues) => {
-    const updated = await update(prizesId, buildUpdatePayload(values));
+  const handleUpdate = async (prize: AdminPrize, values: PrizeEditFormValues) => {
+    const updated = await update(prize.prizes_id, buildUpdatePayload(prize, values));
     if (updated) {
       setLastSaveAction('update');
       setEditingPrize(null);
