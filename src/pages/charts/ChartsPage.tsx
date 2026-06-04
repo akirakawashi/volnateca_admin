@@ -1,15 +1,17 @@
 import { useState } from 'react';
+import { AccrualSourcesPieChart } from '../../components/stats/AccrualSourcesPieChart';
 import { DailyAccrualPointsChart } from '../../components/stats/DailyAccrualPointsChart';
 import { DailyActivityChart } from '../../components/stats/DailyActivityChart';
 import { DailyNewUsersChart } from '../../components/stats/DailyNewUsersChart';
 import { PageHero } from '../../components/ui/PageHero/PageHero';
+import { useAccrualSourcesStats } from '../../hooks/useAccrualSourcesStats';
 import { useDailyAccrualPointsStats } from '../../hooks/useDailyAccrualPointsStats';
 import { useDailyActivityStats } from '../../hooks/useDailyActivityStats';
 import { useDailyNewUsersStats } from '../../hooks/useDailyNewUsersStats';
 import type { StatsRangeDays } from '../../types/stats';
 import styles from './ChartsPage.module.css';
 
-type ChartTab = 'activity' | 'growth' | 'economy';
+type ChartTab = 'activity' | 'growth' | 'economy' | 'sources';
 
 const chartTabs: { id: ChartTab; label: string; description: string }[] = [
   {
@@ -30,6 +32,12 @@ const chartTabs: { id: ChartTab; label: string; description: string }[] = [
     description:
       'Сумма начисленных баллов за день — отличает массовую активность от редких крупных начислений.',
   },
+  {
+    id: 'sources',
+    label: 'Источники',
+    description:
+      'Структура начислений: задания, регистрация, рефералы, достижения и ручные корректировки.',
+  },
 ];
 
 export function ChartsPage() {
@@ -37,6 +45,7 @@ export function ChartsPage() {
   const [activityRangeDays, setActivityRangeDays] = useState<StatsRangeDays>(30);
   const [growthRangeDays, setGrowthRangeDays] = useState<StatsRangeDays>(30);
   const [economyRangeDays, setEconomyRangeDays] = useState<StatsRangeDays>(30);
+  const [sourcesRangeDays, setSourcesRangeDays] = useState<StatsRangeDays>(30);
 
   const {
     stats: activityStats,
@@ -58,6 +67,13 @@ export function ChartsPage() {
     error: economyError,
     refresh: refreshEconomy,
   } = useDailyAccrualPointsStats(economyRangeDays);
+
+  const {
+    stats: sourcesStats,
+    loading: sourcesLoading,
+    error: sourcesError,
+    refresh: refreshSources,
+  } = useAccrualSourcesStats(sourcesRangeDays);
 
   const activeMeta = chartTabs.find((tab) => tab.id === activeTab)!;
 
@@ -129,6 +145,17 @@ export function ChartsPage() {
               rangeDays={economyRangeDays}
               onRangeChange={setEconomyRangeDays}
               onRefresh={() => void refreshEconomy()}
+            />
+          )}
+
+          {activeTab === 'sources' && (
+            <AccrualSourcesPieChart
+              stats={sourcesStats}
+              loading={sourcesLoading}
+              error={sourcesError}
+              rangeDays={sourcesRangeDays}
+              onRangeChange={setSourcesRangeDays}
+              onRefresh={() => void refreshSources()}
             />
           )}
         </section>

@@ -26,4 +26,20 @@ export interface DailyAccrualPointsStats extends DailySeriesStats {
   label: string;
 }
 
+export interface AccrualSourceSegment {
+  source: string;
+  value: number;
+}
+
+export interface AccrualSourcesStats {
+  timezone: string;
+  from: string;
+  to: string;
+  metric: 'accrual_sources';
+  label: string;
+  description: string;
+  total: number;
+  segments: AccrualSourceSegment[];
+}
+
 export type StatsRangeDays = 7 | 30 | 90;

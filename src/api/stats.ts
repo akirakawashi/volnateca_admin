@@ -1,5 +1,6 @@
 import { apiFetch } from './client';
 import type {
+  AccrualSourcesStats,
   DailyAccrualPointsStats,
   DailyActivityStats,
   DailyNewUsersStats,
@@ -21,4 +22,8 @@ export function getDailyNewUsersStats(days: StatsRangeDays): Promise<DailyNewUse
 
 export function getDailyAccrualPointsStats(days: StatsRangeDays): Promise<DailyAccrualPointsStats> {
   return fetchDailyStats<DailyAccrualPointsStats>('/v1/admin/stats/daily-accrual-points', days);
+}
+
+export function getAccrualSourcesStats(days: StatsRangeDays): Promise<AccrualSourcesStats> {
+  return fetchDailyStats<AccrualSourcesStats>('/v1/admin/stats/accrual-sources', days);
 }
