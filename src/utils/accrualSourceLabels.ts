@@ -1,7 +1,7 @@
 const ACCRUAL_SOURCE_LABELS: Record<string, string> = {
   registration: 'Регистрация',
   task: 'Задания',
-  referral: 'Рефералы',
+  referral: 'Пригласить друга',
   achievement: 'Достижения',
   adjustment: 'Корректировки',
   prize: 'Возврат за приз',

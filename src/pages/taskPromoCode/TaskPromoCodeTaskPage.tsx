@@ -49,6 +49,7 @@ export function TaskPromoCodeTaskPage() {
       starts_at: values.starts_at ? new Date(values.starts_at).toISOString() : null,
       ends_at: values.ends_at ? new Date(values.ends_at).toISOString() : null,
       promo_code: normalizePromoCode(values.promo_code),
+      image_attachment: values.image_attachment?.trim() || null,
     });
 
     if (created) {
@@ -152,6 +153,14 @@ export function TaskPromoCodeTaskPage() {
             error={errors.promo_code?.message}
           >
             <Input {...register('promo_code')} placeholder="BOT-CODE-1" />
+          </Field>
+
+          <Field
+            label="VK attachment изображения"
+            hint="Вставьте VK attachment фото задания, например photo-123456_789. Показывается пользователю при старте задания."
+            error={errors.image_attachment?.message}
+          >
+            <Input {...register('image_attachment')} placeholder="photo-123456_789" />
           </Field>
 
           <FormFooter inCard>

@@ -32,7 +32,7 @@ const TABS: { id: UserProfileTab; label: string }[] = [
   { id: 'redemptions', label: 'Заявки' },
   { id: 'tasks', label: 'Задания' },
   { id: 'transactions', label: 'Транзакции' },
-  { id: 'referrals', label: 'Рефералы' },
+  { id: 'referrals', label: 'Пригласить друга' },
 ];
 
 const REDEMPTION_STATUS_LABELS: Record<string, string> = {
@@ -199,7 +199,7 @@ export function UserProfilePage() {
       { label: 'Уровень', value: `${profile.current_level} · ${profile.level_name}` },
       { label: 'Заработано', value: `${profile.earned_points_total} ✦` },
       { label: 'Потрачено', value: `${profile.spent_points_total} ✦` },
-      { label: 'Рефералов', value: String(profile.referrals_sent_count) },
+      { label: 'Приглашённых друзей', value: String(profile.referrals_sent_count) },
       { label: 'Заявок в очереди', value: String(profile.redemptions_reserved_count) },
     ];
   }, [profile]);
@@ -404,7 +404,7 @@ export function UserProfilePage() {
       {activeTab === 'referrals' ? (
         <Card className={styles.tableCard}>
           {tabLoading ? (
-            <p className={styles.loading}>Загрузка рефералов…</p>
+            <p className={styles.loading}>Загрузка приглашённых друзей…</p>
           ) : (
             <div className={styles.referrals}>
               <section>

@@ -7,6 +7,7 @@ export interface CreateTaskPromoCodeTaskPayload {
   starts_at: string | null;
   ends_at: string | null;
   promo_code: string;
+  image_attachment: string | null;
 }
 
 export interface CreatedTaskPromoCodeTask {

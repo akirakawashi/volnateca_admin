@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { extractVkPhotoAttachment } from '../../utils/vkAttachments';
 
 export function normalizePromoCode(value: string): string {
   return value.replace(/\s+/g, '').toUpperCase();
@@ -13,6 +14,13 @@ export const taskPromoCodeFormSchema = z
     starts_at: z.string().optional(),
     ends_at: z.string().optional(),
     promo_code: z.string().min(1, 'Добавь промокод'),
+    image_attachment: z
+      .string()
+      .optional()
+      .refine(
+        (value) => !value || extractVkPhotoAttachment(value) !== null,
+        'Не удалось распознать VK attachment изображения',
+      ),
   })
   .refine(
     (data) => {
@@ -36,4 +44,5 @@ export const defaultTaskPromoCodeFormValues: TaskPromoCodeFormValues = {
   starts_at: '',
   ends_at: '',
   promo_code: '',
+  image_attachment: '',
 };
