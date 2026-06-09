@@ -37,8 +37,9 @@ export const taskPromoCodeFormSchema = z
 export type TaskPromoCodeFormValues = z.infer<typeof taskPromoCodeFormSchema>;
 
 export const defaultTaskPromoCodeFormValues: TaskPromoCodeFormValues = {
-  task_name: 'Меняйка: обмен ГБ на промокод',
-  description: '',
+  task_name: 'Партнёр: промокод',
+  description:
+    'Вставьте текст партнера, который отобразится в его задании.',
   points: 15,
   week_number: null,
   starts_at: '',
