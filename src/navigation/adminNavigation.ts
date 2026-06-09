@@ -63,7 +63,7 @@ export const adminRoutes = [
   {
     id: 'taskPromoCodes',
     path: '/tasks/promo-codes',
-    sidebar: { label: 'Задание Меняйки' },
+    sidebar: { label: 'Партнёрское задание' },
   },
   {
     id: 'wallPost',
