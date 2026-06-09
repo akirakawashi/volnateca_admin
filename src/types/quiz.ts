@@ -40,3 +40,23 @@ export interface CreatedQuiz {
   task_name: string;
   questions: CreatedQuizQuestion[];
 }
+
+export interface AdminQuizQuestionImage {
+  quiz_questions_id: number;
+  question_text: string;
+  image_attachment: string | null;
+}
+
+export interface AdminQuiz {
+  tasks_id: number;
+  code: string;
+  task_name: string;
+  starts_at: string | null;
+  ends_at: string | null;
+  can_edit: boolean;
+  questions: AdminQuizQuestionImage[];
+}
+
+export interface UpdateQuizQuestionImagePayload {
+  image_attachment: string | null;
+}

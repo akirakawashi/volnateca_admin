@@ -1,8 +1,13 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { quizFormSchema, defaultQuestion } from './schema';
-import type { QuizFormValues } from './schema';
+import {
+  defaultQuestion,
+  quizFormSchema,
+  quizQuestionImageEditSchema,
+  type QuizFormValues,
+  type QuizQuestionImageEditValues,
+} from './schema';
 import { QuestionsEditor } from './QuestionsEditor';
 import { useCreateQuiz } from '../../hooks/useCreateQuiz';
 import { useAutoStatusMessage } from '../../hooks/useAutoStatusMessage';
@@ -14,10 +19,39 @@ import { Field, Input, Textarea } from '../../components/ui/Field/Field';
 import { Alert } from '../../components/ui/Alert/Alert';
 import { FormFooter } from '../../components/ui/FormFooter/FormFooter';
 import { extractVkPhotoAttachment } from '../../utils/vkAttachments';
+import type { AdminQuiz, AdminQuizQuestionImage } from '../../types/quiz';
 import styles from './CreateQuizPage.module.css';
 
+const dateFormatter = new Intl.DateTimeFormat('ru-RU', {
+  dateStyle: 'short',
+  timeStyle: 'short',
+});
+
+function formatDateTime(value: string | null): string {
+  if (!value) return 'Не задано';
+  return dateFormatter.format(new Date(value));
+}
+
+interface EditingQuestion {
+  quiz: AdminQuiz;
+  question: AdminQuizQuestionImage;
+}
+
 export function CreateQuizPage() {
-  const { create, loading, error, result, reset: resetMutation } = useCreateQuiz();
+  const {
+    quizzes,
+    fetch,
+    quizzesLoading,
+    create,
+    loading,
+    updating,
+    error,
+    result,
+    successMessage,
+    updateQuestionImage,
+    resetStatus,
+  } = useCreateQuiz();
+  const [editingQuestion, setEditingQuestion] = useState<EditingQuestion | null>(null);
   const statusRef = useRef<HTMLDivElement>(null);
 
   const methods = useForm<QuizFormValues>({
@@ -34,6 +68,32 @@ export function CreateQuizPage() {
   });
 
   const { register, handleSubmit, reset, formState: { errors } } = methods;
+
+  const {
+    register: registerImageEdit,
+    handleSubmit: handleImageEditSubmit,
+    reset: resetImageEditForm,
+    formState: { errors: imageEditErrors },
+  } = useForm<QuizQuestionImageEditValues>({
+    resolver: zodResolver(quizQuestionImageEditSchema),
+    defaultValues: {
+      image_attachment: '',
+    },
+  });
+
+  useEffect(() => {
+    void fetch();
+  }, [fetch]);
+
+  useEffect(() => {
+    if (editingQuestion === null) {
+      resetImageEditForm({ image_attachment: '' });
+      return;
+    }
+    resetImageEditForm({
+      image_attachment: editingQuestion.question.image_attachment ?? '',
+    });
+  }, [editingQuestion, resetImageEditForm]);
 
   const onSubmit = async (values: QuizFormValues) => {
     const created = await create({
@@ -58,10 +118,32 @@ export function CreateQuizPage() {
     }
   };
 
+  const onSubmitImageEdit = handleImageEditSubmit(async (values) => {
+    if (editingQuestion === null) {
+      return;
+    }
+
+    const updated = await updateQuestionImage(editingQuestion.question.quiz_questions_id, {
+      image_attachment: extractVkPhotoAttachment(values.image_attachment || ''),
+    });
+
+    if (updated) {
+      setEditingQuestion(null);
+    }
+  });
+
+  const handleEditQuestionClick = (quiz: AdminQuiz, question: AdminQuizQuestionImage) => {
+    if (!quiz.can_edit) {
+      return;
+    }
+    resetStatus();
+    setEditingQuestion({ quiz, question });
+  };
+
   useAutoStatusMessage({
-    active: Boolean(result || error),
+    active: Boolean(result || successMessage || error),
     scrollRef: statusRef,
-    onDismiss: result ? resetMutation : undefined,
+    onDismiss: result || successMessage ? resetStatus : undefined,
   });
 
   return (
@@ -72,7 +154,7 @@ export function CreateQuizPage() {
         subtitle="Новое задание типа «Викторина»"
       />
 
-      {(result || error) && (
+      {(result || successMessage || error) && (
         <div ref={statusRef} className={styles.statusRegion}>
           {result && (
             <Alert variant="success">
@@ -80,6 +162,7 @@ export function CreateQuizPage() {
               вопросов: {result.questions.length}
             </Alert>
           )}
+          {successMessage && <Alert variant="success">{successMessage}</Alert>}
           {error && <Alert variant="error">{error}</Alert>}
         </div>
       )}
@@ -87,7 +170,7 @@ export function CreateQuizPage() {
       <FormProvider {...methods}>
         <form
           onSubmit={handleSubmit(onSubmit as Parameters<typeof handleSubmit>[0])}
-          onFocus={resetMutation}
+          onFocus={resetStatus}
           noValidate
           className={`formStack ${styles.form}`}
         >
@@ -169,6 +252,110 @@ export function CreateQuizPage() {
           </FormFooter>
         </form>
       </FormProvider>
+
+      {editingQuestion && (
+        <Card
+          title="Редактировать фото вопроса"
+          className={styles.formCard}
+          action={
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setEditingQuestion(null)}
+            >
+              Отменить
+            </Button>
+          }
+        >
+          <form
+            onSubmit={onSubmitImageEdit}
+            onFocus={resetStatus}
+            noValidate
+            className={`formStack ${styles.form}`}
+          >
+            <div className={styles.editMeta}>
+              <strong>{editingQuestion.quiz.task_name}</strong>
+              <span>Старт: {formatDateTime(editingQuestion.quiz.starts_at)}</span>
+            </div>
+
+            <div className={styles.questionPreview}>
+              {editingQuestion.question.question_text}
+            </div>
+
+            <Field
+              label="VK attachment изображения"
+              hint="Например: photo-123456_789. Пустое поле уберет фото у вопроса."
+              error={imageEditErrors.image_attachment?.message}
+            >
+              <Input {...registerImageEdit('image_attachment')} placeholder="photo-123456_789" />
+            </Field>
+
+            <FormFooter inCard>
+              <Button type="submit" variant="primary" size="md" loading={updating}>
+                Сохранить
+              </Button>
+            </FormFooter>
+          </form>
+        </Card>
+      )}
+
+      <Card title="Фото вопросов квиза" className={styles.listCard}>
+        {quizzesLoading ? (
+          <p className={styles.muted}>Загрузка квизов…</p>
+        ) : !quizzes || quizzes.length === 0 ? (
+          <p className={styles.muted}>Квизов пока нет.</p>
+        ) : (
+          <ul className={styles.quizList}>
+            {quizzes.map((quiz) => (
+              <li key={quiz.tasks_id} className={styles.quizItem}>
+                <div className={styles.quizHeader}>
+                  <div className={styles.quizInfo}>
+                    <div className={styles.quizTitleRow}>
+                      <strong>{quiz.task_name}</strong>
+                      <span
+                        className={quiz.can_edit ? styles.statusEditable : styles.statusLocked}
+                      >
+                        {quiz.can_edit ? 'Можно редактировать' : 'Редактирование закрыто'}
+                      </span>
+                    </div>
+                    <div className={styles.quizMeta}>
+                      <span>Код: {quiz.code}</span>
+                      <span>Старт: {formatDateTime(quiz.starts_at)}</span>
+                      <span>Вопросов: {quiz.questions.length}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {quiz.questions.length === 0 ? (
+                  <p className={styles.muted}>Вопросов нет.</p>
+                ) : (
+                  <ul className={styles.questionList}>
+                    {quiz.questions.map((question, index) => (
+                      <li key={question.quiz_questions_id} className={styles.questionItem}>
+                        <div className={styles.questionInfo}>
+                          <strong>Вопрос {index + 1}</strong>
+                          <p>{question.question_text}</p>
+                          <span>Фото: {question.image_attachment ?? 'Не задано'}</span>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          size="sm"
+                          disabled={!quiz.can_edit}
+                          onClick={() => handleEditQuestionClick(quiz, question)}
+                        >
+                          Редактировать фото
+                        </Button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </Card>
     </div>
   );
 }

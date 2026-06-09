@@ -36,6 +36,19 @@ export const taskPromoCodeFormSchema = z
 
 export type TaskPromoCodeFormValues = z.infer<typeof taskPromoCodeFormSchema>;
 
+export const taskPromoCodeEditFormSchema = z.object({
+  description: z.string().optional(),
+  image_attachment: z
+    .string()
+    .optional()
+    .refine(
+      (value) => !value || extractVkPhotoAttachment(value) !== null,
+      'Не удалось распознать VK attachment изображения',
+    ),
+});
+
+export type TaskPromoCodeEditFormValues = z.infer<typeof taskPromoCodeEditFormSchema>;
+
 export const defaultTaskPromoCodeFormValues: TaskPromoCodeFormValues = {
   task_name: 'Партнёр: промокод',
   description:

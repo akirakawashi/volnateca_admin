@@ -43,6 +43,18 @@ export const quizFormSchema = z
 
 export type QuizFormValues = z.infer<typeof quizFormSchema>;
 
+export const quizQuestionImageEditSchema = z.object({
+  image_attachment: z
+    .string()
+    .optional()
+    .refine(
+      (value) => !value || extractVkPhotoAttachment(value) !== null,
+      'Не удалось распознать VK attachment изображения',
+    ),
+});
+
+export type QuizQuestionImageEditValues = z.infer<typeof quizQuestionImageEditSchema>;
+
 export const defaultQuestion = () => ({
   question_text: '',
   image_attachment: '',
