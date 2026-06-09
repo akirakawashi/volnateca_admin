@@ -60,9 +60,9 @@ export function TaskPromoCodeTaskPage() {
   return (
     <div className={styles.page}>
       <PageHero
-        eyebrow="Promo task"
-        title="Задание Меняйки"
-        subtitle="Создание одного задания с одним промокодом для проверки в боте"
+        eyebrow="Partner promo"
+        title="Партнёрское задание"
+        subtitle="Создание отдельного задания для каждого промокода партнёра"
       />
 
       {(result || error) && (
@@ -107,14 +107,14 @@ export function TaskPromoCodeTaskPage() {
           </div>
 
           <Field label="Название задания" required error={errors.task_name?.message}>
-            <Input {...register('task_name')} placeholder="Меняйка: обмен ГБ на промокод" />
+            <Input {...register('task_name')} placeholder="Медоборы: промокод в соцсетях" />
           </Field>
 
-          <Field label="Описание">
+          <Field label="Текст задания в боте">
             <Textarea
               {...register('description')}
-              rows={3}
-              placeholder="Инструкция для внутренней админки или описания задания..."
+              rows={6}
+              placeholder="Загляни в соцсети партнёра, найди промокод и отправь его сюда."
             />
           </Field>
 
@@ -157,7 +157,7 @@ export function TaskPromoCodeTaskPage() {
 
           <Field
             label="VK attachment изображения"
-            hint="Вставьте VK attachment фото задания, например photo-123456_789. Показывается пользователю при старте задания."
+            hint="Вставьте VK attachment фото конкретного задания, например photo-123456_789. Показывается пользователю при старте задания."
             error={errors.image_attachment?.message}
           >
             <Input {...register('image_attachment')} placeholder="photo-123456_789" />
