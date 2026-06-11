@@ -2,7 +2,8 @@ import type { PrizeReceiveType } from '../types/prize';
 
 const RECEIVE_TYPE_LABELS: Record<PrizeReceiveType, string> = {
   pickup: 'Самовывоз',
-  manager_contact: 'Связь с менеджером',
+  promo_code: 'Промокод в VK',
+  manager_contact: 'Выдача менеджером',
 };
 
 export function formatReceiveType(value: string): string {

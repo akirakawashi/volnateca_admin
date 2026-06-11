@@ -25,9 +25,3 @@ export async function seedDevScenario(payload: SeedDevScenarioPayload): Promise<
     body: JSON.stringify(payload),
   });
 }
-
-export async function seedStorePrizes(): Promise<DevResponse> {
-  return apiFetch<DevResponse>('/v1/admin/dev/seed-store-prizes', {
-    method: 'POST',
-  });
-}

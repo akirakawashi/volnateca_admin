@@ -19,6 +19,7 @@ export interface AdminPrizeRedemption {
   canceled_at: string | null;
   cancel_reason: string | null;
   created_at: string;
+  promo_code: string | null;
 }
 
 export interface ListPrizeRedemptionsParams {

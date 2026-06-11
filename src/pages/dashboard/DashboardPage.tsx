@@ -9,7 +9,6 @@ import { PageHero } from '../../components/ui/PageHero/PageHero';
 import { useAutoStatusMessage } from '../../hooks/useAutoStatusMessage';
 import { useTruncateDB } from '../../hooks/useTruncateDB'; // TODO DEV
 import { useSeedScenario } from '../../hooks/useSeedScenario'; // TODO DEV
-import { useSeedStorePrizes } from '../../hooks/useSeedStorePrizes'; // TODO DEV
 import { useAwardMonthlyTop } from '../../hooks/useAwardMonthlyTop';
 import type { SeedDevScenario } from '../../api/dev'; // TODO DEV
 import type { AwardMonthlyTopResponse } from '../../types/monthly_top';
@@ -64,17 +63,10 @@ export function DashboardPage() {
   // TODO DEV: удалить хуки truncate/seed перед релизом.
   const { truncate, loading: truncateLoading, error: truncateError, reset: resetTruncate } = useTruncateDB();
   const { seed, loading: seedLoading, error: seedError, reset: resetSeed } = useSeedScenario();
-  const {
-    seedStore,
-    loading: storeSeedLoading,
-    error: storeSeedError,
-    reset: resetStoreSeed,
-  } = useSeedStorePrizes();
   const { award, loading: awardLoading, error: awardError, reset: resetAward } = useAwardMonthlyTop();
 
   // TODO DEV: удалить state/handlers truncate и seed перед релизом.
   const [seedResult, setSeedResult] = useState<{ scenario: SeedDevScenario; messages: string[] } | null>(null);
-  const [storeSeedResult, setStoreSeedResult] = useState<string[] | null>(null);
   const [awardResult, setAwardResult] = useState<AwardMonthlyTopResponse | null>(null);
   const [awardMonth, setAwardMonth] = useState(getPreviousMonthKey);
   const [activeScenario, setActiveScenario] = useState<SeedDevScenario | null>(null);
@@ -99,7 +91,6 @@ export function DashboardPage() {
   const handleSeed = async (scenario: SeedDevScenario) => {
     resetSeed();
     setSeedResult(null);
-    setStoreSeedResult(null);
     setAwardResult(null);
     setActiveScenario(scenario);
     try {
@@ -107,19 +98,6 @@ export function DashboardPage() {
       setSeedResult({ scenario, messages });
     } finally {
       setActiveScenario(null);
-    }
-  };
-
-  const handleSeedStorePrizes = async () => {
-    resetStoreSeed();
-    setSeedResult(null);
-    setStoreSeedResult(null);
-    setAwardResult(null);
-    try {
-      const messages = await seedStore();
-      setStoreSeedResult(messages);
-    } catch {
-      // Error text is exposed through storeSeedError.
     }
   };
 
@@ -168,7 +146,6 @@ export function DashboardPage() {
     resetAward();
     setAwardResult(null);
     setSeedResult(null);
-    setStoreSeedResult(null);
     setMonthlyTopModalClosing(false);
     setMonthlyTopConfirmOpen(true);
   };
@@ -203,9 +180,9 @@ export function DashboardPage() {
   const hasProdStatus = Boolean(prodError || awardResult);
   const hasProdSuccess = Boolean(awardResult);
 
-  const devError = seedError || storeSeedError;
-  const hasDevStatus = Boolean(devError || seedResult || storeSeedResult);
-  const hasDevSuccess = Boolean(seedResult || storeSeedResult);
+  const devError = seedError;
+  const hasDevStatus = Boolean(devError || seedResult);
+  const hasDevSuccess = Boolean(seedResult);
   const hasDangerStatus = Boolean(done || truncateError);
 
   useAutoStatusMessage({
@@ -220,7 +197,6 @@ export function DashboardPage() {
     onDismiss: hasDevSuccess
       ? () => {
           setSeedResult(null);
-          setStoreSeedResult(null);
         }
       : undefined,
   });
@@ -249,7 +225,7 @@ export function DashboardPage() {
             </span>
             <span className={[styles.statChip, styles.statChipMuted].join(' ')}>
               <span className={styles.statLabel}>DEV</span>
-              <strong>{seedButtons.length + 1}</strong>
+              <strong>{seedButtons.length}</strong>
             </span>
           </div>
         }
@@ -378,19 +354,6 @@ export function DashboardPage() {
                       </div>
                     </Alert>
                   )}
-
-                  {storeSeedResult && (
-                    <Alert variant="info">
-                      <div className={styles.resultBox}>
-                        <strong>Тестовые призы магазина засеяны</strong>
-                        <ul className={styles.resultList}>
-                          {storeSeedResult.map((m, i) => (
-                            <li key={i}>{m}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </Alert>
-                  )}
                 </div>
               )}
 
@@ -401,23 +364,13 @@ export function DashboardPage() {
                     variant={btn.color}
                     size="sm"
                     loading={seedLoading && activeScenario === btn.scenario}
-                    disabled={seedLoading || storeSeedLoading}
+                    disabled={seedLoading}
                     onClick={() => handleSeed(btn.scenario)}
                   >
                     {btn.label}
                   </Button>
                 ))}
               </div>
-
-              <Button
-                variant="secondary"
-                size="sm"
-                loading={storeSeedLoading}
-                disabled={seedLoading}
-                onClick={handleSeedStorePrizes}
-              >
-                Засеять тестовые призы магазина
-              </Button>
             </div>
           </section>
 

@@ -299,7 +299,8 @@ export function UserProfilePage() {
                     <p className={styles.itemMeta}>
                       {REDEMPTION_STATUS_LABELS[item.prize_redemption_status] ??
                         item.prize_redemption_status}{' '}
-                      · код {item.redemption_code} · {item.points_spent} ✦
+                      · {item.promo_code ? 'промокод' : 'код'} {item.promo_code ?? item.redemption_code} ·{' '}
+                      {item.points_spent} ✦
                     </p>
                     <p className={styles.itemMeta}>
                       {formatRedemptionDateTime(item.created_at)}

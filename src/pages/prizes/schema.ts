@@ -19,14 +19,50 @@ export const prizeFormSchema = z.object({
   prize_type: z.enum(ADMIN_PRIZE_TYPES),
   status: z.enum(ADMIN_MANUAL_PRIZE_STATUSES),
   cost_points: z.number().int().positive('Стоимость должна быть больше 0'),
-  quantity_total: z.number().int().positive('Укажите количество не меньше 1'),
+  quantity_total: z.number().int().positive('Укажите количество не меньше 1').nullable().optional(),
   required_level: z.number().int().min(1).max(4).nullable().optional(),
   sort_order: z.number().int().min(0, 'sort_order не может быть отрицательным'),
+  promo_codes_text: z.string().optional(),
+}).superRefine((values, ctx) => {
+  if (values.prize_type === 'partner') {
+    if (parsePromoCodeLines(values.promo_codes_text).length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['promo_codes_text'],
+        message: 'Добавьте хотя бы один промокод',
+      });
+    }
+    return;
+  }
+
+  if (values.quantity_total == null) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['quantity_total'],
+      message: 'Укажите количество',
+    });
+  }
 });
 
 export type PrizeFormValues = z.infer<typeof prizeFormSchema>;
 
-export const prizeEditFormSchema = prizeFormSchema.omit({ prize_type: true });
+export const prizeEditFormSchema = z.object({
+  prize_name: z.string().min(1, 'Название приза обязательно'),
+  description: z.string().optional(),
+  image_attachment: z
+    .string()
+    .optional()
+    .refine(
+      (value) => !value || extractVkPhotoAttachment(value) !== null,
+      'Не удалось распознать VK attachment изображения',
+    ),
+  status: z.enum(ADMIN_MANUAL_PRIZE_STATUSES),
+  cost_points: z.number().int().positive('Стоимость должна быть больше 0'),
+  quantity_total: z.number().int().positive('Укажите количество не меньше 1').nullable().optional(),
+  required_level: z.number().int().min(1).max(4).nullable().optional(),
+  sort_order: z.number().int().min(0, 'sort_order не может быть отрицательным'),
+  promo_codes_to_add: z.string().optional(),
+});
 
 export type PrizeEditFormValues = z.infer<typeof prizeEditFormSchema>;
 
@@ -40,6 +76,7 @@ export const defaultPrizeFormValues: PrizeFormValues = {
   quantity_total: 10,
   required_level: null,
   sort_order: 0,
+  promo_codes_text: '',
 };
 
 export function mapPrizeToEditFormValues(prize: {
@@ -61,5 +98,20 @@ export function mapPrizeToEditFormValues(prize: {
     quantity_total: prize.quantity_total ?? 1,
     required_level: prize.required_level,
     sort_order: prize.sort_order,
+    promo_codes_to_add: '',
   };
+}
+
+export function parsePromoCodeLines(value: string | null | undefined): string[] {
+  const seen = new Set<string>();
+  const codes: string[] = [];
+  for (const line of (value ?? '').split(/\r?\n/)) {
+    const normalized = line.replace(/\s+/g, '').toUpperCase();
+    if (!normalized || seen.has(normalized)) {
+      continue;
+    }
+    seen.add(normalized);
+    codes.push(normalized);
+  }
+  return codes;
 }

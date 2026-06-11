@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { createPrize, listPrizes, updatePrize } from '../api/prizes';
+import { addPrizePromoCodes, createPrize, listPrizes, updatePrize } from '../api/prizes';
 import type { AdminPrize, CreatePrizePayload, UpdatePrizePayload } from '../types/prize';
 
 function sortPrizes(prizes: AdminPrize[]): AdminPrize[] {
@@ -78,6 +78,29 @@ export function usePrizes() {
     [],
   );
 
+  const addPromoCodes = useCallback(
+    async (prizesId: number, promoCodes: string[]): Promise<AdminPrize | null> => {
+      setUpdating(true);
+      setError(null);
+      setResult(null);
+      try {
+        await addPrizePromoCodes(prizesId, { promo_codes: promoCodes });
+        const data = await listPrizes();
+        const sorted = sortPrizes(data);
+        const updated = sorted.find((item) => item.prizes_id === prizesId) ?? null;
+        setPrizes(sorted);
+        setResult(updated);
+        return updated;
+      } catch (e) {
+        setError(e instanceof Error ? e.message : String(e));
+        return null;
+      } finally {
+        setUpdating(false);
+      }
+    },
+    [],
+  );
+
   const resetStatus = useCallback(() => {
     setError(null);
     setResult(null);
@@ -93,6 +116,7 @@ export function usePrizes() {
     fetch,
     create,
     update,
+    addPromoCodes,
     resetStatus,
   };
 }

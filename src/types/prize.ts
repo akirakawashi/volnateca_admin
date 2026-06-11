@@ -1,5 +1,5 @@
 export const ADMIN_PRIZE_TYPES = ['merch', 'partner', 'super_prize'] as const;
-export const ADMIN_RECEIVE_TYPES = ['pickup', 'manager_contact'] as const;
+export const ADMIN_RECEIVE_TYPES = ['pickup', 'promo_code', 'manager_contact'] as const;
 export const ADMIN_PRIZE_STATUSES = ['available', 'sold_out', 'hidden'] as const;
 export const ADMIN_MANUAL_PRIZE_STATUSES = ['available', 'hidden'] as const;
 
@@ -22,6 +22,10 @@ export interface AdminPrize {
   required_level: number | null;
   sort_order: number;
   is_active: boolean;
+  promo_codes_total: number | null;
+  promo_codes_available: number | null;
+  promo_codes_assigned: number | null;
+  promo_codes_void: number | null;
 }
 
 export interface CreatePrizePayload {
@@ -35,6 +39,7 @@ export interface CreatePrizePayload {
   quantity_total: number | null;
   required_level: number | null;
   sort_order: number;
+  promo_codes?: string[];
 }
 
 export interface UpdatePrizePayload {
@@ -43,7 +48,21 @@ export interface UpdatePrizePayload {
   image_attachment: string | null;
   status: PrizeStatus;
   cost_points: number;
-  quantity_total: number;
+  quantity_total?: number | null;
   required_level: number | null;
   sort_order: number;
+}
+
+export interface AddPrizePromoCodesPayload {
+  promo_codes: string[];
+}
+
+export interface AddPrizePromoCodesResult {
+  prizes_id: number;
+  created: number;
+  duplicates: number;
+  total_codes: number;
+  available_codes: number;
+  assigned_codes: number;
+  void_codes: number;
 }

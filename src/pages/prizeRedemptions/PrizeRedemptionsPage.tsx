@@ -669,7 +669,9 @@ function CounterModePanel({
 
         {counterTarget && (
           <div className={styles.counterMatch}>
-            <code className={styles.counterMatchCode}>{counterTarget.redemption_code}</code>
+            <code className={styles.counterMatchCode}>
+              {counterTarget.promo_code ?? counterTarget.redemption_code}
+            </code>
             <p className={styles.counterMatchTitle}>{counterTarget.prize_name}</p>
             <div className={styles.counterMatchMeta}>
               <span>{counterTarget.points_spent} ✦</span>
@@ -743,7 +745,7 @@ function RedemptionListItem({ item, selected, onSelect }: RedemptionListItemProp
       <div className={styles.redemptionHead}>
         <div>
           <h3 className={styles.redemptionTitle}>{item.prize_name}</h3>
-          <code className={styles.redemptionCode}>{item.redemption_code}</code>
+          <code className={styles.redemptionCode}>{item.promo_code ?? item.redemption_code}</code>
         </div>
         <div className={styles.badges}>
           <span className={[styles.badge, getStatusBadgeClass(item.prize_redemption_status)].join(' ')}>
@@ -805,7 +807,7 @@ function RedemptionDetail({
 
   return (
     <div className={styles.detailBody}>
-      <code className={styles.detailCode}>{item.redemption_code}</code>
+      <code className={styles.detailCode}>{item.promo_code ?? item.redemption_code}</code>
 
       <div className={styles.badges}>
         <span className={[styles.badge, getStatusBadgeClass(item.prize_redemption_status)].join(' ')}>
