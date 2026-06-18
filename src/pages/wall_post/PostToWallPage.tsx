@@ -16,7 +16,6 @@ import styles from './PostToWallPage.module.css';
 const schema = z.object({
   message: z.string().min(1, 'Текст поста обязателен').max(16384),
   like_points: z.number().int().positive('Должно быть > 0'),
-  repost_points: z.number().int().positive('Должно быть > 0'),
   comment_points: z.number().int().min(0, 'Не может быть отрицательным'),
   week_number: z.number().int().min(1).max(12).nullable().optional(),
   attachments: z.array(z.object({ value: z.string().trim().min(1) })).max(10),
@@ -39,7 +38,6 @@ export function PostToWallPage() {
     defaultValues: {
       message: '',
       like_points: 10,
-      repost_points: 20,
       comment_points: 0,
       week_number: undefined,
       attachments: [],
@@ -56,7 +54,6 @@ export function PostToWallPage() {
     const posted = await post({
       message: values.message,
       like_points: values.like_points,
-      repost_points: values.repost_points,
       comment_points: values.comment_points,
       week_number: values.week_number ?? null,
       attachments,
@@ -84,7 +81,6 @@ export function PostToWallPage() {
             <Alert variant="success">
               Пост опубликован — <strong>{result.external_id}</strong>
               {result.like_tasks_id != null && <>, задание «лайк»: #{result.like_tasks_id}</>}
-              {result.repost_tasks_id != null && <>, «репост»: #{result.repost_tasks_id}</>}
               {result.comment_tasks_id != null && <>, «комментарий»: #{result.comment_tasks_id}</>}
             </Alert>
           )}
@@ -146,14 +142,6 @@ export function PostToWallPage() {
                 type="number"
                 min={1}
                 placeholder="10"
-              />
-            </Field>
-            <Field label="Баллы за репост" required error={errors.repost_points?.message}>
-              <Input
-                {...register('repost_points', { valueAsNumber: true })}
-                type="number"
-                min={1}
-                placeholder="20"
               />
             </Field>
             <Field
