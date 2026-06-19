@@ -135,7 +135,7 @@ export function PostToWallPage() {
         </Card>
 
         <Card title="Задания">
-          <div className={styles.row3}>
+          <div className={styles.row2}>
             <Field label="Баллы за лайк" required error={errors.like_points?.message}>
               <Input
                 {...register('like_points', { valueAsNumber: true })}
