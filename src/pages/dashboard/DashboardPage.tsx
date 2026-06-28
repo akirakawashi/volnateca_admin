@@ -1,4 +1,3 @@
-// TODO DEV: удалить DEV-импорты и секции devPanel/dangerPanel перед релизом.
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../../components/ui/Button/Button';
@@ -7,10 +6,7 @@ import { Field } from '../../components/ui/Field/Field';
 import { MonthPicker } from '../../components/ui/MonthPicker/MonthPicker';
 import { PageHero } from '../../components/ui/PageHero/PageHero';
 import { useAutoStatusMessage } from '../../hooks/useAutoStatusMessage';
-import { useTruncateDB } from '../../hooks/useTruncateDB'; // TODO DEV
-import { useSeedScenario } from '../../hooks/useSeedScenario'; // TODO DEV
 import { useAwardMonthlyTop } from '../../hooks/useAwardMonthlyTop';
-import type { SeedDevScenario } from '../../api/dev'; // TODO DEV
 import type { AwardMonthlyTopResponse } from '../../types/monthly_top';
 import { adminDashboardLinks } from '../../navigation/adminNavigation';
 import { formatMonthlyTopAwardLine } from '../../utils/monthlyTop';
@@ -25,22 +21,6 @@ type ProdAction = {
   disabled?: boolean;
 };
 
-type SeedButton = {
-  key: string;
-  label: string;
-  scenario: SeedDevScenario;
-  color: 'primary' | 'secondary' | 'ghost';
-};
-
-// TODO DEV: удалить seedButtons перед релизом.
-const seedButtons: SeedButton[] = [
-  { key: 'monthly_top', label: 'Топ-10 месяца (seed)', scenario: 'monthly_top', color: 'secondary' },
-  { key: 'project12', label: 'Все 12 недель', scenario: 'project12', color: 'secondary' },
-  { key: 'referral3', label: 'Рефералы: 3 друга', scenario: 'referral3', color: 'ghost' },
-  { key: 'referral5', label: 'Рефералы: 5 друзей', scenario: 'referral5', color: 'ghost' },
-  { key: 'referral10', label: 'Рефералы: 10 друзей', scenario: 'referral10', color: 'ghost' },
-];
-
 function formatMonthKey(date: Date): string {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 }
@@ -53,53 +33,13 @@ function getPreviousMonthKey(): string {
 const MONTHLY_TOP_MODAL_ANIM_MS = 500;
 
 export function DashboardPage() {
-  const [confirmPending, setConfirmPending] = useState(false);
   const [monthlyTopConfirmOpen, setMonthlyTopConfirmOpen] = useState(false);
   const [monthlyTopModalClosing, setMonthlyTopModalClosing] = useState(false);
-  const [done, setDone] = useState(false);
   const prodStatusRef = useRef<HTMLDivElement>(null);
-  const devStatusRef = useRef<HTMLDivElement>(null);
-  const dangerStatusRef = useRef<HTMLDivElement>(null);
-  // TODO DEV: удалить хуки truncate/seed перед релизом.
-  const { truncate, loading: truncateLoading, error: truncateError, reset: resetTruncate } = useTruncateDB();
-  const { seed, loading: seedLoading, error: seedError, reset: resetSeed } = useSeedScenario();
   const { award, loading: awardLoading, error: awardError, reset: resetAward } = useAwardMonthlyTop();
 
-  // TODO DEV: удалить state/handlers truncate и seed перед релизом.
-  const [seedResult, setSeedResult] = useState<{ scenario: SeedDevScenario; messages: string[] } | null>(null);
   const [awardResult, setAwardResult] = useState<AwardMonthlyTopResponse | null>(null);
   const [awardMonth, setAwardMonth] = useState(getPreviousMonthKey);
-  const [activeScenario, setActiveScenario] = useState<SeedDevScenario | null>(null);
-
-  const handleTruncateClick = () => {
-    resetTruncate();
-    setDone(false);
-    setConfirmPending(true);
-  };
-
-  const handleConfirm = async () => {
-    const ok = await truncate();
-    setConfirmPending(false);
-    if (ok) setDone(true);
-  };
-
-  const handleCancel = () => {
-    setConfirmPending(false);
-    resetTruncate();
-  };
-
-  const handleSeed = async (scenario: SeedDevScenario) => {
-    resetSeed();
-    setSeedResult(null);
-    setAwardResult(null);
-    setActiveScenario(scenario);
-    try {
-      const messages = await seed({ scenario, users_id: 1 });
-      setSeedResult({ scenario, messages });
-    } finally {
-      setActiveScenario(null);
-    }
-  };
 
   const monthlyTopModalVisible = monthlyTopConfirmOpen || monthlyTopModalClosing;
 
@@ -145,7 +85,6 @@ export function DashboardPage() {
   const handleAwardMonthlyTopClick = () => {
     resetAward();
     setAwardResult(null);
-    setSeedResult(null);
     setMonthlyTopModalClosing(false);
     setMonthlyTopConfirmOpen(true);
   };
@@ -180,31 +119,10 @@ export function DashboardPage() {
   const hasProdStatus = Boolean(prodError || awardResult);
   const hasProdSuccess = Boolean(awardResult);
 
-  const devError = seedError;
-  const hasDevStatus = Boolean(devError || seedResult);
-  const hasDevSuccess = Boolean(seedResult);
-  const hasDangerStatus = Boolean(done || truncateError);
-
   useAutoStatusMessage({
     active: hasProdStatus,
     scrollRef: prodStatusRef,
     onDismiss: hasProdSuccess ? () => setAwardResult(null) : undefined,
-  });
-
-  useAutoStatusMessage({
-    active: hasDevStatus,
-    scrollRef: devStatusRef,
-    onDismiss: hasDevSuccess
-      ? () => {
-          setSeedResult(null);
-        }
-      : undefined,
-  });
-
-  useAutoStatusMessage({
-    active: hasDangerStatus,
-    scrollRef: dangerStatusRef,
-    onDismiss: done ? () => setDone(false) : undefined,
   });
 
   return (
@@ -222,10 +140,6 @@ export function DashboardPage() {
             <span className={styles.statChip}>
               <span className={styles.statLabel}>PROD</span>
               <strong>{prodActions.length}</strong>
-            </span>
-            <span className={[styles.statChip, styles.statChipMuted].join(' ')}>
-              <span className={styles.statLabel}>DEV</span>
-              <strong>{seedButtons.length}</strong>
             </span>
           </div>
         }
@@ -324,110 +238,6 @@ export function DashboardPage() {
               </div>
             </div>
           </section>
-
-          {/* TODO DEV: удалить секцию devPanel перед релизом. */}
-          <section className={styles.opsBlock} aria-labelledby="dashboard-dev-title">
-            <header className={styles.opsHead}>
-              <div className={styles.opsHeadText}>
-                <span className={styles.devTag}>DEV</span>
-                <h2 id="dashboard-dev-title" className={styles.opsTitle}>
-                  Dev-сценарии
-                </h2>
-                <p className={styles.opsSub}>Засеять БД для ручного тестирования</p>
-              </div>
-            </header>
-
-            <div className={styles.opsBody}>
-              {hasDevStatus && (
-                <div ref={devStatusRef} className={styles.statusStack}>
-                  {devError && <Alert variant="error">{devError}</Alert>}
-
-                  {seedResult && (
-                    <Alert variant="info">
-                      <div className={styles.resultBox}>
-                        <strong>Сценарий «{seedResult.scenario}» выполнен</strong>
-                        <ul className={styles.resultList}>
-                          {seedResult.messages.map((m, i) => (
-                            <li key={i}>{m}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </Alert>
-                  )}
-                </div>
-              )}
-
-              <div className={styles.chipGrid}>
-                {seedButtons.map((btn) => (
-                  <Button
-                    key={btn.key}
-                    variant={btn.color}
-                    size="sm"
-                    loading={seedLoading && activeScenario === btn.scenario}
-                    disabled={seedLoading}
-                    onClick={() => handleSeed(btn.scenario)}
-                  >
-                    {btn.label}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* TODO DEV: удалить секцию dangerPanel (truncate) перед релизом. */}
-          <section
-            className={[styles.opsBlock, styles.opsBlockDanger].join(' ')}
-            aria-labelledby="dashboard-danger-title"
-          >
-            <header className={styles.opsHead}>
-              <div className={styles.opsHeadText}>
-                <span className={styles.dangerTag} aria-hidden="true">
-                  !
-                </span>
-                <h2 id="dashboard-danger-title" className={styles.opsTitle}>
-                  Опасная зона
-                </h2>
-                <p className={styles.opsSub}>Только для DEBUG-режима</p>
-              </div>
-            </header>
-
-            <div className={styles.opsBody}>
-              {hasDangerStatus && (
-                <div ref={dangerStatusRef} className={styles.statusStack}>
-                  {done && <Alert variant="success">База данных очищена</Alert>}
-                  {truncateError && <Alert variant="error">{truncateError}</Alert>}
-                </div>
-              )}
-
-              {!confirmPending ? (
-                <div className={styles.dangerRow}>
-                  <div>
-                    <p className={styles.dangerActionTitle}>Очистить базу данных</p>
-                    <p className={styles.dangerActionMeta}>
-                      TRUNCATE рабочих таблиц с RESTART IDENTITY CASCADE; справочники сохраняются
-                    </p>
-                  </div>
-                  <Button variant="danger" size="sm" onClick={handleTruncateClick}>
-                    Очистить БД
-                  </Button>
-                </div>
-              ) : (
-                <div className={styles.confirmBox}>
-                  <p className={styles.confirmText}>
-                    Все данные будут удалены без возможности восстановления. Продолжить?
-                  </p>
-                  <div className={styles.confirmActions}>
-                    <Button variant="secondary" size="sm" onClick={handleCancel}>
-                      Отмена
-                    </Button>
-                    <Button variant="danger" size="sm" loading={truncateLoading} onClick={handleConfirm}>
-                      Да, удалить всё
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </section>
         </div>
       </div>
 
@@ -456,43 +266,43 @@ export function DashboardPage() {
           >
             <div className={styles.modalGlass} aria-hidden="true" />
             <div className={styles.modalDialog}>
-            <div className={styles.modalHead}>
-              <span className={styles.prodTag}>PROD</span>
-              <h2 id="monthly-top-confirm-title" className={styles.modalTitle}>
-                Начислить топ-10 месяца
-              </h2>
-            </div>
-            <dl className={styles.confirmDetails}>
-              <div>
-                <dt>Месяц</dt>
-                <dd>{awardMonth}</dd>
+              <div className={styles.modalHead}>
+                <span className={styles.prodTag}>PROD</span>
+                <h2 id="monthly-top-confirm-title" className={styles.modalTitle}>
+                  Начислить топ-10 месяца
+                </h2>
               </div>
-              <div>
-                <dt>Достижение</dt>
-                <dd>monthly_top_10</dd>
+              <dl className={styles.confirmDetails}>
+                <div>
+                  <dt>Месяц</dt>
+                  <dd>{awardMonth}</dd>
+                </div>
+                <div>
+                  <dt>Достижение</dt>
+                  <dd>monthly_top_10</dd>
+                </div>
+                <div>
+                  <dt>Лимит</dt>
+                  <dd>10 пользователей</dd>
+                </div>
+              </dl>
+              <p className={styles.modalText}>
+                Начисление отправит награду выбранным пользователям и запишет результат операции.
+              </p>
+              <div className={styles.modalActions}>
+                <Button variant="secondary" size="sm" disabled={awardLoading} onClick={handleAwardMonthlyTopCancel}>
+                  Отмена
+                </Button>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  loading={awardLoading}
+                  disabled={!awardMonth}
+                  onClick={handleAwardMonthlyTopConfirm}
+                >
+                  Начислить
+                </Button>
               </div>
-              <div>
-                <dt>Лимит</dt>
-                <dd>10 пользователей</dd>
-              </div>
-            </dl>
-            <p className={styles.modalText}>
-              Начисление отправит награду выбранным пользователям и запишет результат операции.
-            </p>
-            <div className={styles.modalActions}>
-              <Button variant="secondary" size="sm" disabled={awardLoading} onClick={handleAwardMonthlyTopCancel}>
-                Отмена
-              </Button>
-              <Button
-                variant="primary"
-                size="sm"
-                loading={awardLoading}
-                disabled={!awardMonth}
-                onClick={handleAwardMonthlyTopConfirm}
-              >
-                Начислить
-              </Button>
-            </div>
             </div>
           </div>
         </div>
