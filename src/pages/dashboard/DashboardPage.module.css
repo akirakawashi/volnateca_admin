@@ -26,10 +26,6 @@
   background: var(--surface-2);
 }
 
-.statChipMuted {
-  opacity: 0.85;
-}
-
 .statLabel {
   font-size: 10px;
   font-weight: 600;
@@ -161,10 +157,6 @@
   overflow: hidden;
 }
 
-.opsBlockDanger {
-  border-color: rgba(251, 143, 143, 0.28);
-}
-
 .opsHead {
   padding: 10px 12px;
   border-bottom: 1px solid var(--sep);
@@ -199,9 +191,7 @@
   gap: 12px;
 }
 
-.prodTag,
-.devTag,
-.dangerTag {
+.prodTag {
   padding: 2px 7px;
   border-radius: var(--r-sm);
   font-size: 9px;
@@ -209,31 +199,9 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   flex-shrink: 0;
-}
-
-.prodTag {
   background: var(--green-muted);
   border: 1px solid rgba(122, 231, 176, 0.28);
   color: var(--green);
-}
-
-.devTag {
-  background: var(--orange-muted);
-  border: 1px solid rgba(252, 207, 102, 0.28);
-  color: var(--orange);
-}
-
-.dangerTag {
-  width: 22px;
-  height: 22px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--red-muted);
-  border: 1px solid rgba(251, 143, 143, 0.28);
-  color: var(--red);
-  font-size: 12px;
-  animation: dangerBlink 3.4s ease-in-out infinite;
 }
 
 .statusStack {
@@ -247,8 +215,7 @@
   max-width: 240px;
 }
 
-.actionRow,
-.chipGrid {
+.actionRow {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -265,50 +232,6 @@
   padding-left: 16px;
   font-size: 12px;
   line-height: 1.55;
-}
-
-.dangerRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px;
-  border: 1px solid var(--sep);
-  border-radius: var(--r);
-  background: var(--surface-2);
-}
-
-.dangerActionTitle {
-  margin: 0 0 2px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.dangerActionMeta {
-  margin: 0;
-  font-size: 11px;
-  color: var(--text-3);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-}
-
-.confirmBox {
-  padding: 10px;
-  background: var(--red-muted);
-  border: 1px solid rgba(251, 143, 143, 0.24);
-  border-radius: var(--r);
-}
-
-.confirmText {
-  margin: 0 0 10px;
-  font-size: 12px;
-  color: var(--text-2);
-}
-
-.confirmActions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
 }
 
 .modalOverlay {
@@ -441,16 +364,6 @@
   }
 }
 
-@keyframes dangerBlink {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.65;
-  }
-}
-
 @keyframes modalOverlayIn {
   0% {
     opacity: 0;
@@ -522,11 +435,6 @@
 }
 
 @media (max-width: 640px) {
-  .dangerRow {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
   .confirmDetails {
     grid-template-columns: 1fr;
   }
