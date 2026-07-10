@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Alert } from '../../components/ui/Alert/Alert';
@@ -107,11 +106,6 @@ function StorePrizeFormPanel({
     name: 'prize_type',
     disabled: isEditing,
   });
-  const editQuantityTotal = useWatch({
-    control: editForm.control,
-    name: 'quantity_total',
-    disabled: !isEditing,
-  });
   const createPromoCodesText = useWatch({
     control: createForm.control,
     name: 'promo_codes_text',
@@ -125,13 +119,6 @@ function StorePrizeFormPanel({
   const createPromoCodeCount = parsePromoCodeLines(createPromoCodesText).length;
   const editPromoCodeAddCount = parsePromoCodeLines(editPromoCodesToAdd).length;
 
-  useEffect(() => {
-    if (isEditing || selectedPrizeType !== 'super_prize') {
-      return;
-    }
-    createForm.setValue('quantity_total', 1, { shouldValidate: true });
-  }, [createForm, isEditing, selectedPrizeType]);
-
   const onSubmitCreate = createForm.handleSubmit(async (values) => {
     await onCreate(values);
     createForm.reset(defaultPrizeFormValues);
@@ -141,29 +128,32 @@ function StorePrizeFormPanel({
     if (!editingPrize) {
       return;
     }
-    const isPartnerPrize = editingPrize.prize_type === 'partner';
-    const keepSystemSoldOut = (
-      editingPrize.status === 'sold_out'
-      && values.status === 'available'
-      && !isPartnerPrize
-      && (values.quantity_total ?? 0) <= editingPrize.quantity_claimed
-    );
-    if (
-      !isPartnerPrize
-      && values.quantity_total != null
-      && values.status === 'available'
-      && values.quantity_total <= editingPrize.quantity_claimed
-      && !keepSystemSoldOut
-    ) {
+    const promoCodesToAdd = parsePromoCodeLines(values.promo_codes_to_add);
+    const canSetAvailable = (editingPrize.promo_codes_available ?? 0) > 0 || promoCodesToAdd.length > 0;
+    if (values.status === 'available' && !canSetAvailable) {
       editForm.setError('status', {
         type: 'manual',
-        message: `Увеличьте количество выше ${editingPrize.quantity_claimed}, чтобы сделать приз доступным.`,
+        message: 'Добавьте свободные коды, чтобы сделать приз доступным.',
       });
       return;
     }
-    const updated = await onUpdate(editingPrize, values);
-    const promoCodesToAdd = parsePromoCodeLines(values.promo_codes_to_add);
-    if (updated && isPartnerPrize && promoCodesToAdd.length > 0) {
+    const shouldAddCodesBeforeUpdate = (
+      values.status === 'available'
+      && (editingPrize.promo_codes_available ?? 0) <= 0
+      && promoCodesToAdd.length > 0
+    );
+    const prizeForUpdate = shouldAddCodesBeforeUpdate
+      ? await onAddPromoCodes(editingPrize, promoCodesToAdd)
+      : editingPrize;
+    if (!prizeForUpdate) {
+      return;
+    }
+
+    const updated = await onUpdate(prizeForUpdate, {
+      ...values,
+      promo_codes_to_add: shouldAddCodesBeforeUpdate ? '' : values.promo_codes_to_add,
+    });
+    if (updated && !shouldAddCodesBeforeUpdate && promoCodesToAdd.length > 0) {
       await onAddPromoCodes(updated, promoCodesToAdd);
       editForm.reset({ ...mapPrizeToEditFormValues(updated), promo_codes_to_add: '' });
     }
@@ -172,10 +162,7 @@ function StorePrizeFormPanel({
   if (isEditing && editingPrize) {
     const { register, control, formState: { errors } } = editForm;
     const editPrizeType = editingPrize.prize_type;
-    const editQuantityTotalValue = typeof editQuantityTotal === 'number' ? editQuantityTotal : Number.NaN;
-    const canSetAvailable = editPrizeType === 'partner'
-      ? (editingPrize.promo_codes_available ?? 0) > 0
-      : Number.isFinite(editQuantityTotalValue) && editQuantityTotalValue > editingPrize.quantity_claimed;
+    const canSetAvailable = (editingPrize.promo_codes_available ?? 0) > 0 || editPromoCodeAddCount > 0;
     const editStatusOptions = statusOptions.map((option) => {
       if (option.value !== 'available' || canSetAvailable) {
         return option;
@@ -183,9 +170,7 @@ function StorePrizeFormPanel({
       return {
         ...option,
         disabled: true,
-        disabledHint: editPrizeType === 'partner'
-          ? 'Добавьте свободные промокоды'
-          : `Увеличьте количество выше ${editingPrize.quantity_claimed}`,
+        disabledHint: 'Добавьте свободные коды',
       };
     });
 
@@ -207,9 +192,7 @@ function StorePrizeFormPanel({
               hint={
                 canSetAvailable
                   ? undefined
-                  : editPrizeType === 'partner'
-                    ? 'Чтобы сделать доступным, добавьте свободные промокоды.'
-                    : `Чтобы сделать доступным, увеличьте количество выше ${editingPrize.quantity_claimed}.`
+                  : 'Чтобы сделать доступным, добавьте свободные коды.'
               }
             >
               <Controller
@@ -257,29 +240,9 @@ function StorePrizeFormPanel({
           </Field>
 
           <div className={styles.row3}>
-            {editPrizeType === 'partner' ? (
-              <Field label="Количество" hint="Считается по пулу промокодов.">
-                <Input value={formatQuantity(editingPrize)} readOnly />
-              </Field>
-            ) : (
-              <Field
-                label="Количество"
-                required
-                error={errors.quantity_total?.message}
-                hint={
-                  editPrizeType === 'super_prize'
-                    ? 'Суперприз — не меньше уже выданных.'
-                    : `Минимум ${editingPrize.quantity_claimed} (уже в резерве/выдано).`
-                }
-              >
-                <Input
-                  {...register('quantity_total', { valueAsNumber: true })}
-                  type="number"
-                  min={editingPrize.quantity_claimed}
-                  placeholder="10"
-                />
-              </Field>
-            )}
+            <Field label="Количество" hint="Считается по пулу кодов.">
+              <Input value={formatQuantity(editingPrize)} readOnly />
+            </Field>
             <Field label="Мин. уровень" error={errors.required_level?.message}>
               <Input
                 {...register('required_level', {
@@ -301,18 +264,16 @@ function StorePrizeFormPanel({
             </Field>
           </div>
 
-          {editPrizeType === 'partner' && (
-            <Field
-              label="Добавить промокоды"
-              hint={`Один код на строку. Новых кодов к добавлению: ${editPromoCodeAddCount}.`}
-            >
-              <Textarea
-                {...register('promo_codes_to_add')}
-                rows={5}
-                placeholder={'ICE-001\nICE-002\nICE-003'}
-              />
-            </Field>
-          )}
+          <Field
+            label="Добавить коды"
+            hint={`Один код на строку. Новых кодов к добавлению: ${editPromoCodeAddCount}.`}
+          >
+            <Textarea
+              {...register('promo_codes_to_add')}
+              rows={5}
+              placeholder={'CODE-001\nCODE-002\nCODE-003'}
+            />
+          </Field>
 
           <FormFooter inCard>
             <Button type="button" variant="secondary" size="sm" onClick={onCancelEdit}>
@@ -328,7 +289,6 @@ function StorePrizeFormPanel({
   }
 
   const { register, control, formState: { errors } } = createForm;
-  const isPartnerCreate = selectedPrizeType === 'partner';
 
   return (
     <Card title="Создать приз" className={styles.formCard}>
@@ -396,29 +356,9 @@ function StorePrizeFormPanel({
         </Field>
 
         <div className={styles.row3}>
-          {isPartnerCreate ? (
-            <Field label="Количество" hint="Считается по числу уникальных промокодов ниже.">
-              <Input value={createPromoCodeCount} readOnly />
-            </Field>
-          ) : (
-            <Field
-              label="Количество"
-              required
-              error={errors.quantity_total?.message}
-              hint={
-                selectedPrizeType === 'super_prize'
-                  ? 'Суперприз — одна единица на всех.'
-                  : 'Все призы лимитированы. Укажите общий остаток.'
-              }
-            >
-              <Input
-                {...register('quantity_total', { valueAsNumber: true })}
-                type="number"
-                min={1}
-                placeholder={selectedPrizeType === 'super_prize' ? '1' : '10'}
-              />
-            </Field>
-          )}
+          <Field label="Количество" hint="Считается по числу уникальных кодов ниже.">
+            <Input value={createPromoCodeCount} readOnly />
+          </Field>
           <Field label="Мин. уровень" error={errors.required_level?.message}>
             <Input
               {...register('required_level', {
@@ -440,28 +380,22 @@ function StorePrizeFormPanel({
           </Field>
         </div>
 
-        {isPartnerCreate && (
-          <Field
-            label="Промокоды партнёра"
-            required
-            error={errors.promo_codes_text?.message}
-            hint="Один код на строку. Количество приза будет равно числу уникальных кодов."
-          >
-            <Textarea
-              {...register('promo_codes_text')}
-              rows={6}
-              placeholder={'ICE-001\nICE-002\nICE-003'}
-            />
-          </Field>
-        )}
+        <Field
+          label="Коды приза"
+          required
+          error={errors.promo_codes_text?.message}
+          hint="Один код на строку. Количество приза будет равно числу уникальных кодов."
+        >
+          <Textarea
+            {...register('promo_codes_text')}
+            rows={6}
+            placeholder={'CODE-001\nCODE-002\nCODE-003'}
+          />
+        </Field>
 
         <div className={styles.helperBox}>
           <strong>{prizeTypeLabels[selectedPrizeType ?? 'merch']}</strong>
-          <span>
-            {isPartnerCreate
-              ? 'Партнёрский приз выдаётся автоматически: один покупатель получает один свободный промокод.'
-              : 'Выдача только на пункте самовывоза. Укажите картинку VK и лимит количества.'}
-          </span>
+          <span>Приз выдаётся автоматически: один покупатель получает один свободный код.</span>
         </div>
 
         <FormFooter inCard>
@@ -510,25 +444,13 @@ export function StorePrizesPage() {
     };
   }, [prizes]);
 
-  const buildUpdatePayload = (prize: AdminPrize, values: PrizeEditFormValues) => {
-    const status: PrizeStatus = (
-      prize.prize_type !== 'partner'
-      && prize.status === 'sold_out'
-      && values.status === 'available'
-      && (values.quantity_total ?? 0) <= prize.quantity_claimed
-    )
-      ? 'sold_out'
-      : values.status;
-
+  const buildUpdatePayload = (values: PrizeEditFormValues) => {
     return {
       prize_name: values.prize_name.trim(),
       description: values.description?.trim() || null,
       image_attachment: extractVkPhotoAttachment(values.image_attachment),
-      status,
+      status: values.status,
       cost_points: values.cost_points,
-      ...(prize.prize_type === 'partner'
-        ? {}
-        : { quantity_total: values.quantity_total ?? prize.quantity_total ?? 1 }),
       required_level: values.required_level ?? null,
       sort_order: values.sort_order,
     };
@@ -540,15 +462,13 @@ export function StorePrizesPage() {
       description: values.description?.trim() || null,
       image_attachment: extractVkPhotoAttachment(values.image_attachment),
       prize_type: values.prize_type,
-      receive_type: values.prize_type === 'partner' ? 'promo_code' : 'pickup',
+      receive_type: 'promo_code',
       status: values.status,
       cost_points: values.cost_points,
-      quantity_total: values.prize_type === 'partner' ? null : values.quantity_total ?? 1,
+      quantity_total: null,
       required_level: values.required_level ?? null,
       sort_order: values.sort_order,
-      promo_codes: values.prize_type === 'partner'
-        ? parsePromoCodeLines(values.promo_codes_text)
-        : undefined,
+      promo_codes: parsePromoCodeLines(values.promo_codes_text),
     });
 
     if (created) {
@@ -561,7 +481,7 @@ export function StorePrizesPage() {
     prize: AdminPrize,
     values: PrizeEditFormValues,
   ): Promise<AdminPrize | null> => {
-    const updated = await update(prize.prizes_id, buildUpdatePayload(prize, values));
+    const updated = await update(prize.prizes_id, buildUpdatePayload(values));
     if (updated) {
       setLastSaveAction('update');
       setEditingPrize(null);
@@ -586,7 +506,7 @@ export function StorePrizesPage() {
       <PageHero
         eyebrow="Store inventory"
         title="Призы магазина"
-        subtitle="Добавление мерча, партнёрских промокодов и суперпризов"
+        subtitle="Добавление призов и одноразовых кодов для выдачи"
         aside={
           <div className={styles.headerChips}>
             <span className={styles.headerChip}>
@@ -658,14 +578,6 @@ export function StorePrizesPage() {
                       >
                         Редактировать
                       </Button>
-                      {prize.prize_type !== 'partner' && (
-                        <Link
-                          className={styles.redemptionsLink}
-                          to={`/store/redemptions?status=reserved&prizes_id=${prize.prizes_id}`}
-                        >
-                          Заявки на выдачу
-                        </Link>
-                      )}
                       <div className={styles.badges}>
                         <span className={[styles.badge, styles.badgeType].join(' ')}>
                           {prizeTypeLabels[prize.prize_type]}
@@ -692,14 +604,12 @@ export function StorePrizesPage() {
                       <span className={styles.metaLabel}>Количество</span>
                       <strong className={styles.metaValue}>{formatQuantity(prize)}</strong>
                     </div>
-                    {prize.prize_type === 'partner' && (
-                      <div>
-                        <span className={styles.metaLabel}>Свободных кодов</span>
-                        <strong className={styles.metaValue}>
-                          {prize.promo_codes_available ?? 0} / {prize.promo_codes_total ?? 0}
-                        </strong>
-                      </div>
-                    )}
+                    <div>
+                      <span className={styles.metaLabel}>Свободных кодов</span>
+                      <strong className={styles.metaValue}>
+                        {prize.promo_codes_available ?? 0} / {prize.promo_codes_total ?? 0}
+                      </strong>
+                    </div>
                     <div>
                       <span className={styles.metaLabel}>Мин. уровень</span>
                       <strong className={styles.metaValue}>

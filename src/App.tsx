@@ -12,7 +12,6 @@ const ChartsPage = lazy(() =>
 );
 import { CreateQuizPage } from './pages/quiz/CreateQuizPage';
 import { StorePrizesPage } from './pages/prizes/StorePrizesPage';
-import { PrizeRedemptionsPage } from './pages/prizeRedemptions/PrizeRedemptionsPage';
 import { TaskPromoCodeTaskPage } from './pages/taskPromoCode/TaskPromoCodeTaskPage';
 import { PostToWallPage } from './pages/wall_post/PostToWallPage';
 import { MessageTemplatesPage } from './pages/message_templates/MessageTemplatesPage';
@@ -30,7 +29,6 @@ const adminRouteElements = {
   quizCreate: <CreateQuizPage />,
   taskPromoCodes: <TaskPromoCodeTaskPage />,
   storePrizes: <StorePrizesPage />,
-  storeRedemptions: <PrizeRedemptionsPage />,
   users: <UserSearchPage />,
   userProfile: <UserProfilePage />,
   wallPost: <PostToWallPage />,

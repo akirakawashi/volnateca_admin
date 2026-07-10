@@ -23,7 +23,6 @@ export interface UserProfile {
   created_at: string;
   updated_at: string;
   referrals_sent_count: number;
-  redemptions_reserved_count: number;
 }
 
 export interface UserReferralRow {
