@@ -1,26 +1,12 @@
 import { NavLink } from 'react-router-dom';
-import { useRedemptionQueue } from '../../contexts/redemptionQueue';
-import { adminSidebarItems, type AdminSidebarItem } from '../../navigation/adminNavigation';
+import { adminSidebarItems } from '../../navigation/adminNavigation';
 import styles from './Sidebar.module.css';
-
-interface SidebarNavItem extends AdminSidebarItem {
-  badgeCount?: number | null;
-  badgeCapped?: boolean;
-}
 
 interface SidebarProps {
   onLogout: () => void;
 }
 
 export function Sidebar({ onLogout }: SidebarProps) {
-  const { queueCount, queueCountCapped } = useRedemptionQueue();
-
-  const items: SidebarNavItem[] = adminSidebarItems.map((item) =>
-    item.badge === 'redemptionQueue'
-      ? { ...item, badgeCount: queueCount, badgeCapped: queueCountCapped }
-      : item,
-  );
-
   return (
     <aside className={styles.sidebar}>
       <div className={styles.top}>
@@ -40,7 +26,7 @@ export function Sidebar({ onLogout }: SidebarProps) {
 
       <nav className={styles.nav} aria-label="Основное меню">
         <ul className={styles.navList} role="list">
-          {items.map((item) => (
+          {adminSidebarItems.map((item) => (
             <li key={item.to}>
               <NavLink
                 to={item.to}
@@ -50,12 +36,6 @@ export function Sidebar({ onLogout }: SidebarProps) {
                 }
               >
                 <span className={styles.navLabel}>{item.label}</span>
-                {item.badgeCount != null && item.badgeCount > 0 && (
-                  <span className={styles.navBadge} aria-label={`В очереди: ${item.badgeCount}`}>
-                    {item.badgeCount}
-                    {item.badgeCapped ? '+' : ''}
-                  </span>
-                )}
               </NavLink>
             </li>
           ))}

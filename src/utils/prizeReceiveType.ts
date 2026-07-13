@@ -1,14 +1,12 @@
-import type { PrizeReceiveType } from '../types/prize';
-
-const RECEIVE_TYPE_LABELS: Record<PrizeReceiveType, string> = {
+const RECEIVE_TYPE_LABELS: Record<string, string> = {
   pickup: 'Самовывоз',
-  promo_code: 'Промокод в VK',
+  promo_code: 'Код в VK',
   manager_contact: 'Выдача менеджером',
 };
 
 export function formatReceiveType(value: string): string {
   if (value in RECEIVE_TYPE_LABELS) {
-    return RECEIVE_TYPE_LABELS[value as PrizeReceiveType];
+    return RECEIVE_TYPE_LABELS[value];
   }
   return value;
 }

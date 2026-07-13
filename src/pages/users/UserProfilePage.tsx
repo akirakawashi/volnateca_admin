@@ -29,15 +29,15 @@ import styles from './UserProfilePage.module.css';
 
 const TABS: { id: UserProfileTab; label: string }[] = [
   { id: 'overview', label: 'Обзор' },
-  { id: 'redemptions', label: 'Заявки' },
+  { id: 'redemptions', label: 'Призы' },
   { id: 'tasks', label: 'Задания' },
   { id: 'transactions', label: 'Транзакции' },
   { id: 'referrals', label: 'Пригласить друга' },
 ];
 
 const REDEMPTION_STATUS_LABELS: Record<string, string> = {
-  reserved: 'Ожидает выдачи',
-  issued: 'Выдан',
+  reserved: 'В обработке',
+  issued: 'Получен',
   canceled: 'Отменён',
 };
 
@@ -66,14 +66,6 @@ function parseTab(value: string | null): UserProfileTab {
     return value as UserProfileTab;
   }
   return 'overview';
-}
-
-function buildRedemptionQueueUrl(redemption: AdminPrizeRedemption): string {
-  const params = new URLSearchParams({
-    status: 'reserved',
-    q: redemption.redemption_code,
-  });
-  return `/store/redemptions?${params.toString()}`;
 }
 
 export function UserProfilePage() {
@@ -200,7 +192,6 @@ export function UserProfilePage() {
       { label: 'Заработано', value: `${profile.earned_points_total} ✦` },
       { label: 'Потрачено', value: `${profile.spent_points_total} ✦` },
       { label: 'Приглашённых друзей', value: String(profile.referrals_sent_count) },
-      { label: 'Заявок в очереди', value: String(profile.redemptions_reserved_count) },
     ];
   }, [profile]);
 
@@ -285,10 +276,10 @@ export function UserProfilePage() {
       {activeTab === 'redemptions' ? (
         <Card className={styles.tableCard}>
           {tabLoading ? (
-            <p className={styles.loading}>Загрузка заявок…</p>
+            <p className={styles.loading}>Загрузка призов…</p>
           ) : redemptions.length === 0 ? (
             <p className={styles.empty}>
-              {listPage > 1 ? 'На этой странице записей нет.' : 'Заявок на призы нет.'}
+              {listPage > 1 ? 'На этой странице записей нет.' : 'Полученных призов нет.'}
             </p>
           ) : (
             <ul className={styles.list}>
@@ -299,17 +290,12 @@ export function UserProfilePage() {
                     <p className={styles.itemMeta}>
                       {REDEMPTION_STATUS_LABELS[item.prize_redemption_status] ??
                         item.prize_redemption_status}{' '}
-                      · {item.promo_code ? 'промокод' : 'код'} {item.promo_code ?? item.redemption_code} ·{' '}
+                      · код {item.promo_code ?? item.redemption_code} ·{' '}
                       {item.points_spent} ✦
                     </p>
                     <p className={styles.itemMeta}>
                       {formatRedemptionDateTime(item.created_at)}
                     </p>
-                  </div>
-                  <div className={styles.itemActions}>
-                    <Link to={buildRedemptionQueueUrl(item)} className={styles.actionLink}>
-                      Открыть в выдаче
-                    </Link>
                   </div>
                 </li>
               ))}

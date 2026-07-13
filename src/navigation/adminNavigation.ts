@@ -1,11 +1,8 @@
-export type AdminNavBadge = 'redemptionQueue';
-
 interface AdminRouteConfig {
   id: string;
   path: string;
   sidebar?: {
     label: string;
-    badge?: AdminNavBadge;
   };
   dashboard?: {
     title: string;
@@ -39,16 +36,7 @@ export const adminRoutes = [
     sidebar: { label: 'Призы магазина' },
     dashboard: {
       title: 'Призы магазина',
-      description: 'Добавить мерч, партнёрский приз или суперприз в каталог',
-    },
-  },
-  {
-    id: 'storeRedemptions',
-    path: '/store/redemptions',
-    sidebar: { label: 'Выдача призов', badge: 'redemptionQueue' },
-    dashboard: {
-      title: 'Выдача призов',
-      description: 'Очередь заявок после покупки: сверка кода и отметка «Выдано»',
+      description: 'Добавить призы и одноразовые коды в каталог',
     },
   },
   {
@@ -93,7 +81,6 @@ const adminRouteConfigs: readonly AdminRouteConfig[] = adminRoutes;
 export interface AdminSidebarItem {
   to: string;
   label: string;
-  badge?: AdminNavBadge;
 }
 
 export interface AdminDashboardLink {
@@ -108,7 +95,6 @@ export const adminSidebarItems: AdminSidebarItem[] = adminRouteConfigs.flatMap((
         {
           to: route.path,
           label: route.sidebar.label,
-          badge: route.sidebar.badge,
         },
       ]
     : [],

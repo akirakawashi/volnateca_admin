@@ -24,22 +24,11 @@ export const prizeFormSchema = z.object({
   sort_order: z.number().int().min(0, 'sort_order не может быть отрицательным'),
   promo_codes_text: z.string().optional(),
 }).superRefine((values, ctx) => {
-  if (values.prize_type === 'partner') {
-    if (parsePromoCodeLines(values.promo_codes_text).length === 0) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ['promo_codes_text'],
-        message: 'Добавьте хотя бы один промокод',
-      });
-    }
-    return;
-  }
-
-  if (values.quantity_total == null) {
+  if (parsePromoCodeLines(values.promo_codes_text).length === 0) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      path: ['quantity_total'],
-      message: 'Укажите количество',
+      path: ['promo_codes_text'],
+      message: 'Добавьте хотя бы один код',
     });
   }
 });
@@ -73,7 +62,7 @@ export const defaultPrizeFormValues: PrizeFormValues = {
   prize_type: 'merch',
   status: 'available',
   cost_points: 60,
-  quantity_total: 10,
+  quantity_total: null,
   required_level: null,
   sort_order: 0,
   promo_codes_text: '',
