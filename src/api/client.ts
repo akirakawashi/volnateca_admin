@@ -3,9 +3,9 @@ import { notifyAdminUnauthorized } from '../auth/adminAuth';
 const DEFAULT_API_BASE =
   window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:8000'
-    : window.location.origin;
+    : 'http://ne-rebotaet';
 
-const API_BASE = window.__VOLNATECA_ADMIN_CONFIG__?.API_BASE_URL?.trim() || DEFAULT_API_BASE;
+const API_BASE = import.meta.env.VITE_API_BASE_URL?.trim() || DEFAULT_API_BASE;
 const DEFAULT_API_TIMEOUT_MS = 30_000;
 
 type ApiFetchOptions = RequestInit & {
